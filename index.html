@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Polnisch App – Stufe 3</title>
+    <title>Polnisch Lern-App – Verbindungstest</title>
     <style>
         body { font-family: sans-serif; max-width: 500px; margin: 50px auto; padding: 20px; background: #f4f6f9; }
         .card { background: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
@@ -23,7 +23,7 @@
 </head>
 <body>
     <div class="card">
-        <div class="status-ok">✅ Stufe 1 & 2 aktiv: Hosting & Schlüssel-Tresor bereit.</div>
+        <div class="status-ok">✅ Stufe 1 & 2 aktiv: GitHub Pages & Schlüssel-Tresor bereit.</div>
         <h2>🔐 Schlüssel-Tresor</h2>
         <input type="password" id="apiKey" placeholder="AQ.Ab8...">
         <div class="btn-group">
@@ -84,8 +84,7 @@
             pingBtn.disabled = true;
             pingResult.style.display = "none";
 
-            // Aktuelle, gültige Modelle der Reihe nach testen
-            const models = ["gemini-4-hydrogen", "gemini-3.5-flash-lite", "gemini-3.8-flash"];
+            const models = ["gemini-4-hydrogen", "gemini-3.8-flash"];
             const host = ["https://", "generativelanguage", ".", "googleapis", ".", "com"].join("");
             let lastError = "";
 
