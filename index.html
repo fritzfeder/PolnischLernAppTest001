@@ -1,10 +1,110 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <title>Meine Seite</title>
-</head>
-<body>
-    <h1>Hallo Welt!</h1>
-    <p>Meine erste Website auf GitHub Pages läuft.</p>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <title>Polnisch-Sprachlehrer</title>
+    <link rel="stylesheet" href="https://jsdelivr.net" />
+  </head>
+  <body>
+    <div id="root"></div>
+    <script src="https://jsdelivr.net"></script>
+    <script>
+      stlite.mount(
+        {
+          requirements: [],
+          entrypoint: "app.py",
+          files: {
+            "app.py": `
+import streamlit as st
+import json
+from pyodide.http import pyfetch
+
+st.set_page_config(page_title="Polnisch-Trainer", page_icon="🇵🇱")
+st.title("🇵🇱 Dein persönlicher Polnisch-Sprachlehrer")
+
+with st.sidebar:
+    st.header("Einstellungen")
+    api_key = st.text_input("Google Gemini API-Key:", type="password")
+    st.markdown("[Hier API-Key kostenlos erstellen](https://google.com)")
+
+col1, col2 = st.columns(2)
+with col1:
+    niveau = st.selectbox("Sprachniveau wählen:", ["A1", "A2", "B1", "B2"])
+with col2:
+    thema = st.text_input("Thema eingeben:", placeholder="z. B. Im Café, Einkaufen, Reise...")
+
+async def generate_lesson(api_key, niveau, thema):
+    url = "https://googleapis.com"
+    
+    prompt = f"""
+    Du bist mein persönlicher Polnisch-Sprachlehrer. Erstelle für mich eine vollständige, 
+    strukturierte Lern-Lektion auf dem Sprachniveau {niveau} zum Thema "{thema}". 
+    Halte dich bei deiner Antwort exakt an diese 6 Bausteine (verzichte auf lange Einleitungen):
+
+    ### 1. Polnischer Lesetext
+    Ein zusammenhängender Alltagstext (5 bis 8 Sätze), passend zum gewählten Sprachniveau {niveau}.
+
+    ### 2. Deutsche Übersetzung
+    Eine natürliche deutsche Übersetzung direkt darunter.
+
+    ### 3. Wichtige Vokabeln
+    5 bis 6 Begriffe aus dem Text im exakten Format: 
+    **Polnisches Wort** *(einfache deutsche Lautschrift zur Aussprachehilfe)* – Deutsche Bedeutung.
+
+    ### 4. Verständnisfragen
+    Stelle 5 Fragen auf Polnisch zum Text (inklusive deutscher Übersetzung in Klammern).
+
+    ### 5. Lösungen
+    Gib die passenden Antworten auf Polnisch (inklusive deutscher Lautschrift für die wichtigsten Wörter).
+
+    ### 6. Kleine Grammatik-Übung
+    Greife ein konkretes Grammatik-Phänomen aus dem Text auf (z. B. Vergangenheit, Instrumental, Präsens), 
+    erkläre die Regel in 2 kurzen Sätzen auf Deutsch und erstelle 3 Lückensätze zum Üben inklusive Lösungen.
+    """
+
+    payload = {
+        "contents": [{
+            "parts": [{"text": prompt}]
+        }]
+    }
+
+    response = await pyfetch(
+        url,
+        method="POST",
+        headers={
+            "Content-Type": "application/json",
+            "x-goog-api-key": api_key.strip()
+        },
+        body=json.dumps(payload)
+    )
+    
+    data = await response.json()
+    
+    if response.status != 200:
+        error_msg = data.get("error", {}).get("message", "Unbekannter API-Fehler")
+        raise Exception(error_msg)
+        
+    return data["candidates"][0]["content"]["parts"][0]["text"]
+
+if st.button("Lektion erstellen 🚀", type="primary"):
+    if not api_key:
+        st.error("Bitte gib zuerst deinen Google Gemini API-Key in der Seitenleiste ein.")
+    elif not thema:
+        st.warning("Bitte gib ein Thema ein.")
+    else:
+        with st.spinner("Dein Lehrer bereitet die Lektion vor..."):
+            try:
+                lesson_text = await generate_lesson(api_key, niveau, thema)
+                st.markdown("---")
+                st.markdown(lesson_text)
+            except Exception as e:
+                st.error(f"Ein Fehler ist aufgetreten: {e}")
+`
+          }
+        },
+        document.getElementById("root")
+      );
+    </script>
+  </body>
 </html>
