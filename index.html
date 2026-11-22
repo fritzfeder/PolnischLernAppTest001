@@ -1,21 +1,20 @@
 <!DOCTYPE html>
-<html>
+<html lang="de">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <title>Polnisch-Sprachlehrer</title>
-    <link rel="stylesheet" href="https://jsdelivr.net" />
+    <link
+      rel="stylesheet"
+      href="https://jsdelivr.net"
+    />
   </head>
   <body>
     <div id="root"></div>
-    <script src="https://jsdelivr.net"></script>
-    <script>
-      stlite.mount(
-        {
-          requirements: [],
-          entrypoint: "app.py",
-          files: {
-            "app.py": `
+    <script type="module">
+      import { mount } from "https://jsdelivr.net";
+
+      const pythonCode = `
 import streamlit as st
 import json
 from pyodide.http import pyfetch
@@ -37,31 +36,25 @@ with col2:
 async def generate_lesson(api_key, niveau, thema):
     url = "https://googleapis.com"
     
-    prompt = f"""
-    Du bist mein persönlicher Polnisch-Sprachlehrer. Erstelle für mich eine vollständige, 
-    strukturierte Lern-Lektion auf dem Sprachniveau {niveau} zum Thema "{thema}". 
-    Halte dich bei deiner Antwort exakt an diese 6 Bausteine (verzichte auf lange Einleitungen):
-
-    ### 1. Polnischer Lesetext
-    Ein zusammenhängender Alltagstext (5 bis 8 Sätze), passend zum gewählten Sprachniveau {niveau}.
-
-    ### 2. Deutsche Übersetzung
-    Eine natürliche deutsche Übersetzung direkt darunter.
-
-    ### 3. Wichtige Vokabeln
-    5 bis 6 Begriffe aus dem Text im exakten Format: 
-    **Polnisches Wort** *(einfache deutsche Lautschrift zur Aussprachehilfe)* – Deutsche Bedeutung.
-
-    ### 4. Verständnisfragen
-    Stelle 5 Fragen auf Polnisch zum Text (inklusive deutscher Übersetzung in Klammern).
-
-    ### 5. Lösungen
-    Gib die passenden Antworten auf Polnisch (inklusive deutscher Lautschrift für die wichtigsten Wörter).
-
-    ### 6. Kleine Grammatik-Übung
-    Greife ein konkretes Grammatik-Phänomen aus dem Text auf (z. B. Vergangenheit, Instrumental, Präsens), 
-    erkläre die Regel in 2 kurzen Sätzen auf Deutsch und erstelle 3 Lückensätze zum Üben inklusive Lösungen.
-    """
+    prompt = (
+        f"Du bist mein persönlicher Polnisch-Sprachlehrer. Erstelle für mich eine vollständige, "
+        f"strukturierte Lern-Lektion auf dem Sprachniveau {niveau} zum Thema '{thema}'. "
+        "Halte dich bei deiner Antwort exakt an diese 6 Bausteine (verzichte auf lange Einleitungen):\\n\\n"
+        "### 1. Polnischer Lesetext\\n"
+        f"Ein zusammenhängender Alltagstext (5 bis 8 Sätze), passend zum gewählten Sprachniveau {niveau}.\\n\\n"
+        "### 2. Deutsche Übersetzung\\n"
+        "Eine natürliche deutsche Übersetzung direkt darunter.\\n\\n"
+        "### 3. Wichtige Vokabeln\\n"
+        "5 bis 6 Begriffe aus dem Text im exakten Format:\\n"
+        "**Polnisches Wort** *(einfache deutsche Lautschrift zur Aussprachehilfe)* – Deutsche Bedeutung.\\n\\n"
+        "### 4. Verständnisfragen\\n"
+        "Stelle 5 Fragen auf Polnisch zum Text (inklusive deutscher Übersetzung in Klammern).\\n\\n"
+        "### 5. Lösungen\\n"
+        "Gib die passenden Antworten auf Polnisch (inklusive deutscher Lautschrift für die wichtigsten Wörter).\\n\\n"
+        "### 6. Kleine Grammatik-Übung\\n"
+        "Greife ein konkretes Grammatik-Phänomen aus dem Text auf (z. B. Vergangenheit, Instrumental, Präsens), "
+        "erkläre die Regel in 2 kurzen Sätzen auf Deutsch und erstelle 3 Lückensätze zum Üben inklusive Lösungen."
+    )
 
     payload = {
         "contents": [{
@@ -100,7 +93,14 @@ if st.button("Lektion erstellen 🚀", type="primary"):
                 st.markdown(lesson_text)
             except Exception as e:
                 st.error(f"Ein Fehler ist aufgetreten: {e}")
-`
+`;
+
+      mount(
+        {
+          requirements: [],
+          entrypoint: "app.py",
+          files: {
+            "app.py": pythonCode
           }
         },
         document.getElementById("root")
