@@ -3,144 +3,140 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Polnisch Lern-App – Verbindungstest</title>
+    <title>🇵🇱 Polnisch Lern-App</title>
     <style>
-        body { font-family: sans-serif; max-width: 500px; margin: 50px auto; padding: 20px; background: #f4f6f9; }
-        .card { background: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
-        .status-ok { border-left: 4px solid #2e7d32; background: #e8f5e9; padding: 10px; margin-bottom: 15px; font-size: 0.9rem; }
-        input { width: 100%; padding: 10px; margin: 8px 0 15px 0; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px; }
-        .btn-group { display: flex; gap: 10px; margin-bottom: 20px; }
-        button { flex: 1; padding: 10px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; }
-        .btn-save { background: #1976d2; color: white; }
-        .btn-delete { background: #d32f2f; color: white; }
-        .btn-ping { width: 100%; background: #2e7d32; color: white; padding: 12px; font-size: 1rem; }
-        .btn-ping:disabled { background: #999; cursor: not-allowed; }
-        #msg { margin-top: 10px; margin-bottom: 15px; font-weight: bold; font-size: 0.9rem; }
-        #pingResult { margin-top: 15px; padding: 15px; border-radius: 6px; display: none; white-space: pre-wrap; line-height: 1.5; }
-        .res-ok { background: #e8f5e9; border: 1px solid #2e7d32; color: #1b5e20; }
-        .res-err { background: #ffebee; border: 1px solid #c62828; color: #b71c1c; }
+        body { font-family: sans-serif; max-width: 600px; margin: 30px auto; padding: 15px; background: #f4f6f9; color: #222; }
+        .card { background: #fff; padding: 22px; border-radius: 10px; box-shadow: 0 3px 10px rgba(0,0,0,0.08); margin-bottom: 18px; }
+        h1 { margin-top: 0; font-size: 1.45rem; color: #d4213d; }
+        label { display: block; font-weight: 600; margin-bottom: 5px; font-size: 0.95rem; }
+        input, select { width: 100%; padding: 10px; margin-bottom: 15px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 6px; font-size: 1rem; }
+        .btn-group { display: flex; gap: 10px; }
+        button { padding: 10px 15px; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 0.95rem; }
+        button:disabled { background: #999 !important; cursor: not-allowed; }
+        .btn-save { background: #1976d2; color: #fff; flex: 1; }
+        .btn-delete { background: #e0e0e0; color: #333; }
+        .btn-generate { width: 100%; background: #d4213d; color: #fff; padding: 13px; font-size: 1.05rem; }
+        .chips { display: flex; flex-wrap: wrap; gap: 6px; margin: -6px 0 16px 0; }
+        .chip { background: #eef2f7; border: 1px solid #d0d7de; border-radius: 15px; padding: 4px 10px; font-size: 0.8rem; cursor: pointer; }
+        #keyMsg { margin-top: 8px; font-size: 0.85rem; font-weight: 600; }
+        #outputBox { margin-top: 18px; padding: 18px; border-radius: 8px; display: none; line-height: 1.65; font-size: 1.08rem; white-space: pre-wrap; }
+        .out-ok { background: #fdfdfd; border: 1px solid #d0d7de; border-left: 5px solid #d4213d; }
+        .out-err { background: #ffebee; border: 1px solid #c62828; color: #b71c1c; font-size: 0.95rem !important; }
+        .meta-info { font-size: 0.8rem; color: #666; margin-top: 12px; border-top: 1px solid #eee; padding-top: 8px; }
+        details summary { cursor: pointer; font-weight: 600; color: #555; }
     </style>
 </head>
 <body>
     <div class="card">
-        <div class="status-ok">✅ Stufe 1 & 2 aktiv: GitHub Pages & Schlüssel-Tresor bereit.</div>
-        <h2>🔐 Schlüssel-Tresor</h2>
-        <input type="password" id="apiKey" placeholder="AQ.Ab8...">
-        <div class="btn-group">
-            <button class="btn-save" onclick="saveKey()">Speichern</button>
-            <button class="btn-delete" onclick="deleteKey()">Löschen</button>
+        <details id="keyPanel" open>
+            <summary>🔐 API-Schlüssel Einstellungen</summary>
+            <div style="margin-top: 12px;">
+                <label for="apiKey">Google Gemini API-Schlüssel (lokal im Browser):</label>
+                <input type="password" id="apiKey" placeholder="AQ.Ab8...">
+                <div class="btn-group">
+                    <button class="btn-save" onclick="saveKey()">Speichern</button>
+                    <button class="btn-delete" onclick="deleteKey()">Löschen</button>
+                </div>
+                <div id="keyMsg"></div>
+            </div>
+        </details>
+    </div>
+
+    <div class="card">
+        <h1>🇵🇱 Polnisch Lesetrainer</h1>
+        <label for="level">1. Sprachniveau wählen:</label>
+        <select id="level">
+            <option value="A1">A1 – Anfänger</option>
+            <option value="A2">A2 – Grundlegende Kenntnisse</option>
+            <option value="B1">B1 – Fortgeschritten</option>
+            <option value="B2">B2 – Selbstständig</option>
+        </select>
+
+        <label for="topic">2. Thema eingeben:</label>
+        <input type="text" id="topic" placeholder="Worüber möchtest du lesen?">
+        <div class="chips">
+            <span class="chip" onclick="setTopic('Im Café bestellen')">☕ Im Café</span>
+            <span class="chip" onclick="setTopic('Ein Wochenende in Krakau')">🏰 Krakau</span>
+            <span class="chip" onclick="setTopic('Einkaufen auf dem Markt')">🍎 Markt</span>
+            <span class="chip" onclick="setTopic('Am Bahnhof nach dem Weg fragen')">🚆 Bahnhof</span>
         </div>
-        <div id="msg"></div>
 
-        <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;">
-
-        <h2>📡 Stufe 3: API-Verbindungstest</h2>
-        <button id="pingBtn" class="btn-ping" onclick="testConnection()">Verbindung zu Google testen</button>
-        <div id="pingResult"></div>
+        <button id="genBtn" class="btn-generate" onclick="generateStory()">Polnischen Text erstellen (5–8 Sätze)</button>
+        <div id="outputBox"></div>
     </div>
 
     <script>
-        const keyInput = document.getElementById('apiKey');
-        const msgBox = document.getElementById('msg');
-        const pingBtn = document.getElementById('pingBtn');
-        const pingResult = document.getElementById('pingResult');
+        const keyInput = document.getElementById('apiKey'), keyMsg = document.getElementById('keyMsg'), keyPanel = document.getElementById('keyPanel');
+        const levelSelect = document.getElementById('level'), topicInput = document.getElementById('topic'), genBtn = document.getElementById('genBtn'), outputBox = document.getElementById('outputBox');
 
         window.addEventListener('DOMContentLoaded', function() {
             const saved = localStorage.getItem('polnisch_app_key');
-            if (saved) {
-                keyInput.value = saved;
-                showMsg("ℹ️ Gespeicherter Schlüssel geladen.", "#1976d2");
-            }
+            if (saved) { keyInput.value = saved; showKeyMsg("✅ Schlüssel aktiv.", "#2e7d32"); keyPanel.open = false; }
         });
 
         function saveKey() {
             const val = keyInput.value.trim();
-            if ((!val.startsWith("AQ.") && !val.startsWith("AIza")) || val.length < 25) {
-                showMsg("❌ Ungültiges Schlüssel-Format.", "#d32f2f");
-                return;
-            }
+            if ((!val.startsWith("AQ.") && !val.startsWith("AIza")) || val.length < 25) { showKeyMsg("❌ Ungültiges Format.", "#d32f2f"); return; }
             localStorage.setItem('polnisch_app_key', val);
-            showMsg("✅ Schlüssel lokal gesichert.", "#2e7d32");
+            showKeyMsg("✅ Schlüssel lokal gesichert.", "#2e7d32");
         }
 
         function deleteKey() {
-            localStorage.removeItem('polnisch_app_key');
-            keyInput.value = "";
-            showMsg("🗑️ Schlüssel gelöscht.", "#555");
+            localStorage.removeItem('polnisch_app_key'); keyInput.value = "";
+            showKeyMsg("🗑️ Schlüssel gelöscht.", "#555"); keyPanel.open = true;
         }
 
-        function showMsg(text, color) {
-            msgBox.style.color = color;
-            msgBox.textContent = text;
-        }
+        function showKeyMsg(t, c) { keyMsg.style.color = c; keyMsg.textContent = t; }
+        function setTopic(t) { topicInput.value = t; }
 
-        async function testConnection() {
-            const apiKey = keyInput.value.trim();
-            if (!apiKey) {
-                showPing("Bitte zuerst einen API-Schlüssel eingeben.", false);
-                return;
-            }
+        async function generateStory() {
+            const apiKey = keyInput.value.trim(), level = levelSelect.value, topic = topicInput.value.trim();
+            if (!apiKey) { keyPanel.open = true; showOutput("Bitte API-Schlüssel eingeben.", false); return; }
+            if (!topic) { showOutput("Bitte ein Thema eingeben.", false); return; }
 
-            pingBtn.disabled = true;
-            pingResult.style.display = "none";
+            localStorage.setItem('polnisch_app_key', apiKey);
+            genBtn.disabled = true; outputBox.style.display = "none";
 
-            const models = ["gemini-4-hydrogen", "gemini-3.8-flash"];
+            const prompt = 'Schreibe einen natürlichen Text auf Polnisch über "' + topic + '". Sprachniveau exakt GER ' + level + '. Genau 5 bis 8 Sätze lang. Nur den polnischen Text ausgeben, ohne Übersetzung oder Titel.';
+            const models = ["gemini-3.5-flash-lite", "gemini-4-hydrogen", "gemini-3.8-flash"];
             const host = ["https://", "generativelanguage", ".", "googleapis", ".", "com"].join("");
             let lastError = "";
 
             for (const modelName of models) {
-                pingBtn.textContent = "Teste " + modelName + "...";
+                genBtn.textContent = "Erstelle Text (" + level + ")...";
                 const endpoint = host + "/v1beta/models/" + modelName + ":generateContent";
-
                 try {
                     const response = await fetch(endpoint, {
                         method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'x-goog-api-key': apiKey
-                        },
-                        body: JSON.stringify({
-                            contents: [{
-                                parts: [{ text: "Antworte nur mit einem einzigen polnischen Begrüßungswort und seiner deutschen Übersetzung." }]
-                            }]
-                        })
+                        headers: { 'Content-Type': 'application/json', 'x-goog-api-key': apiKey },
+                        body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
                     });
-
                     const data = await response.json();
-
-                    if (!response.ok) {
-                        lastError = (data.error && data.error.message) ? data.error.message : ("HTTP " + response.status);
-                        continue;
-                    }
+                    if (!response.ok) { lastError = (data.error && data.error.message) ? data.error.message : ("HTTP " + response.status); continue; }
 
                     let reply = "";
                     if (data.candidates && data.candidates.length > 0) {
                         const first = data.candidates.at(0);
-                        if (first && first.content && first.content.parts && first.content.parts.length > 0) {
-                            reply = first.content.parts.at(0).text;
-                        }
+                        if (first && first.content && first.content.parts && first.content.parts.length > 0) reply = first.content.parts.at(0).text;
                     }
-
                     if (reply) {
-                        showPing("✅ Stufe 3 erfolgreich (via " + modelName + ")!\nAntwort: " + reply.trim(), true);
-                        pingBtn.disabled = false;
-                        pingBtn.textContent = "Verbindung zu Google testen";
-                        return;
+                        showOutput(reply.trim(), true, level, modelName);
+                        genBtn.disabled = false; genBtn.textContent = "Polnischen Text erstellen (5–8 Sätze)"; return;
                     }
-                } catch (err) {
-                    lastError = err.message;
-                }
+                } catch (err) { lastError = err.message; }
             }
-
-            showPing("❌ Kein Modell erreichbar. Letzte Meldung:\n" + lastError, false);
-            pingBtn.disabled = false;
-            pingBtn.textContent = "Verbindung zu Google testen";
+            showOutput("Fehler: " + lastError, false);
+            genBtn.disabled = false; genBtn.textContent = "Polnischen Text erstellen (5–8 Sätze)";
         }
 
-        function showPing(text, isSuccess) {
-            pingResult.textContent = text;
-            pingResult.style.display = "block";
-            pingResult.className = isSuccess ? "res-ok" : "res-err";
+        function showOutput(text, isSuccess, level, modelName) {
+            outputBox.innerHTML = ""; outputBox.style.display = "block";
+            outputBox.className = isSuccess ? "out-ok" : "out-err";
+            const d = document.createElement('div'); d.textContent = text; outputBox.appendChild(d);
+            if (isSuccess && level && modelName) {
+                const m = document.createElement('div'); m.className = "meta-info";
+                m.textContent = "Niveau: " + level + " • Modell: " + modelName; outputBox.appendChild(m);
+            }
         }
     </script>
 </body>
