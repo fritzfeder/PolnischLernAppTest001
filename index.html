@@ -50,7 +50,6 @@
             font-size: 1rem;
             font-weight: 600;
             cursor: pointer;
-            transition: background-color 0.2s;
         }
         button:hover {
             background-color: #b01830;
@@ -171,8 +170,11 @@
             }
 
             let generatedText = "";
-            if (data.candidates && data.candidates.length > 0 && data.candidates[0].content && data.candidates[0].content.parts && data.candidates[0].content.parts.length > 0) {
-                generatedText = data.candidates[0].content.parts[0].text;
+            if (data.candidates && data.candidates.length > 0) {
+                const firstCandidate = data.candidates.at(0);
+                if (firstCandidate && firstCandidate.content && firstCandidate.content.parts && firstCandidate.content.parts.length > 0) {
+                    generatedText = firstCandidate.content.parts.at(0).text;
+                }
             }
 
             if (generatedText) {
@@ -182,7 +184,6 @@
             }
 
         } catch (error) {
-            console.error("Fehlerdetails:", error);
             showOutput("Fehler: " + error.message, true);
         } finally {
             generateBtn.disabled = false;
