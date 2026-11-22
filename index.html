@@ -1,3 +1,118 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Polnisch Lern-App – Basis</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: #f4f6f9;
+            color: #333;
+            max-width: 600px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+        .card {
+            background: #ffffff;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+        h1 {
+            margin-top: 0;
+            font-size: 1.5rem;
+            color: #d4213d;
+        }
+        .form-group {
+            margin-bottom: 18px;
+        }
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+        input, select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 1rem;
+            box-sizing: border-box;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #d4213d;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        button:hover {
+            background-color: #b01830;
+        }
+        button:disabled {
+            background-color: #999;
+            cursor: not-allowed;
+        }
+        #result-box {
+            margin-top: 25px;
+            padding: 18px;
+            background-color: #eef2f7;
+            border-left: 4px solid #d4213d;
+            border-radius: 6px;
+            line-height: 1.6;
+            font-size: 1.05rem;
+            display: none;
+            white-space: pre-wrap;
+        }
+        .error {
+            background-color: #fde8e8 !important;
+            border-left-color: #e02424 !important;
+            color: #9b1c1c;
+        }
+        small {
+            color: #666;
+            display: block;
+            margin-top: 4px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <h1>🇵🇱 Polnisch Text-Generator</h1>
+
+    <div class="form-group">
+        <label for="apiKey">Google Gemini API-Schlüssel</label>
+        <input type="password" id="apiKey" placeholder="AIzaSy...">
+        <small>Wird sicher nur lokal in deinem Browser gespeichert.</small>
+    </div>
+
+    <div class="form-group">
+        <label for="level">Sprachniveau</label>
+        <select id="level">
+            <option value="A1">A1 – Anfänger</option>
+            <option value="A2">A2 – Grundlegende Kenntnisse</option>
+            <option value="B1">B1 – Fortgeschrittene Sprachverwendung</option>
+            <option value="B2">B2 – Selbstständige Sprachverwendung</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="topic">Thema für den Text</label>
+        <input type="text" id="topic" placeholder="z. B. Im Café bestellen, Ein Wochenende in Krakau...">
+    </div>
+
+    <button id="generateBtn" onclick="generateText()">Polnischen Text erstellen</button>
+
+    <div id="result-box"></div>
+</div>
+
 <script>
     const apiKeyInput = document.getElementById('apiKey');
     const levelSelect = document.getElementById('level');
@@ -5,9 +120,11 @@
     const generateBtn = document.getElementById('generateBtn');
     const resultBox = document.getElementById('result-box');
 
-    window.addEventListener('DOMContentLoaded', () => {
+    window.addEventListener('DOMContentLoaded', function() {
         const savedKey = localStorage.getItem('gemini_api_key');
-        if (savedKey) apiKeyInput.value = savedKey;
+        if (savedKey) {
+            apiKeyInput.value = savedKey;
+        }
     });
 
     async function generateText() {
@@ -22,40 +139,51 @@
 
         localStorage.setItem('gemini_api_key', apiKey);
         generateBtn.disabled = true;
-        generateBtn.textContent = "Verbinde mit Google...";
+        generateBtn.textContent = "Text wird generiert...";
         resultBox.style.display = "none";
 
-        const prompt = `Schreibe einen kurzen Text auf Polnisch über "${topic}". Niveau: ${level}. Länge: 5 bis 8 Sätze. Nur den polnischen Text ausgeben.`;
-        
-        // Standard-Endpunkt mit text/plain vermeidet oft CORS-Preflight-Probleme im Browser
-        const url = `https://googleapis.com{encodeURIComponent(apiKey)}`;
+        const prompt = 'Schreibe einen kurzen, natürlichen Text auf Polnisch über das Thema "' + topic + '". ' +
+                       'Das Sprachniveau muss exakt dem GER-Niveau ' + level + ' entsprechen. ' +
+                       'Der Text soll genau 5 bis 8 Sätze lang sein. ' +
+                       'Gib ausschließlich den polnischen Text aus, ohne Übersetzung und ohne Einleitung.';
+
+        const baseUrl = "https://googleapis.com";
+        const fullUrl = baseUrl + encodeURIComponent(apiKey);
 
         try {
-            const response = await fetch(url, {
+            const response = await fetch(fullUrl, {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'text/plain;charset=utf-8'
+                    'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    contents: [{ parts: [{ text: prompt }] }]
+                    contents: [{
+                        parts: [{ text: prompt }]
+                    }]
                 })
             });
 
             const data = await response.json();
 
             if (!response.ok) {
-                throw new Error(data.error?.message || `HTTP ${response.status}`);
+                const errMsg = (data.error && data.error.message) ? data.error.message : ("HTTP-Fehler " + response.status);
+                throw new Error(errMsg);
             }
 
-            const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
-            if (text) {
-                showOutput(text.trim(), false);
-            } else {
-                showOutput("Leere Antwort von der API erhalten.", true);
+            let generatedText = "";
+            if (data.candidates && data.candidates.length > 0 && data.candidates[0].content && data.candidates[0].content.parts && data.candidates[0].content.parts.length > 0) {
+                generatedText = data.candidates[0].content.parts[0].text;
             }
+
+            if (generatedText) {
+                showOutput(generatedText.trim(), false);
+            } else {
+                showOutput("Die API hat keine Textantwort zurückgegeben.", true);
+            }
+
         } catch (error) {
-            console.error("Detaillierter Fehler:", error);
-            showOutput(`Fehler: ${error.message}\n\nBitte drücke F12 -> Konsole für die genaue Ursache.`, true);
+            console.error("Fehlerdetails:", error);
+            showOutput("Fehler: " + error.message, true);
         } finally {
             generateBtn.disabled = false;
             generateBtn.textContent = "Polnischen Text erstellen";
@@ -65,6 +193,13 @@
     function showOutput(text, isError) {
         resultBox.textContent = text;
         resultBox.style.display = "block";
-        resultBox.classList.toggle('error', isError);
+        if (isError) {
+            resultBox.classList.add('error');
+        } else {
+            resultBox.classList.remove('error');
+        }
     }
 </script>
+
+</body>
+</html>
