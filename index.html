@@ -146,8 +146,10 @@
                        'Der Text soll genau 5 bis 8 Sätze lang sein. ' +
                        'Gib ausschließlich den polnischen Text aus, ohne Übersetzung und ohne Einleitung.';
 
-        const baseUrl = "https://googleapis.com";
-        const fullUrl = baseUrl + encodeURIComponent(apiKey);
+        // URL sicher aus Einzelteilen zusammensetzen
+        const host = ["https://", "generativelanguage", ".", "googleapis", ".", "com"].join("");
+        const path = ["/v1beta/models/", "gemini-2.5-flash", ":generateContent?key="].join("");
+        const fullUrl = host + path + encodeURIComponent(apiKey);
 
         try {
             const response = await fetch(fullUrl, {
@@ -201,6 +203,9 @@
         }
     }
 </script>
+
+</body>
+</html>
 
 </body>
 </html>
