@@ -3,201 +3,205 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Polnisch Lern-Lektion: W kawiarni (A1)</title>
+    <title>Polnisch Lern-App – Basis</title>
     <style>
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            line-height: 1.6;
-            color: #24292e;
-            background-color: #f6f8fa;
-            max-width: 800px;
-            margin: 0 auto;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: #f4f6f9;
+            color: #333;
+            max-width: 600px;
+            margin: 40px auto;
             padding: 20px;
-        }
-        header {
-            background: linear-gradient(135deg, #dc143c 0%, #a50f2d 100%);
-            color: white;
-            padding: 25px;
-            border-radius: 10px;
-            margin-bottom: 25px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        }
-        header h1 {
-            margin: 0;
-            font-size: 1.8em;
-        }
-        .badge {
-            display: inline-block;
-            background: rgba(255,255,255,0.2);
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 0.85em;
-            margin-top: 8px;
         }
         .card {
-            background: white;
-            border: 1px solid #e1e4e8;
-            border-radius: 8px;
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+            background: #ffffff;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
         }
-        h2 {
-            color: #dc143c;
-            border-bottom: 2px solid #f0f0f0;
-            padding-bottom: 8px;
+        h1 {
             margin-top: 0;
-            font-size: 1.3em;
+            font-size: 1.5rem;
+            color: #d4213d; /* Polnisches Rot */
         }
-        .polish-text {
-            font-size: 1.15em;
-            font-weight: 500;
-            background-color: #fff8f8;
-            padding: 15px;
-            border-left: 4px solid #dc143c;
-            border-radius: 4px;
+        .form-group {
+            margin-bottom: 18px;
         }
-        .btn-audio {
-            background-color: #dc143c;
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+        input, select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 1rem;
+            box-sizing: border-box;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #d4213d;
             color: white;
             border: none;
-            padding: 8px 15px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 0.9em;
-            margin-top: 10px;
-            transition: background 0.2s;
-        }
-        .btn-audio:hover {
-            background-color: #b01030;
-        }
-        .phonetic {
-            color: #6a737d;
-            font-style: italic;
-        }
-        details {
-            background-color: #f8f9fa;
-            border: 1px solid #e1e4e8;
             border-radius: 6px;
-            padding: 12px 15px;
-            margin-top: 15px;
-        }
-        summary {
-            font-weight: bold;
+            font-size: 1rem;
+            font-weight: 600;
             cursor: pointer;
-            color: #0366d6;
+            transition: background-color 0.2s;
         }
-        ul, ol {
-            padding-left: 20px;
+        button:hover {
+            background-color: #b01830;
         }
-        li {
-            margin-bottom: 8px;
+        button:disabled {
+            background-color: #999;
+            cursor: not-allowed;
         }
-        .grammar-box {
-            background-color: #f1f8ff;
-            border-left: 4px solid #0366d6;
-            padding: 12px 15px;
-            margin-bottom: 15px;
-            border-radius: 4px;
+        #result-box {
+            margin-top: 25px;
+            padding: 18px;
+            background-color: #eef2f7;
+            border-left: 4px solid #d4213d;
+            border-radius: 6px;
+            line-height: 1.6;
+            font-size: 1.05rem;
+            display: none;
+            white-space: pre-wrap;
+        }
+        .error {
+            background-color: #fde8e8 !important;
+            border-left-color: #e02424 !important;
+            color: #9b1c1c;
+        }
+        small {
+            color: #666;
+            display: block;
+            margin-top: 4px;
         }
     </style>
 </head>
 <body>
 
-<header>
-    <h1>Polnisch Lern-Lektion: W kawiarni (Im Café)</h1>
-    <span class="badge">Sprachniveau: A1</span>
-    <span class="badge">Thema: Alltag & Bestellen</span>
-</header>
+<div class="card">
+    <h1>🇵🇱 Polnisch Text-Generator</h1>
 
-<!-- Baustein 1: Polnischer Lesetext -->
-<section class="card">
-    <h2>1. Polnischer Lesetext</h2>
-    <div class="polish-text" id="text-to-read">
-        Dzień dobry! Poproszę jedną czarną kawę i kawałek szarlotki. Czy ma pan świeże ciasto? Tak, szarlotka jest dzisiaj bardzo dobra. Płacę kartą czy gotówką? Może pan zapłacić kartą. Dziękuję bardzo, do widzenia!
+    <div class="form-group">
+        <label for="apiKey">Google Gemini API-Schlüssel</label>
+        <input type="password" id="apiKey" placeholder="AIzaSy...">
+        <small>Wird sicher nur lokal in deinem Browser gespeichert (nicht auf GitHub).</small>
     </div>
-    <button class="btn-audio" onclick="speakText()">🔊 Text vorlesen (Browser-TTS / Google Voice)</button>
-</section>
 
-<!-- Baustein 2: Deutsche Übersetzung -->
-<section class="card">
-    <h2>2. Deutsche Übersetzung</h2>
-    <p>
-        Guten Tag! Ich hätte gerne einen schwarzen Kaffee und ein Stück Apfelkuchen. Haben Sie frischen Kuchen? Ja, der Apfelkuchen ist heute sehr gut. Zahle ich mit Karte oder bar? Sie können mit Karte bezahlen. Vielen Dank, auf Wiedersehen!
-    </p>
-</section>
-
-<!-- Baustein 3: Wichtige Vokabeln -->
-<section class="card">
-    <h2>3. Wichtige Vokabeln</h2>
-    <ul>
-        <li><strong>poproszę</strong> <span class="phonetic">(po-pro-sche)</span> – ich hätte gerne / ich bitte um</li>
-        <li><strong>kawa</strong> <span class="phonetic">(ka-wa)</span> – der Kaffee</li>
-        <li><strong>kawałek</strong> <span class="phonetic">(ka-wa-wek)</span> – das Stück</li>
-        <li><strong>szarlotka</strong> <span class="phonetic">(schar-lot-ka)</span> – der Apfelkuchen</li>
-        <li><strong>świeży</strong> <span class="phonetic">(schwje-schy)</span> – frisch</li>
-        <li><strong>gotówka</strong> <span class="phonetic">(go-tuf-ka)</span> – das Bargeld</li>
-    </ul>
-</section>
-
-<!-- Baustein 4: Verständnisfragen -->
-<section class="card">
-    <h2>4. Verständnisfragen</h2>
-    <ol>
-        <li>Co zamawia klient? <em>(Was bestellt der Kunde?)</em></li>
-        <li>Jaką kawę chce klient? <em>(Welchen Kaffee möchte der Kunde?)</em></li>
-        <li>Czy szarlotka jest dzisiaj dobra? <em>(Ist der Apfelkuchen heute gut?)</em></li>
-        <li>Jak chce zapłacić klient? <em>(Wie möchte der Kunde bezahlen?)</em></li>
-        <li>Czy można zapłacić kartą? <em>(Kann man mit Karte bezahlen?)</em></li>
-    </ol>
-</section>
-
-<!-- Baustein 5: Lösungen -->
-<section class="card">
-    <h2>5. Lösungen zu den Verständnisfragen</h2>
-    <details>
-        <summary>Lösungen anzeigen / verbergen</summary>
-        <ol style="margin-top: 10px;">
-            <li>Klient zamawia <strong>kawę</strong> <span class="phonetic">(ka-we)</span> i <strong>szarlotkę</strong> <span class="phonetic">(schar-lot-ke)</span>.</li>
-            <li>Klient chce <strong>czarną kawę</strong> <span class="phonetic">(tschar-nom ka-we)</span>.</li>
-            <li>Tak, szarlotka jest dzisiaj <strong>bardzo dobra</strong> <span class="phonetic">(bar-dso dob-ra)</span>.</li>
-            <li>Klient pyta, czy płaci <strong>kartą</strong> <span class="phonetic">(kar-tom)</span> czy <strong>gotówką</strong> <span class="phonetic">(go-tuf-kom)</span>.</li>
-            <li>Tak, <strong>można zapłacić</strong> <span class="phonetic">(mosch-na sa-pwa-tschitsch)</span> kartą.</li>
-        </ol>
-    </details>
-</section>
-
-<!-- Baustein 6: Kleine Grammatik-Übung -->
-<section class="card">
-    <h2>6. Kleine Grammatik-Übung: Der Akkusativ (Biernik)</h2>
-    <div class="grammar-box">
-        <strong>Regel:</strong> Nach Verben wie <em>poproszę</em> (ich hätte gerne) oder <em>mam</em> (ich habe) steht das Objekt im Akkusativ. Weibliche Nomen auf <strong>-a</strong> (z. B. <em>kawa</em>) erhalten im Akkusativ die Endung <strong>-ę</strong> (<em>kawę</em>), während weibliche Adjektive auf <strong>-a</strong> die Endung <strong>-ą</strong> bekommen (<em>czarną</em>).
+    <div class="form-group">
+        <label for="level">Sprachniveau</label>
+        <select id="level">
+            <option value="A1">A1 – Anfänger</option>
+            <option value="A2">A2 – Grundlegende Kenntnisse</option>
+            <option value="B1">B1 – Fortgeschrittene Sprachverwendung</option>
+            <option value="B2">B2 – Selbstständige Sprachverwendung</option>
+        </select>
     </div>
-    
-    <p><strong>Setze die Wörter in Klammern in die richtige Akkusativ-Form ein:</strong></p>
-    <ol>
-        <li>Poproszę __________ (czarna kawa).</li>
-        <li>Czy ma pan __________ (świeża szarlotka)?</li>
-        <li>Zamawiam __________ (dobra herbata – <em>guter Tee</em>).</li>
-    </ol>
 
-    <details>
-        <summary>Grammatik-Lösungen anzeigen</summary>
-        <ol style="margin-top: 10px;">
-            <li>Poproszę <strong>czarną kawę</strong>.</li>
-            <li>Czy ma pan <strong>świeżą szarlotkę</strong>?</li>
-            <li>Zamawiam <strong>dobrą herbatę</strong>.</li>
-        </ol>
-    </details>
-</section>
+    <div class="form-group">
+        <label for="topic">Thema für den Text</label>
+        <input type="text" id="topic" placeholder="z. B. Im Café bestellen, Ein Wochenende in Krakau...">
+    </div>
+
+    <button id="generateBtn" onclick="generateText()">Polnischen Text erstellen</button>
+
+    <div id="result-box"></div>
+</div>
 
 <script>
-    function speakText() {
-        const text = document.getElementById('text-to-read').innerText;
-        const utterance = new SpeechSynthesisUtterance(text);
-        utterance.lang = 'pl-PL';
-        utterance.rate = 0.9;
-        window.speechSynthesis.speak(utterance);
+    const apiKeyInput = document.getElementById('apiKey');
+    const levelSelect = document.getElementById('level');
+    const topicInput = document.getElementById('topic');
+    const generateBtn = document.getElementById('generateBtn');
+    const resultBox = document.getElementById('result-box');
+
+    // Gespeicherten API-Key beim Laden der Seite wiederherstellen
+    window.addEventListener('DOMContentLoaded', () => {
+        const savedKey = localStorage.getItem('gemini_api_key');
+        if (savedKey) {
+            apiKeyInput.value = savedKey;
+        }
+    });
+
+    async function generateText() {
+        const apiKey = apiKeyInput.value.trim();
+        const level = levelSelect.value;
+        const topic = topicInput.value.trim();
+
+        // Einfache Validierung
+        if (!apiKey) {
+            showOutput("Bitte gib zuerst deinen Google API-Schlüssel ein.", true);
+            return;
+        }
+        if (!topic) {
+            showOutput("Bitte gib ein Thema für den Text ein.", true);
+            return;
+        }
+
+        // API-Schlüssel lokal im Browser merken
+        localStorage.setItem('gemini_api_key', apiKey);
+
+        // UI in Ladezustand versetzen
+        generateBtn.disabled = true;
+        generateBtn.textContent = "Text wird generiert...";
+        resultBox.style.display = "none";
+
+        const prompt = `Schreibe einen kurzen, natürlichen Text auf Polnisch über das Thema "${topic}". 
+Das Sprachniveau muss exakt dem GER-Niveau ${level} entsprechen. 
+Der Text soll genau 5 bis 8 Sätze lang sein. 
+Gib ausschließlich den polnischen Text aus, ohne Übersetzung, ohne Einleitung und ohne Markdown-Formatierung.`;
+
+        // Aktuelles, schnelles Gemini-Modell verwenden
+        const url = `https://googleapis.com{encodeURIComponent(apiKey)}`;
+
+        try {
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    contents: [{
+                        parts: [{ text: prompt }]
+                    }]
+                })
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.error?.message || `HTTP-Fehler: ${response.status}`);
+            }
+
+            const generatedText = data.candidates?.[0]?.content?.parts?.[0]?.text;
+
+            if (generatedText) {
+                showOutput(generatedText.trim(), false);
+            } else {
+                showOutput("Die API hat keine Textantwort zurückgegeben.", true);
+            }
+
+        } catch (error) {
+            showOutput(`Fehler bei der Anfrage: ${error.message}`, true);
+        } finally {
+            generateBtn.disabled = false;
+            generateBtn.textContent = "Polnischen Text erstellen";
+        }
+    }
+
+    function showOutput(text, isError) {
+        resultBox.textContent = text;
+        resultBox.style.display = "block";
+        if (isError) {
+            resultBox.classList.add('error');
+        } else {
+            resultBox.classList.remove('error');
+        }
     }
 </script>
 
