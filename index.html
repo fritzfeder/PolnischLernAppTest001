@@ -3,16 +3,69 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Polnisch App – Stufe 1</title>
+    <title>Polnisch App – Stufe 2</title>
     <style>
-        body { font-family: sans-serif; max-width: 500px; margin: 50px auto; padding: 20px; }
-        .box { border: 2px solid #2e7d32; background: #e8f5e9; padding: 20px; border-radius: 8px; }
+        body { font-family: sans-serif; max-width: 500px; margin: 50px auto; padding: 20px; background: #f4f6f9; }
+        .card { background: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        .status-ok { border-left: 4px solid #2e7d32; background: #e8f5e9; padding: 10px; margin-bottom: 20px; font-size: 0.9rem; }
+        input { width: 100%; padding: 10px; margin: 8px 0 15px 0; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px; }
+        .btn-group { display: flex; gap: 10px; }
+        button { flex: 1; padding: 10px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; }
+        .btn-save { background: #1976d2; color: white; }
+        .btn-delete { background: #d32f2f; color: white; }
+        #msg { margin-top: 15px; font-weight: bold; font-size: 0.95rem; }
     </style>
 </head>
 <body>
-    <div class="box">
-        <h2>✅ Stufe 1 erfolgreich!</h2>
-        <p>Deine App läuft sauber über GitHub Pages.</p>
+    <div class="card">
+        <div class="status-ok">✅ Stufe 1 aktiv: GitHub Pages läuft.</div>
+        <h2>🔐 Stufe 2: Schlüssel-Tresor</h2>
+        <p style="font-size: 0.9rem; color: #555;">Dein API-Key wird nur in diesem Browser gespeichert und nie an GitHub gesendet.</p>
+
+        <label for="apiKey">Google Gemini API-Schlüssel:</label>
+        <input type="password" id="apiKey" placeholder="AIzaSy...">
+
+        <div class="btn-group">
+            <button class="btn-save" onclick="saveKey()">Schlüssel speichern</button>
+            <button class="btn-delete" onclick="deleteKey()">Schlüssel löschen</button>
+        </div>
+
+        <div id="msg"></div>
     </div>
+
+    <script>
+        const keyInput = document.getElementById('apiKey');
+        const msgBox = document.getElementById('msg');
+
+        // Beim Laden der Seite prüfen, ob schon ein Schlüssel im Browser liegt
+        window.addEventListener('DOMContentLoaded', function() {
+            const saved = localStorage.getItem('polnisch_app_key');
+            if (saved) {
+                keyInput.value = saved;
+                showMsg("ℹ️ Gespeicherter Schlüssel aus deinem Browser geladen.", "#1976d2");
+            }
+        });
+
+        function saveKey() {
+            const val = keyInput.value.trim();
+            if (!val.startsWith("AIza") || val.length < 30) {
+                showMsg("❌ Das sieht nicht nach einem gültigen Google-Key aus (muss mit 'AIza' beginnen).", "#d32f2f");
+                return;
+            }
+            localStorage.setItem('polnisch_app_key', val);
+            showMsg("✅ Stufe 2 erfolgreich! Schlüssel lokal im Browser gesichert.", "#2e7d32");
+        }
+
+        function deleteKey() {
+            localStorage.removeItem('polnisch_app_key');
+            keyInput.value = "";
+            showMsg("🗑️ Schlüssel vollständig aus dem Browser gelöscht.", "#555");
+        }
+
+        function showMsg(text, color) {
+            msgBox.style.color = color;
+            msgBox.textContent = text;
+        }
+    </script>
 </body>
 </html>
