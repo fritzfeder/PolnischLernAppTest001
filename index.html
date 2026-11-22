@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Polnisch App – Stufe 3 (Auto-Fallback)</title>
+    <title>Polnisch App – Stufe 3</title>
     <style>
         body { font-family: sans-serif; max-width: 500px; margin: 50px auto; padding: 20px; background: #f4f6f9; }
         .card { background: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
@@ -84,8 +84,8 @@
             pingBtn.disabled = true;
             pingResult.style.display = "none";
 
-            // Ausweich-Liste: Schnelle & verfügbare Modelle der Reihe nach testen
-            const models = ["gemini-3.8-flash-lite", "gemini-3.8-flash", "gemini-4-hydrogen"];
+            // Aktuelle, gültige Modelle der Reihe nach testen
+            const models = ["gemini-4-hydrogen", "gemini-3.5-flash-lite", "gemini-3.8-flash"];
             const host = ["https://", "generativelanguage", ".", "googleapis", ".", "com"].join("");
             let lastError = "";
 
@@ -111,7 +111,7 @@
 
                     if (!response.ok) {
                         lastError = (data.error && data.error.message) ? data.error.message : ("HTTP " + response.status);
-                        continue; // Nächstes Modell probieren
+                        continue;
                     }
 
                     let reply = "";
@@ -126,15 +126,14 @@
                         showPing("✅ Stufe 3 erfolgreich (via " + modelName + ")!\nAntwort: " + reply.trim(), true);
                         pingBtn.disabled = false;
                         pingBtn.textContent = "Verbindung zu Google testen";
-                        return; // Erfolg -> Schleife sofort beenden
+                        return;
                     }
                 } catch (err) {
                     lastError = err.message;
                 }
             }
 
-            // Falls alle Modelle ausgelastet waren
-            showPing("❌ Alle Modelle aktuell ausgelastet. Letzte Meldung:\n" + lastError, false);
+            showPing("❌ Kein Modell erreichbar. Letzte Meldung:\n" + lastError, false);
             pingBtn.disabled = false;
             pingBtn.textContent = "Verbindung zu Google testen";
         }
