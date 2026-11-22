@@ -85,9 +85,9 @@
             pingBtn.textContent = "Sende Test-Ping an Google...";
             pingResult.style.display = "none";
 
-            // URL sicher aus Einzelteilen zusammensetzen (kein Abschneiden beim Kopieren)
+            // Aktuelles Modell gemini-3.8-flash verwenden
             const host = ["https://", "generativelanguage", ".", "googleapis", ".", "com"].join("");
-            const path = ["/v1beta/models/", "gemini-2.5-flash", ":generateContent"].join("");
+            const path = ["/v1beta/models/", "gemini-3.8-flash", ":generateContent"].join("");
             const endpoint = host + path;
 
             try {
