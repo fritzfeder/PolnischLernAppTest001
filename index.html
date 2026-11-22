@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Polnisch App – Stufe 3</title>
+    <title>Polnisch App – Stufe 3 (Auto-Fallback)</title>
     <style>
         body { font-family: sans-serif; max-width: 500px; margin: 50px auto; padding: 20px; background: #f4f6f9; }
         .card { background: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
@@ -56,7 +56,7 @@
         function saveKey() {
             const val = keyInput.value.trim();
             if ((!val.startsWith("AQ.") && !val.startsWith("AIza")) || val.length < 25) {
-                showMsg("❌ Ungültiges Schlüssel-Format (muss mit 'AQ.' oder 'AIza' beginnen).", "#d32f2f");
+                showMsg("❌ Ungültiges Schlüssel-Format.", "#d32f2f");
                 return;
             }
             localStorage.setItem('polnisch_app_key', val);
@@ -82,55 +82,61 @@
             }
 
             pingBtn.disabled = true;
-            pingBtn.textContent = "Sende Test-Ping an Google...";
             pingResult.style.display = "none";
 
-            // Aktuelles Modell gemini-3.8-flash verwenden
+            // Ausweich-Liste: Schnelle & verfügbare Modelle der Reihe nach testen
+            const models = ["gemini-3.8-flash-lite", "gemini-3.8-flash", "gemini-4-hydrogen"];
             const host = ["https://", "generativelanguage", ".", "googleapis", ".", "com"].join("");
-            const path = ["/v1beta/models/", "gemini-3.8-flash", ":generateContent"].join("");
-            const endpoint = host + path;
+            let lastError = "";
 
-            try {
-                const response = await fetch(endpoint, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'x-goog-api-key': apiKey
-                    },
-                    body: JSON.stringify({
-                        contents: [{
-                            parts: [{ text: "Antworte nur mit einem einzigen polnischen Begrüßungswort und seiner deutschen Übersetzung." }]
-                        }]
-                    })
-                });
+            for (const modelName of models) {
+                pingBtn.textContent = "Teste " + modelName + "...";
+                const endpoint = host + "/v1beta/models/" + modelName + ":generateContent";
 
-                const data = await response.json();
+                try {
+                    const response = await fetch(endpoint, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'x-goog-api-key': apiKey
+                        },
+                        body: JSON.stringify({
+                            contents: [{
+                                parts: [{ text: "Antworte nur mit einem einzigen polnischen Begrüßungswort und seiner deutschen Übersetzung." }]
+                            }]
+                        })
+                    });
 
-                if (!response.ok) {
-                    const errDetail = (data.error && data.error.message) ? data.error.message : ("HTTP Status " + response.status);
-                    throw new Error(errDetail);
-                }
+                    const data = await response.json();
 
-                let reply = "";
-                if (data.candidates && data.candidates.length > 0) {
-                    const first = data.candidates.at(0);
-                    if (first && first.content && first.content.parts && first.content.parts.length > 0) {
-                        reply = first.content.parts.at(0).text;
+                    if (!response.ok) {
+                        lastError = (data.error && data.error.message) ? data.error.message : ("HTTP " + response.status);
+                        continue; // Nächstes Modell probieren
                     }
-                }
 
-                if (reply) {
-                    showPing("✅ Stufe 3 erfolgreich!\nAntwort von Google: " + reply.trim(), true);
-                } else {
-                    showPing("⚠️ Verbindung klappte, aber die Antwort war leer.", false);
-                }
+                    let reply = "";
+                    if (data.candidates && data.candidates.length > 0) {
+                        const first = data.candidates.at(0);
+                        if (first && first.content && first.content.parts && first.content.parts.length > 0) {
+                            reply = first.content.parts.at(0).text;
+                        }
+                    }
 
-            } catch (err) {
-                showPing("❌ Fehler beim Verbindungstest:\n" + err.message, false);
-            } finally {
-                pingBtn.disabled = false;
-                pingBtn.textContent = "Verbindung zu Google testen";
+                    if (reply) {
+                        showPing("✅ Stufe 3 erfolgreich (via " + modelName + ")!\nAntwort: " + reply.trim(), true);
+                        pingBtn.disabled = false;
+                        pingBtn.textContent = "Verbindung zu Google testen";
+                        return; // Erfolg -> Schleife sofort beenden
+                    }
+                } catch (err) {
+                    lastError = err.message;
+                }
             }
+
+            // Falls alle Modelle ausgelastet waren
+            showPing("❌ Alle Modelle aktuell ausgelastet. Letzte Meldung:\n" + lastError, false);
+            pingBtn.disabled = false;
+            pingBtn.textContent = "Verbindung zu Google testen";
         }
 
         function showPing(text, isSuccess) {
