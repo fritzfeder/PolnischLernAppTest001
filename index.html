@@ -23,7 +23,7 @@
         <p style="font-size: 0.9rem; color: #555;">Dein API-Key wird nur in diesem Browser gespeichert und nie an GitHub gesendet.</p>
 
         <label for="apiKey">Google Gemini API-Schlüssel:</label>
-        <input type="password" id="apiKey" placeholder="AIzaSy...">
+        <input type="password" id="apiKey" placeholder="AQ.Ab8...">
 
         <div class="btn-group">
             <button class="btn-save" onclick="saveKey()">Schlüssel speichern</button>
@@ -37,7 +37,6 @@
         const keyInput = document.getElementById('apiKey');
         const msgBox = document.getElementById('msg');
 
-        // Beim Laden der Seite prüfen, ob schon ein Schlüssel im Browser liegt
         window.addEventListener('DOMContentLoaded', function() {
             const saved = localStorage.getItem('polnisch_app_key');
             if (saved) {
@@ -48,8 +47,8 @@
 
         function saveKey() {
             const val = keyInput.value.trim();
-            if (!val.startsWith("AIza") || val.length < 30) {
-                showMsg("❌ Das sieht nicht nach einem gültigen Google-Key aus (muss mit 'AIza' beginnen).", "#d32f2f");
+            if ((!val.startsWith("AQ.") && !val.startsWith("AIza")) || val.length < 25) {
+                showMsg("❌ Das sieht nicht nach einem gültigen Google-Key aus (muss mit 'AQ.' oder 'AIza' beginnen).", "#d32f2f");
                 return;
             }
             localStorage.setItem('polnisch_app_key', val);
