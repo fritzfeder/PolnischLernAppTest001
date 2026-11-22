@@ -1,143 +1,158 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🇵🇱 Polnisch Lern-App</title>
-    <style>
-        body { font-family: sans-serif; max-width: 600px; margin: 30px auto; padding: 15px; background: #f4f6f9; color: #222; }
-        .card { background: #fff; padding: 22px; border-radius: 10px; box-shadow: 0 3px 10px rgba(0,0,0,0.08); margin-bottom: 18px; }
-        h1 { margin-top: 0; font-size: 1.45rem; color: #d4213d; }
-        label { display: block; font-weight: 600; margin-bottom: 5px; font-size: 0.95rem; }
-        input, select { width: 100%; padding: 10px; margin-bottom: 15px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 6px; font-size: 1rem; }
-        .btn-group { display: flex; gap: 10px; }
-        button { padding: 10px 15px; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 0.95rem; }
-        button:disabled { background: #999 !important; cursor: not-allowed; }
-        .btn-save { background: #1976d2; color: #fff; flex: 1; }
-        .btn-delete { background: #e0e0e0; color: #333; }
-        .btn-generate { width: 100%; background: #d4213d; color: #fff; padding: 13px; font-size: 1.05rem; }
-        .chips { display: flex; flex-wrap: wrap; gap: 6px; margin: -6px 0 16px 0; }
-        .chip { background: #eef2f7; border: 1px solid #d0d7de; border-radius: 15px; padding: 4px 10px; font-size: 0.8rem; cursor: pointer; }
-        #keyMsg { margin-top: 8px; font-size: 0.85rem; font-weight: 600; }
-        #outputBox { margin-top: 18px; padding: 18px; border-radius: 8px; display: none; line-height: 1.65; font-size: 1.08rem; white-space: pre-wrap; }
-        .out-ok { background: #fdfdfd; border: 1px solid #d0d7de; border-left: 5px solid #d4213d; }
-        .out-err { background: #ffebee; border: 1px solid #c62828; color: #b71c1c; font-size: 0.95rem !important; }
-        .meta-info { font-size: 0.8rem; color: #666; margin-top: 12px; border-top: 1px solid #eee; padding-top: 8px; }
-        details summary { cursor: pointer; font-weight: 600; color: #555; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🇵🇱 Polnisch Lern-App</title>
+<style>
+body{font-family:sans-serif;max-width:650px;margin:20px auto;padding:15px;background:#f4f6f9;color:#222}
+.card{background:#fff;padding:20px;border-radius:10px;box-shadow:0 3px 10px rgba(0,0,0,.08);margin-bottom:16px}
+h1{margin:0 0 15px;font-size:1.4rem;color:#d4213d}
+h2{font-size:1.1rem;color:#d4213d;margin:18px 0 8px;border-bottom:1px solid #eee;padding-bottom:4px}
+label{display:block;font-weight:600;margin-bottom:4px;font-size:.9rem}
+input,select{width:100%;padding:9px;margin-bottom:12px;box-sizing:border-box;border:1px solid #ccc;border-radius:6px;font-size:1rem}
+.row{display:flex;gap:8px}
+button{padding:10px 14px;border:none;border-radius:6px;cursor:pointer;font-weight:600;font-size:.95rem}
+button:disabled{background:#999!important;cursor:not-allowed}
+.b-save{background:#1976d2;color:#fff;flex:1}
+.b-del{background:#e0e0e0;color:#333}
+.b-gen{width:100%;background:#d4213d;color:#fff;padding:12px;font-size:1.05rem}
+.b-aud{background:#2e7d32;color:#fff;margin-top:10px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:-4px 0 14px}
+.chip{background:#eef2f7;border:1px solid #d0d7de;border-radius:15px;padding:4px 10px;font-size:.8rem;cursor:pointer}
+#keyMsg{margin-top:8px;font-size:.85rem;font-weight:600}
+#lessonBox{display:none}
+.pl-txt{background:#fdfdfd;border:1px solid #d0d7de;border-left:5px solid #d4213d;padding:15px;border-radius:8px;line-height:1.65;font-size:1.1rem;white-space:pre-wrap}
+details.box{background:#f8fafc;border:1px solid #d0d7de;border-radius:8px;padding:10px 14px;margin-top:12px}
+details.box summary{cursor:pointer;font-weight:600;color:#1976d2}
+details.box div{margin-top:8px;line-height:1.6}
+ul,ol{padding-left:20px;line-height:1.6;margin:8px 0}
+li{margin-bottom:6px}
+.err{background:#ffebee;border:1px solid #c62828;color:#b71c1c;padding:12px;border-radius:8px;margin-top:12px;display:none}
+.meta{font-size:.8rem;color:#666;margin-top:14px;border-top:1px solid #eee;padding-top:8px}
+</style>
 </head>
 <body>
-    <div class="card">
-        <details id="keyPanel" open>
-            <summary>🔐 API-Schlüssel Einstellungen</summary>
-            <div style="margin-top: 12px;">
-                <label for="apiKey">Google Gemini API-Schlüssel (lokal im Browser):</label>
-                <input type="password" id="apiKey" placeholder="AQ.Ab8...">
-                <div class="btn-group">
-                    <button class="btn-save" onclick="saveKey()">Speichern</button>
-                    <button class="btn-delete" onclick="deleteKey()">Löschen</button>
-                </div>
-                <div id="keyMsg"></div>
-            </div>
-        </details>
-    </div>
+<div class="card">
+<details id="kPanel" open>
+<summary style="cursor:pointer;font-weight:600;color:#555">🔐 API-Schlüssel Einstellungen</summary>
+<div style="margin-top:10px">
+<label for="apiKey">Google Gemini API-Schlüssel (lokal im Browser):</label>
+<input type="password" id="apiKey" placeholder="AQ.Ab8...">
+<div class="row">
+<button class="b-save" onclick="saveKey()">Speichern</button>
+<button class="b-del" onclick="delKey()">Löschen</button>
+</div>
+<div id="keyMsg"></div>
+</div>
+</details>
+</div>
 
-    <div class="card">
-        <h1>🇵🇱 Polnisch Lesetrainer</h1>
-        <label for="level">1. Sprachniveau wählen:</label>
-        <select id="level">
-            <option value="A1">A1 – Anfänger</option>
-            <option value="A2">A2 – Grundlegende Kenntnisse</option>
-            <option value="B1">B1 – Fortgeschritten</option>
-            <option value="B2">B2 – Selbstständig</option>
-        </select>
+<div class="card">
+<h1>🇵🇱 Polnisch Lesetrainer</h1>
+<label for="level">1. Sprachniveau wählen:</label>
+<select id="level">
+<option value="A1">A1 – Anfänger</option>
+<option value="A2">A2 – Grundlegende Kenntnisse</option>
+<option value="B1">B1 – Fortgeschritten</option>
+<option value="B2">B2 – Selbstständig</option>
+</select>
+<label for="topic">2. Thema eingeben:</label>
+<input type="text" id="topic" placeholder="Worüber möchtest du lesen?">
+<div class="chips">
+<span class="chip" onclick="setT('Im Café bestellen')">☕ Im Café</span>
+<span class="chip" onclick="setT('Ein Wochenende in Krakau')">🏰 Krakau</span>
+<span class="chip" onclick="setT('Einkaufen auf dem Markt')">🍎 Markt</span>
+<span class="chip" onclick="setT('Am Bahnhof nach dem Weg fragen')">🚆 Bahnhof</span>
+</div>
+<button id="genBtn" class="b-gen" onclick="genLesson()">Lektion erstellen</button>
+<div id="errBox" class="err"></div>
+</div>
 
-        <label for="topic">2. Thema eingeben:</label>
-        <input type="text" id="topic" placeholder="Worüber möchtest du lesen?">
-        <div class="chips">
-            <span class="chip" onclick="setTopic('Im Café bestellen')">☕ Im Café</span>
-            <span class="chip" onclick="setTopic('Ein Wochenende in Krakau')">🏰 Krakau</span>
-            <span class="chip" onclick="setTopic('Einkaufen auf dem Markt')">🍎 Markt</span>
-            <span class="chip" onclick="setTopic('Am Bahnhof nach dem Weg fragen')">🚆 Bahnhof</span>
-        </div>
+<div id="lessonBox" class="card">
+<h2 style="margin-top:0">📖 Polnischer Text</h2>
+<div id="plTxt" class="pl-txt"></div>
+<button id="audBtn" class="b-aud" onclick="toggleAud()">🔊 Text vorlesen</button>
+<details class="box"><summary>🇩🇪 Deutsche Übersetzung anzeigen</summary><div id="deTxt"></div></details>
+<h2>🗣️ Wichtige Redewendungen & Vokabeln</h2>
+<ul id="vList"></ul>
+<h2>❓ Verständnisfragen</h2>
+<ol id="qList"></ol>
+<details class="box"><summary>✅ Lösungen anzeigen (mit Lautschrift)</summary><div><ol id="aList"></ol></div></details>
+<div id="meta" class="meta"></div>
+</div>
 
-        <button id="genBtn" class="btn-generate" onclick="generateStory()">Polnischen Text erstellen (5–8 Sätze)</button>
-        <div id="outputBox"></div>
-    </div>
+<script>
+const kIn=document.getElementById('apiKey'),kMsg=document.getElementById('keyMsg'),kPan=document.getElementById('kPanel');
+const lvlSel=document.getElementById('level'),topIn=document.getElementById('topic'),gBtn=document.getElementById('genBtn');
+const errBox=document.getElementById('errBox'),lesBox=document.getElementById('lessonBox');
+let curPl="";
 
-    <script>
-        const keyInput = document.getElementById('apiKey'), keyMsg = document.getElementById('keyMsg'), keyPanel = document.getElementById('keyPanel');
-        const levelSelect = document.getElementById('level'), topicInput = document.getElementById('topic'), genBtn = document.getElementById('genBtn'), outputBox = document.getElementById('outputBox');
+window.addEventListener('DOMContentLoaded',()=>{
+const s=localStorage.getItem('polnisch_app_key');
+if(s){kIn.value=s;msg("✅ Schlüssel aktiv.","#2e7d32");kPan.open=false;}
+});
 
-        window.addEventListener('DOMContentLoaded', function() {
-            const saved = localStorage.getItem('polnisch_app_key');
-            if (saved) { keyInput.value = saved; showKeyMsg("✅ Schlüssel aktiv.", "#2e7d32"); keyPanel.open = false; }
-        });
+function saveKey(){
+const v=kIn.value.trim();
+if((!v.startsWith("AQ.")&&!v.startsWith("AIza"))||v.length<25){msg("❌ Ungültiges Format.","#d32f2f");return;}
+localStorage.setItem('polnisch_app_key',v);msg("✅ Lokal gesichert.","#2e7d32");
+}
+function delKey(){localStorage.removeItem('polnisch_app_key');kIn.value="";msg("🗑️ Gelöscht.","#555");kPan.open=true;}
+function msg(t,c){kMsg.style.color=c;kMsg.textContent=t;}
+function setT(t){topIn.value=t;}
 
-        function saveKey() {
-            const val = keyInput.value.trim();
-            if ((!val.startsWith("AQ.") && !val.startsWith("AIza")) || val.length < 25) { showKeyMsg("❌ Ungültiges Format.", "#d32f2f"); return; }
-            localStorage.setItem('polnisch_app_key', val);
-            showKeyMsg("✅ Schlüssel lokal gesichert.", "#2e7d32");
-        }
+function toggleAud(){
+if(!('speechSynthesis'in window)){alert("Keine Sprachausgabe verfügbar.");return;}
+if(window.speechSynthesis.speaking){window.speechSynthesis.cancel();document.getElementById('audBtn').textContent="🔊 Text vorlesen";return;}
+const u=new SpeechSynthesisUtterance(curPl);u.lang='pl-PL';u.rate=0.9;
+u.onend=()=>{document.getElementById('audBtn').textContent="🔊 Text vorlesen";};
+document.getElementById('audBtn').textContent="⏹️ Stopp";window.speechSynthesis.speak(u);
+}
 
-        function deleteKey() {
-            localStorage.removeItem('polnisch_app_key'); keyInput.value = "";
-            showKeyMsg("🗑️ Schlüssel gelöscht.", "#555"); keyPanel.open = true;
-        }
+async function genLesson(){
+const key=kIn.value.trim(),lvl=lvlSel.value,top=topIn.value.trim();
+if(!key){kPan.open=true;err("Bitte API-Schlüssel eingeben.");return;}
+if(!top){err("Bitte ein Thema eingeben.");return;}
+window.speechSynthesis.cancel();localStorage.setItem('polnisch_app_key',key);
+gBtn.disabled=true;errBox.style.display="none";lesBox.style.display="none";
 
-        function showKeyMsg(t, c) { keyMsg.style.color = c; keyMsg.textContent = t; }
-        function setTopic(t) { topicInput.value = t; }
+const prompt='Erstelle eine Polnisch-Lektion zum Thema "'+top+'" (Niveau GER '+lvl+'). Antworte ausschließlich als JSON-Objekt mit diesen 5 Feldern: 1. "polnisch": Text/Dialog auf Polnisch (5 bis 8 Sätze). 2. "deutsch": Deutsche Übersetzung. 3. "vokabeln": Array mit 5-6 Objekten aus dem Text: {"pl":"Polnischer Ausdruck","laut":"einfache deutsche Lautschrift","de":"Deutsche Bedeutung"}. 4. "fragen": Array mit 5 Verständnisfragen: "Polnische Frage? (Deutsche Übersetzung?)". 5. "loesungen": Array mit 5 Antworten: "Polnische Antwort. (deutsche Lautschrift)".';
 
-        async function generateStory() {
-            const apiKey = keyInput.value.trim(), level = levelSelect.value, topic = topicInput.value.trim();
-            if (!apiKey) { keyPanel.open = true; showOutput("Bitte API-Schlüssel eingeben.", false); return; }
-            if (!topic) { showOutput("Bitte ein Thema eingeben.", false); return; }
+const models=["gemini-3.5-flash-lite","gemini-4-hydrogen","gemini-3.8-flash"];
+const host=["https://","generativelanguage",".","googleapis",".","com"].join("");
+let lastErr="";
 
-            localStorage.setItem('polnisch_app_key', apiKey);
-            genBtn.disabled = true; outputBox.style.display = "none";
+for(const m of models){
+gBtn.textContent="Erstelle Lektion ("+lvl+")...";
+try{
+const res=await fetch(host+"/v1beta/models/"+m+":generateContent",{
+method:'POST',headers:{'Content-Type':'application/json','x-goog-api-key':key},
+body:JSON.stringify({contents:[{parts:[{text:prompt}]}],generationConfig:{responseMimeType:"application/json"}})
+});
+const data=await res.json();
+if(!res.ok){lastErr=(data.error&&data.error.message)?data.error.message:("HTTP "+res.status);continue;}
+let raw="";
+if(data.candidates&&data.candidates.length>0){const f=data.candidates.at(0);if(f&&f.content&&f.content.parts&&f.content.parts.length>0)raw=f.content.parts.at(0).text;}
+if(raw){render(JSON.parse(raw),lvl,m);gBtn.disabled=false;gBtn.textContent="Lektion erstellen";return;}
+}catch(e){lastErr=e.message;}
+}
+err("Fehler: "+lastErr);gBtn.disabled=false;gBtn.textContent="Lektion erstellen";
+}
 
-            const prompt = 'Schreibe einen natürlichen Text auf Polnisch über "' + topic + '". Sprachniveau exakt GER ' + level + '. Genau 5 bis 8 Sätze lang. Nur den polnischen Text ausgeben, ohne Übersetzung oder Titel.';
-            const models = ["gemini-3.5-flash-lite", "gemini-4-hydrogen", "gemini-3.8-flash"];
-            const host = ["https://", "generativelanguage", ".", "googleapis", ".", "com"].join("");
-            let lastError = "";
-
-            for (const modelName of models) {
-                genBtn.textContent = "Erstelle Text (" + level + ")...";
-                const endpoint = host + "/v1beta/models/" + modelName + ":generateContent";
-                try {
-                    const response = await fetch(endpoint, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json', 'x-goog-api-key': apiKey },
-                        body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
-                    });
-                    const data = await response.json();
-                    if (!response.ok) { lastError = (data.error && data.error.message) ? data.error.message : ("HTTP " + response.status); continue; }
-
-                    let reply = "";
-                    if (data.candidates && data.candidates.length > 0) {
-                        const first = data.candidates.at(0);
-                        if (first && first.content && first.content.parts && first.content.parts.length > 0) reply = first.content.parts.at(0).text;
-                    }
-                    if (reply) {
-                        showOutput(reply.trim(), true, level, modelName);
-                        genBtn.disabled = false; genBtn.textContent = "Polnischen Text erstellen (5–8 Sätze)"; return;
-                    }
-                } catch (err) { lastError = err.message; }
-            }
-            showOutput("Fehler: " + lastError, false);
-            genBtn.disabled = false; genBtn.textContent = "Polnischen Text erstellen (5–8 Sätze)";
-        }
-
-        function showOutput(text, isSuccess, level, modelName) {
-            outputBox.innerHTML = ""; outputBox.style.display = "block";
-            outputBox.className = isSuccess ? "out-ok" : "out-err";
-            const d = document.createElement('div'); d.textContent = text; outputBox.appendChild(d);
-            if (isSuccess && level && modelName) {
-                const m = document.createElement('div'); m.className = "meta-info";
-                m.textContent = "Niveau: " + level + " • Modell: " + modelName; outputBox.appendChild(m);
-            }
-        }
-    </script>
+function render(l,lvl,m){
+curPl=l.polnisch||"";document.getElementById('plTxt').textContent=curPl;
+document.getElementById('deTxt').textContent=l.deutsch||"";document.getElementById('audBtn').textContent="🔊 Text vorlesen";
+const vl=document.getElementById('vList');vl.innerHTML="";
+(l.vokabeln||[]).forEach(v=>{const li=document.createElement('li');li.innerHTML="<strong>"+esc(v.pl)+"</strong> <em>("+esc(v.laut)+")</em> – "+esc(v.de);vl.appendChild(li);});
+const ql=document.getElementById('qList');ql.innerHTML="";
+(l.fragen||[]).forEach(q=>{const li=document.createElement('li');li.textContent=q;ql.appendChild(li);});
+const al=document.getElementById('aList');al.innerHTML="";
+(l.loesungen||[]).forEach(a=>{const li=document.createElement('li');li.textContent=a;al.appendChild(li);});
+document.getElementById('meta').textContent="Niveau: "+lvl+" • Modell: "+m;lesBox.style.display="block";
+}
+function err(m){errBox.textContent=m;errBox.style.display="block";}
+function esc(s){const d=document.createElement('div');d.textContent=s||"";return d.innerHTML;}
+</script>
 </body>
 </html>
