@@ -3,33 +3,42 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>🇵🇱 Polnisch Lern-App</title>
+<title>🌍 Multi-Sprachen Lern-App</title>
 <style>
-body{font-family:sans-serif;max-width:650px;margin:20px auto;padding:15px;background:#f4f6f9;color:#222}
-.card{background:#fff;padding:20px;border-radius:10px;box-shadow:0 3px 10px rgba(0,0,0,.08);margin-bottom:16px}
-h1{margin:0 0 15px;font-size:1.4rem;color:#d4213d}
-h2{font-size:1.1rem;color:#d4213d;margin:18px 0 8px;border-bottom:1px solid #eee;padding-bottom:4px}
-label{display:block;font-weight:600;margin-bottom:4px;font-size:.9rem}
-input,select{width:100%;padding:9px;margin-bottom:12px;box-sizing:border-box;border:1px solid #ccc;border-radius:6px;font-size:1rem}
-.row{display:flex;gap:8px}
-button{padding:10px 14px;border:none;border-radius:6px;cursor:pointer;font-weight:600;font-size:.95rem}
+body{font-family:sans-serif;max-width:700px;margin:20px auto;padding:12px;background:#f4f6f9;color:#222}
+.card{background:#fff;padding:18px;border-radius:10px;box-shadow:0 3px 10px rgba(0,0,0,.08);margin-bottom:14px}
+h1{margin:0 0 14px;font-size:1.35rem;color:#d4213d}
+h2{font-size:1.05rem;color:#d4213d;margin:18px 0 8px;border-bottom:1px solid #eee;padding-bottom:4px}
+label{display:block;font-weight:600;margin-bottom:4px;font-size:.88rem}
+input,select{width:100%;padding:8px;margin-bottom:10px;box-sizing:border-box;border:1px solid #ccc;border-radius:6px;font-size:.95rem}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.row{display:flex;gap:8px;align-items:center}
+button{padding:9px 12px;border:none;border-radius:6px;cursor:pointer;font-weight:600;font-size:.9rem}
 button:disabled{background:#999!important;cursor:not-allowed}
 .b-save{background:#1976d2;color:#fff;flex:1}
 .b-del{background:#e0e0e0;color:#333}
-.b-gen{width:100%;background:#d4213d;color:#fff;padding:12px;font-size:1.05rem}
-.b-aud{background:#2e7d32;color:#fff;margin-top:10px}
-.chips{display:flex;flex-wrap:wrap;gap:6px;margin:-4px 0 14px}
-.chip{background:#eef2f7;border:1px solid #d0d7de;border-radius:15px;padding:4px 10px;font-size:.8rem;cursor:pointer}
-#keyMsg{margin-top:8px;font-size:.85rem;font-weight:600}
+.b-gen{width:100%;background:#d4213d;color:#fff;padding:12px;font-size:1rem;margin-top:4px}
+.b-aud{background:#2e7d32;color:#fff}
+.b-mini{padding:4px 8px;font-size:.8rem;background:#1976d2;color:#fff;margin-left:6px}
+.b-rem{padding:3px 7px;font-size:.75rem;background:#d32f2f;color:#fff;margin-left:6px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:-2px 0 12px}
+.chip{background:#eef2f7;border:1px solid #d0d7de;border-radius:14px;padding:4px 9px;font-size:.78rem;cursor:pointer}
+#keyMsg{margin-top:6px;font-size:.82rem;font-weight:600}
 #lessonBox{display:none}
-.pl-txt{background:#fdfdfd;border:1px solid #d0d7de;border-left:5px solid #d4213d;padding:15px;border-radius:8px;line-height:1.65;font-size:1.1rem;white-space:pre-wrap}
-details.box{background:#f8fafc;border:1px solid #d0d7de;border-radius:8px;padding:10px 14px;margin-top:12px}
+.txt-box{background:#fdfdfd;border:1px solid #d0d7de;border-left:5px solid #d4213d;padding:14px;border-radius:8px;line-height:1.65;font-size:1.05rem;white-space:pre-wrap}
+.gram-box{background:#fff8e1;border-left:4px solid #fbc02d;padding:12px;border-radius:6px;line-height:1.55;font-size:.95rem}
+.aud-bar{background:#f1f8e9;padding:10px;border-radius:8px;margin-top:10px;display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:.85rem}
+.aud-bar input{width:80px;margin:0}
+details.box{background:#f8fafc;border:1px solid #d0d7de;border-radius:8px;padding:9px 12px;margin-top:10px}
 details.box summary{cursor:pointer;font-weight:600;color:#1976d2}
 details.box div{margin-top:8px;line-height:1.6}
-ul,ol{padding-left:20px;line-height:1.6;margin:8px 0}
+ul,ol{padding-left:20px;line-height:1.6;margin:6px 0}
 li{margin-bottom:6px}
-.err{background:#ffebee;border:1px solid #c62828;color:#b71c1c;padding:12px;border-radius:8px;margin-top:12px;display:none}
-.meta{font-size:.8rem;color:#666;margin-top:14px;border-top:1px solid #eee;padding-top:8px}
+.cloze-inp{width:130px;display:inline-block;padding:4px 6px;margin:0 4px;font-size:.92rem}
+.ok{border:2px solid #2e7d32!important;background:#e8f5e9}
+.bad{border:2px solid #c62828!important;background:#ffebee}
+.err{background:#ffebee;border:1px solid #c62828;color:#b71c1c;padding:10px;border-radius:8px;margin-top:10px;display:none}
+.meta{font-size:.78rem;color:#666;margin-top:12px;border-top:1px solid #eee;padding-top:6px}
 </style>
 </head>
 <body>
@@ -49,48 +58,99 @@ li{margin-bottom:6px}
 </div>
 
 <div class="card">
-<h1>🇵🇱 Polnisch Lesetrainer</h1>
-<label for="level">1. Sprachniveau wählen:</label>
+<h1>🌍 Multi-Sprachen Lern-App</h1>
+<div class="grid">
+<div>
+<label for="lang">Sprache:</label>
+<select id="lang">
+<option value="Polnisch|pl-PL">🇵🇱 Polnisch</option>
+<option value="Britisches Englisch|en-GB">🇬🇧 Britisch Englisch</option>
+<option value="US-Englisch|en-US">🇺🇸 US-Englisch</option>
+<option value="Swahili|sw-KE">🇰🇪 Swahili</option>
+<option value="Italienisch|it-IT">🇮🇹 Italienisch</option>
+<option value="Rumänisch|ro-RO">🇷🇴 Rumänisch</option>
+<option value="Spanisch|es-ES">🇪🇸 Spanisch</option>
+<option value="Französisch|fr-FR">🇫🇷 Französisch</option>
+</select>
+</div>
+<div>
+<label for="level">Sprachniveau:</label>
 <select id="level">
 <option value="A1">A1 – Anfänger</option>
-<option value="A2">A2 – Grundlegende Kenntnisse</option>
+<option value="A2">A2 – Grundlagen</option>
 <option value="B1">B1 – Fortgeschritten</option>
 <option value="B2">B2 – Selbstständig</option>
 </select>
-<label for="topic">2. Thema eingeben:</label>
-<input type="text" id="topic" placeholder="Worüber möchtest du lesen?">
+</div>
+<div>
+<label for="len">Textlänge:</label>
+<select id="len">
+<option value="3 bis 4">3–4 Sätze (Kurz)</option>
+<option value="5 bis 8" selected>5–8 Sätze (Mittel)</option>
+<option value="10 bis 15">10–15 Sätze (Lang)</option>
+</select>
+</div>
+<div>
+<label for="mode">Textart:</label>
+<select id="mode">
+<option value="Lesetext">📖 Lesetext (Erzählung)</option>
+<option value="Dialog zwischen zwei Personen">💬 Dialog-Trainer</option>
+</select>
+</div>
+</div>
+
+<label for="topic">Thema eingeben:</label>
+<input type="text" id="topic" placeholder="Worüber möchtest du lernen?">
 <div class="chips">
 <span class="chip" onclick="setT('Im Café bestellen')">☕ Im Café</span>
-<span class="chip" onclick="setT('Ein Wochenende in Krakau')">🏰 Krakau</span>
-<span class="chip" onclick="setT('Einkaufen auf dem Markt')">🍎 Markt</span>
 <span class="chip" onclick="setT('Am Bahnhof nach dem Weg fragen')">🚆 Bahnhof</span>
+<span class="chip" onclick="setT('Einkaufen auf dem Markt')">🍎 Markt</span>
+<span class="chip" onclick="setT('Sich kennenlernen und vorstellen')">👋 Kennenlernen</span>
 </div>
 <button id="genBtn" class="b-gen" onclick="genLesson()">Lektion erstellen</button>
 <div id="errBox" class="err"></div>
 </div>
-
 <div id="lessonBox" class="card">
-<h2 style="margin-top:0">📖 Polnischer Text</h2>
-<div id="plTxt" class="pl-txt"></div>
-<button id="audBtn" class="b-aud" onclick="toggleAud()">🔊 Text vorlesen</button>
+<h2 style="margin-top:0">📖 Text / Dialog</h2>
+<div id="plTxt" class="txt-box"></div>
+<div class="aud-bar">
+<button id="audBtn" class="b-aud" onclick="toggleAud()">🔊 Vorlesen</button>
+<span>Tempo: <input type="range" id="rate" min="0.5" max="1.3" step="0.1" value="0.9" oninput="document.getElementById('rVal').textContent=this.value+'x'"><b id="rVal">0.9x</b></span>
+<span>Höhe: <input type="range" id="pitch" min="0.7" max="1.3" step="0.1" value="1.0" oninput="document.getElementById('pVal').textContent=this.value"><b id="pVal">1.0</b></span>
+</div>
 <details class="box"><summary>🇩🇪 Deutsche Übersetzung anzeigen</summary><div id="deTxt"></div></details>
+
+<h2>📐 Grammatik-Fokus (<span id="gLvl"></span>)</h2>
+<div id="gramTxt" class="gram-box"></div>
+
 <h2>🗣️ Wichtige Redewendungen & Vokabeln</h2>
 <ul id="vList"></ul>
+
+<h2>🧩 Interaktives Lückentext-Quiz</h2>
+<div id="clozeBox"></div>
+<button class="b-save" style="margin-top:8px" onclick="checkCloze()">Antworten prüfen</button>
+<div id="clozeRes" style="margin-top:6px;font-weight:600;font-size:.9rem"></div>
+
 <h2>❓ Verständnisfragen</h2>
 <ol id="qList"></ol>
 <details class="box"><summary>✅ Lösungen anzeigen (mit Lautschrift)</summary><div><ol id="aList"></ol></div></details>
 <div id="meta" class="meta"></div>
 </div>
 
+<div class="card">
+<h2 style="margin-top:0">⭐ Meine Vokabel-Merkliste (<span id="mCount">0</span>)</h2>
+<ul id="memoList"></ul>
+</div>
+
 <script>
 const kIn=document.getElementById('apiKey'),kMsg=document.getElementById('keyMsg'),kPan=document.getElementById('kPanel');
-const lvlSel=document.getElementById('level'),topIn=document.getElementById('topic'),gBtn=document.getElementById('genBtn');
-const errBox=document.getElementById('errBox'),lesBox=document.getElementById('lessonBox');
-let curPl="";
+const errBox=document.getElementById('errBox'),lesBox=document.getElementById('lessonBox'),gBtn=document.getElementById('genBtn');
+let curTxt="",curCode="pl-PL",curLang="Polnisch",clozeAns=[];
 
 window.addEventListener('DOMContentLoaded',()=>{
 const s=localStorage.getItem('polnisch_app_key');
 if(s){kIn.value=s;msg("✅ Schlüssel aktiv.","#2e7d32");kPan.open=false;}
+renderMemo();
 });
 
 function saveKey(){
@@ -100,31 +160,43 @@ localStorage.setItem('polnisch_app_key',v);msg("✅ Lokal gesichert.","#2e7d32")
 }
 function delKey(){localStorage.removeItem('polnisch_app_key');kIn.value="";msg("🗑️ Gelöscht.","#555");kPan.open=true;}
 function msg(t,c){kMsg.style.color=c;kMsg.textContent=t;}
-function setT(t){topIn.value=t;}
+function setT(t){document.getElementById('topic').value=t;}
 
 function toggleAud(){
-if(!('speechSynthesis'in window)){alert("Keine Sprachausgabe verfügbar.");return;}
-if(window.speechSynthesis.speaking){window.speechSynthesis.cancel();document.getElementById('audBtn').textContent="🔊 Text vorlesen";return;}
-const u=new SpeechSynthesisUtterance(curPl);u.lang='pl-PL';u.rate=0.9;
-u.onend=()=>{document.getElementById('audBtn').textContent="🔊 Text vorlesen";};
+if(!('speechSynthesis'in window)){alert("Sprachausgabe nicht unterstützt.");return;}
+if(window.speechSynthesis.speaking){window.speechSynthesis.cancel();document.getElementById('audBtn').textContent="🔊 Vorlesen";return;}
+const u=new SpeechSynthesisUtterance(curTxt);
+u.lang=curCode;u.rate=parseFloat(document.getElementById('rate').value);u.pitch=parseFloat(document.getElementById('pitch').value);
+u.onend=()=>{document.getElementById('audBtn').textContent="🔊 Vorlesen";};
 document.getElementById('audBtn').textContent="⏹️ Stopp";window.speechSynthesis.speak(u);
 }
 
 async function genLesson(){
-const key=kIn.value.trim(),lvl=lvlSel.value,top=topIn.value.trim();
+const key=kIn.value.trim(),top=document.getElementById('topic').value.trim();
+const lvl=document.getElementById('level').value,len=document.getElementById('len').value,mode=document.getElementById('mode').value;
+const langParts=document.getElementById('lang').value.split("|");
+curLang=langParts.at(0);curCode=langParts.at(1);
+
 if(!key){kPan.open=true;err("Bitte API-Schlüssel eingeben.");return;}
 if(!top){err("Bitte ein Thema eingeben.");return;}
 window.speechSynthesis.cancel();localStorage.setItem('polnisch_app_key',key);
 gBtn.disabled=true;errBox.style.display="none";lesBox.style.display="none";
 
-const prompt='Erstelle eine Polnisch-Lektion zum Thema "'+top+'" (Niveau GER '+lvl+'). Antworte ausschließlich als JSON-Objekt mit diesen 5 Feldern: 1. "polnisch": Text/Dialog auf Polnisch (5 bis 8 Sätze). 2. "deutsch": Deutsche Übersetzung. 3. "vokabeln": Array mit 5-6 Objekten aus dem Text: {"pl":"Polnischer Ausdruck","laut":"einfache deutsche Lautschrift","de":"Deutsche Bedeutung"}. 4. "fragen": Array mit 5 Verständnisfragen: "Polnische Frage? (Deutsche Übersetzung?)". 5. "loesungen": Array mit 5 Antworten: "Polnische Antwort. (deutsche Lautschrift)".';
+const prompt='Erstelle eine Sprachlektion für '+curLang+' zum Thema "'+top+'" (Niveau GER '+lvl+', Format: '+mode+', Länge: genau '+len+' Sätze). Antworte ausschließlich als JSON-Objekt mit diesen 7 Feldern: '
++'1. "text": Der '+mode+' auf '+curLang+' ('+len+' Sätze). '
++'2. "deutsch": Vollständige deutsche Übersetzung. '
++'3. "grammatik": Kurze Grammatik-Regel auf Deutsch passend zu Niveau '+lvl+' mit 1-2 Beispielen aus dem Text. '
++'4. "vokabeln": Array mit 5-6 Objekten aus dem Text: {"w":"Fremdsprachiger Ausdruck","laut":"einfache deutsche Lautschrift","de":"Deutsche Bedeutung"}. '
++'5. "luecken": Array mit 4 Lückentext-Übungen basierend auf dem Text: {"vor":"Satzteil vor der Lücke ","loesung":"gesuchtes Wort","nach":" Satzteil nach der Lücke (deutsche Bedeutung)"}. '
++'6. "fragen": Array mit 5 Verständnisfragen: "Frage auf '+curLang+'? (Deutsche Übersetzung?)". '
++'7. "loesungen": Array mit 5 Antworten: "Antwort auf '+curLang+'. (deutsche Lautschrift)".';
 
 const models=["gemini-3.5-flash-lite","gemini-4-hydrogen","gemini-3.8-flash"];
 const host=["https://","generativelanguage",".","googleapis",".","com"].join("");
 let lastErr="";
 
 for(const m of models){
-gBtn.textContent="Erstelle Lektion ("+lvl+")...";
+gBtn.textContent="Erstelle "+curLang+"-Lektion ("+lvl+")...";
 try{
 const res=await fetch(host+"/v1beta/models/"+m+":generateContent",{
 method:'POST',headers:{'Content-Type':'application/json','x-goog-api-key':key},
@@ -141,16 +213,65 @@ err("Fehler: "+lastErr);gBtn.disabled=false;gBtn.textContent="Lektion erstellen"
 }
 
 function render(l,lvl,m){
-curPl=l.polnisch||"";document.getElementById('plTxt').textContent=curPl;
-document.getElementById('deTxt').textContent=l.deutsch||"";document.getElementById('audBtn').textContent="🔊 Text vorlesen";
+curTxt=l.text||"";document.getElementById('plTxt').textContent=curTxt;
+document.getElementById('deTxt').textContent=l.deutsch||"";document.getElementById('audBtn').textContent="🔊 Vorlesen";
+document.getElementById('gLvl').textContent=curLang+" "+lvl;document.getElementById('gramTxt').textContent=l.grammatik||"";
+
 const vl=document.getElementById('vList');vl.innerHTML="";
-(l.vokabeln||[]).forEach(v=>{const li=document.createElement('li');li.innerHTML="<strong>"+esc(v.pl)+"</strong> <em>("+esc(v.laut)+")</em> – "+esc(v.de);vl.appendChild(li);});
+(l.vokabeln||[]).forEach(v=>{
+const li=document.createElement('li');
+li.innerHTML="<strong>"+esc(v.w)+"</strong> <em>("+esc(v.laut)+")</em> – "+esc(v.de);
+const b=document.createElement('button');b.className="b-mini";b.textContent="+ Merken";
+b.onclick=()=>addMemo(curLang,v.w,v.laut,v.de);
+li.appendChild(b);vl.appendChild(li);
+});
+
+const cb=document.getElementById('clozeBox');cb.innerHTML="";clozeAns=[];
+document.getElementById('clozeRes').textContent="";
+(l.luecken||[]).forEach((c,i)=>{
+clozeAns.push((c.loesung||"").trim());
+const p=document.createElement('div');p.style.marginBottom="8px";
+p.innerHTML=(i+1)+". "+esc(c.vor)+'<input class="cloze-inp" id="cl_'+i+'" placeholder="...">'+esc(c.nach);
+cb.appendChild(p);
+});
+
 const ql=document.getElementById('qList');ql.innerHTML="";
 (l.fragen||[]).forEach(q=>{const li=document.createElement('li');li.textContent=q;ql.appendChild(li);});
 const al=document.getElementById('aList');al.innerHTML="";
 (l.loesungen||[]).forEach(a=>{const li=document.createElement('li');li.textContent=a;al.appendChild(li);});
-document.getElementById('meta').textContent="Niveau: "+lvl+" • Modell: "+m;lesBox.style.display="block";
+
+document.getElementById('meta').textContent="Sprache: "+curLang+" • Niveau: "+lvl+" • Modell: "+m;lesBox.style.display="block";
 }
+
+function checkCloze(){
+let ok=0;
+clozeAns.forEach((ans,i)=>{
+const inp=document.getElementById('cl_'+i);if(!inp)return;
+inp.classList.remove('ok','bad');
+if(inp.value.trim().toLowerCase()===ans.toLowerCase()){inp.classList.add('ok');ok++;}
+else{inp.classList.add('bad');inp.title="Lösung: "+ans;}
+});
+document.getElementById('clozeRes').textContent="Ergebnis: "+ok+" von "+clozeAns.length+" richtig (Maus/Tipp auf rotes Feld zeigt Lösung).";
+}
+
+function getMemo(){try{return JSON.parse(localStorage.getItem('lang_memo')||"[]");}catch(e){return[];}}
+function addMemo(lang,w,laut,de){
+const list=getMemo();
+if(!list.some(x=>x.w===w&&x.lang===lang)){list.push({lang,w,laut,de});localStorage.setItem('lang_memo',JSON.stringify(list));renderMemo();}
+}
+function remMemo(idx){const list=getMemo();list.splice(idx,1);localStorage.setItem('lang_memo',JSON.stringify(list));renderMemo();}
+function renderMemo(){
+const list=getMemo(),ul=document.getElementById('memoList');
+document.getElementById('mCount').textContent=list.length;ul.innerHTML="";
+if(list.length===0){ul.innerHTML="<li style='color:#666'>Noch keine Vokabeln gemerkt. Klicke oben bei einer Vokabel auf „+ Merken“.</li>";return;}
+list.forEach((v,i)=>{
+const li=document.createElement('li');
+li.innerHTML="["+esc(v.lang)+"] <strong>"+esc(v.w)+"</strong> <em>("+esc(v.laut)+")</em> – "+esc(v.de);
+const b=document.createElement('button');b.className="b-rem";b.textContent="✕";b.onclick=()=>remMemo(i);
+li.appendChild(b);ul.appendChild(li);
+});
+}
+
 function err(m){errBox.textContent=m;errBox.style.display="block";}
 function esc(s){const d=document.createElement('div');d.textContent=s||"";return d.innerHTML;}
 </script>
