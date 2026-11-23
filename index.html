@@ -62,7 +62,6 @@ li{margin-bottom:6px}
 </div>
 </details>
 </div>
-
 <div class="card">
 <h1>🌍 Multi-Sprachen Lern-App</h1>
 <div class="grid">
@@ -116,8 +115,9 @@ li{margin-bottom:6px}
 <button id="genBtn" class="b-gen" onclick="genLesson()">Lektion erstellen</button>
 <div id="errBox" class="err"></div>
 </div>
+
 <div id="lessonBox" class="card">
-<h2 style="margin-top:0">📖 Text / Dialog <small style="font-weight:400;color:#666">(Klick auf einen Satz = einzeln anhören)</small></h2>
+<h2 style="margin-top:0">📖 Text / Dialog <small style="font-weight:400;color:#666">(Klick auf Satz = einzeln anhören)</small></h2>
 <div id="plTxt" class="txt-box"></div>
 <div class="aud-bar">
 <button id="audBtn" class="b-aud" onclick="toggleAud()">🔊 Alles vorlesen</button>
@@ -160,7 +160,6 @@ li{margin-bottom:6px}
 <input type="file" id="impFile" accept=".csv,.txt" style="display:none" onchange="importMemo(event)">
 </div>
 </div>
-
 <div id="cardMode" style="display:none">
 <div class="flashcard" onclick="flipCard()">
 <div id="fcFront" style="font-size:1.25rem;font-weight:700"></div>
@@ -174,7 +173,6 @@ li{margin-bottom:6px}
 <button class="b-save" style="flex:0" onclick="navCard(1)">Weiter ➡️</button>
 </div>
 </div>
-
 <ul id="memoList"></ul>
 </div>
 <script>
@@ -205,7 +203,7 @@ updateVoiceList();
 function updateVoiceList(){
 const sel=document.getElementById('voiceSel');sel.innerHTML='<option value="">Standard-Stimme</option>';
 const prefix=curCode.split("-").at(0).toLowerCase();
-allVoices.filter(v=>v.lang.toLowerCase().startsWith(prefix)).forEach((v,i)=>{
+allVoices.filter(v=>v.lang.toLowerCase().startsWith(prefix)).forEach(v=>{
 const opt=document.createElement('option');opt.value=v.name;opt.textContent=v.name+" ("+v.lang+")";
 sel.appendChild(opt);
 });
@@ -291,7 +289,6 @@ render(JSON.parse(res.text),lvl,res.model);
 }catch(e){err("Fehler: "+e.message);}
 gBtn.disabled=false;gBtn.textContent="Lektion erstellen";
 }
-
 function render(l,lvl,m){
 curTxt=l.text||"";
 const box=document.getElementById('plTxt');box.innerHTML="";
@@ -362,3 +359,71 @@ if(!list.some(x=>x.w===w&&x.lang===lang)){list.push({lang,code,w,laut,de});local
 }
 function remMemo(idx){const list=getMemo();list.splice(idx,1);localStorage.setItem('lang_memo',JSON.stringify(list));renderMemo();showCard();}
 function renderMemo(){
+const list=getMemo(),ul=document.getElementById('memoList');
+document.getElementById('mCount').textContent=list.length;ul.innerHTML="";
+if(list.length===0){ul.innerHTML="<li style='color:#666'>Noch keine Vokabeln gemerkt.</li>";return;}
+list.forEach((v,i)=>{
+const li=document.createElement('li');
+li.innerHTML="["+esc(v.lang)+"] <strong>"+esc(v.w)+"</strong> <em>("+esc(v.laut)+")</em> – "+esc(v.de);
+const b=document.createElement('button');b.className="b-rem";b.textContent="✕";b.onclick=()=>remMemo(i);
+li.appendChild(b);ul.appendChild(li);
+});
+}
+
+function toggleCards(){
+const cm=document.getElementById('cardMode'),list=getMemo();
+if(list.length===0){alert("Merke dir zuerst mindestens eine Vokabel.");return;}
+cm.style.display=(cm.style.display==="none")?"block":"none";
+if(cm.style.display==="block"){fcIdx=0;showCard();}
+}
+function showCard(){
+const list=getMemo();if(list.length===0){document.getElementById('cardMode').style.display="none";return;}
+if(fcIdx>=list.length)fcIdx=0;if(fcIdx<0)fcIdx=list.length-1;
+const v=list.at(fcIdx);
+document.getElementById('fcFront').textContent="["+v.lang+"] "+v.w;
+document.getElementById('fcSub').textContent=v.laut?"("+v.laut+")":"";
+document.getElementById('fcBack').textContent=v.de;document.getElementById('fcBack').style.display="none";
+}
+function flipCard(){const b=document.getElementById('fcBack');b.style.display=(b.style.display==="none")?"block":"none";}
+function navCard(d){fcIdx+=d;showCard();}
+function speakCard(){const v=getMemo().at(fcIdx);if(v)speakText(v.w,v.code||curCode);}
+
+function exportMemo(){
+const filtered=getMemo().filter(v=>v.lang===curLang);
+if(filtered.length===0){alert("Keine gespeicherten Vokabeln für "+curLang+" vorhanden.");return;}
+let lines=["#separator:tab","#html:true","#tags column:3"];
+filtered.forEach(v=>{lines.push("<b>"+esc(v.w)+"</b><br><i>("+esc(v.laut)+")</i>\t"+esc(v.de)+"\t"+curLang.replace(/\s+/g,"_"));});
+const blob=new Blob([lines.join("\n")],{type:"text/tab-separated-values;charset=utf-8"});
+const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download="anki-"+curLang.toLowerCase().replace(/[^a-z0-9]+/g,"-")+".csv";a.click();
+}
+
+function importMemo(ev){
+const file=ev.target.files.at(0);if(!file)return;
+const reader=new FileReader();
+reader.onload=function(e){
+try{
+const list=getMemo();let added=0;
+e.target.result.split(/\r?\n/).forEach(r=>{
+if(!r.trim()||r.startsWith("#"))return;
+const cols=r.split("\t");
+if(cols.length>=2){
+const tmp=document.createElement('div');tmp.innerHTML=cols.at(0);
+const b=tmp.querySelector('b'),i=tmp.querySelector('i');
+const w=b?b.textContent.trim():tmp.textContent.trim();
+const laut=i?i.textContent.replace(/^\(|\)$/g,"").trim():"";
+const de=cols.at(1).trim(),lang=(cols.at(2)||curLang).replace(/_/g," ").trim();
+if(w&&de&&!list.some(x=>x.w===w&&x.lang===lang)){list.push({lang,code:curCode,w,laut,de});added++;}
+}
+});
+localStorage.setItem('lang_memo',JSON.stringify(list));renderMemo();alert(added+" neue Vokabel(n) importiert!");
+}catch(err){alert("Fehler: "+err.message);}
+ev.target.value="";
+};
+reader.readAsText(file);
+}
+
+function err(m){errBox.textContent=m;errBox.style.display="block";}
+function esc(s){const d=document.createElement('div');d.textContent=s||"";return d.innerHTML;}
+</script>
+</body>
+</html>
