@@ -62,7 +62,7 @@ li{margin-bottom:6px}
 <div class="grid">
 <div>
 <label for="lang">Sprache:</label>
-<select id="lang">
+<select id="lang" onchange="updateExpBtn()">
 <option value="Polnisch|pl-PL">🇵🇱 Polnisch</option>
 <option value="Britisches Englisch|en-GB">🇬🇧 Britisch Englisch</option>
 <option value="US-Englisch|en-US">🇺🇸 US-Englisch</option>
@@ -141,7 +141,7 @@ li{margin-bottom:6px}
 <div class="row" style="justify-content:space-between;flex-wrap:wrap;margin-bottom:8px">
 <h2 style="margin:0;border:none">⭐ Vokabel-Merkliste (<span id="mCount">0</span>)</h2>
 <div class="row">
-<button class="b-mini" style="background:#2e7d32" onclick="exportMemo()">💾 Anki-Export (.csv)</button>
+<button id="expBtn" class="b-mini" style="background:#2e7d32" onclick="exportMemo()">💾 Polnisch-Export (.csv)</button>
 <button class="b-mini" onclick="document.getElementById('impFile').click()">📂 Importieren</button>
 <input type="file" id="impFile" accept=".csv,.txt" style="display:none" onchange="importMemo(event)">
 </div>
@@ -157,8 +157,13 @@ let curTxt="",curCode="pl-PL",curLang="Polnisch",clozeAns=[];
 window.addEventListener('DOMContentLoaded',()=>{
 const s=localStorage.getItem('polnisch_app_key');
 if(s){kIn.value=s;msg("✅ Schlüssel aktiv.","#2e7d32");kPan.open=false;}
-renderMemo();
+updateExpBtn();renderMemo();
 });
+
+function updateExpBtn(){
+const selLang=document.getElementById('lang').value.split("|").at(0);
+document.getElementById('expBtn').textContent="💾 "+selLang+"-Export (.csv)";
+}
 
 function saveKey(){
 const v=kIn.value.trim();
@@ -279,18 +284,20 @@ li.appendChild(b);ul.appendChild(li);
 }
 
 function exportMemo(){
-const list=getMemo();
-if(list.length===0){alert("Deine Merkliste ist noch leer.");return;}
+const selLang=document.getElementById('lang').value.split("|").at(0);
+const filtered=getMemo().filter(v=>v.lang===selLang);
+if(filtered.length===0){alert("Keine gespeicherten Vokabeln für "+selLang+" vorhanden.");return;}
 let lines=["#separator:tab","#html:true","#tags column:3"];
-list.forEach(v=>{
+filtered.forEach(v=>{
 const front="<b>"+esc(v.w)+"</b><br><i>("+esc(v.laut)+")</i>";
 const back=esc(v.de);
-const tag=(v.lang||"Sprache").replace(/\s+/g,"_");
+const tag=selLang.replace(/\s+/g,"_");
 lines.push(front+"\t"+back+"\t"+tag);
 });
+const slug=selLang.toLowerCase().replace(/[^a-z0-9]+/g,"-");
 const blob=new Blob([lines.join("\n")],{type:"text/tab-separated-values;charset=utf-8"});
 const a=document.createElement('a');a.href=URL.createObjectURL(blob);
-a.download="anki-vokabeln.csv";a.click();
+a.download="anki-"+slug+".csv";a.click();
 }
 
 function importMemo(ev){
