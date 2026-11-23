@@ -139,11 +139,11 @@ li{margin-bottom:6px}
 
 <div class="card">
 <div class="row" style="justify-content:space-between;flex-wrap:wrap;margin-bottom:8px">
-<h2 style="margin:0;border:none">⭐ Meine Vokabel-Merkliste (<span id="mCount">0</span>)</h2>
+<h2 style="margin:0;border:none">⭐ Vokabel-Merkliste (<span id="mCount">0</span>)</h2>
 <div class="row">
-<button class="b-mini" style="background:#2e7d32" onclick="exportMemo()">💾 Exportieren</button>
+<button class="b-mini" style="background:#2e7d32" onclick="exportMemo()">💾 Anki-Export (.csv)</button>
 <button class="b-mini" onclick="document.getElementById('impFile').click()">📂 Importieren</button>
-<input type="file" id="impFile" accept=".json" style="display:none" onchange="importMemo(event)">
+<input type="file" id="impFile" accept=".csv,.txt" style="display:none" onchange="importMemo(event)">
 </div>
 </div>
 <ul id="memoList"></ul>
@@ -281,9 +281,16 @@ li.appendChild(b);ul.appendChild(li);
 function exportMemo(){
 const list=getMemo();
 if(list.length===0){alert("Deine Merkliste ist noch leer.");return;}
-const blob=new Blob([JSON.stringify(list,null,2)],{type:"application/json"});
+let lines=["#separator:tab","#html:true","#tags column:3"];
+list.forEach(v=>{
+const front="<b>"+esc(v.w)+"</b><br><i>("+esc(v.laut)+")</i>";
+const back=esc(v.de);
+const tag=(v.lang||"Sprache").replace(/\s+/g,"_");
+lines.push(front+"\t"+back+"\t"+tag);
+});
+const blob=new Blob([lines.join("\n")],{type:"text/tab-separated-values;charset=utf-8"});
 const a=document.createElement('a');a.href=URL.createObjectURL(blob);
-a.download="vokabel-merkliste.json";a.click();
+a.download="anki-vokabeln.csv";a.click();
 }
 
 function importMemo(ev){
@@ -291,12 +298,21 @@ const file=ev.target.files.at(0);if(!file)return;
 const reader=new FileReader();
 reader.onload=function(e){
 try{
-const imp=JSON.parse(e.target.result);
-if(!Array.isArray(imp))throw new Error("Ungültige Datei");
+const rows=e.target.result.split(/\r?\n/);
 const list=getMemo();let added=0;
-imp.forEach(item=>{
-if(item.w&&item.de&&!list.some(x=>x.w===item.w&&x.lang===item.lang)){
-list.push({lang:item.lang||"Unbekannt",w:item.w,laut:item.laut||"",de:item.de});added++;
+rows.forEach(r=>{
+if(!r.trim()||r.startsWith("#"))return;
+const cols=r.split("\t");
+if(cols.length>=2){
+const tmp=document.createElement('div');tmp.innerHTML=cols.at(0);
+const bTag=tmp.querySelector('b'),iTag=tmp.querySelector('i');
+const w=bTag?bTag.textContent.trim():tmp.textContent.trim();
+const laut=iTag?iTag.textContent.replace(/^\(|\)$/g,"").trim():"";
+const de=cols.at(1).trim();
+const lang=(cols.at(2)||"Import").replace(/_/g," ").trim();
+if(w&&de&&!list.some(x=>x.w===w&&x.lang===lang)){
+list.push({lang,w,laut,de});added++;
+}
 }
 });
 localStorage.setItem('lang_memo',JSON.stringify(list));renderMemo();
