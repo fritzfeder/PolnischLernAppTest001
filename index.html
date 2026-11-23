@@ -5,30 +5,35 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>🌍 Multi-Sprachen Lern-App</title>
 <style>
-body{font-family:sans-serif;max-width:700px;margin:20px auto;padding:12px;background:#f4f6f9;color:#222}
+body{font-family:sans-serif;max-width:720px;margin:20px auto;padding:12px;background:#f4f6f9;color:#222}
 .card{background:#fff;padding:18px;border-radius:10px;box-shadow:0 3px 10px rgba(0,0,0,.08);margin-bottom:14px}
 h1{margin:0 0 14px;font-size:1.35rem;color:#d4213d}
 h2{font-size:1.05rem;color:#d4213d;margin:18px 0 8px;border-bottom:1px solid #eee;padding-bottom:4px}
 label{display:block;font-weight:600;margin-bottom:4px;font-size:.88rem}
-input,select{width:100%;padding:8px;margin-bottom:10px;box-sizing:border-box;border:1px solid #ccc;border-radius:6px;font-size:.95rem}
+input,select,textarea{width:100%;padding:8px;margin-bottom:10px;box-sizing:border-box;border:1px solid #ccc;border-radius:6px;font-size:.95rem;font-family:inherit}
 .grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .row{display:flex;gap:8px;align-items:center}
-button{padding:9px 12px;border:none;border-radius:6px;cursor:pointer;font-weight:600;font-size:.9rem}
+button{padding:8px 12px;border:none;border-radius:6px;cursor:pointer;font-weight:600;font-size:.88rem}
 button:disabled{background:#999!important;cursor:not-allowed}
 .b-save{background:#1976d2;color:#fff;flex:1}
 .b-del{background:#e0e0e0;color:#333}
 .b-gen{width:100%;background:#d4213d;color:#fff;padding:12px;font-size:1rem;margin-top:4px}
 .b-aud{background:#2e7d32;color:#fff}
-.b-mini{padding:4px 8px;font-size:.8rem;background:#1976d2;color:#fff;margin-left:6px}
-.b-rem{padding:3px 7px;font-size:.75rem;background:#d32f2f;color:#fff;margin-left:6px}
+.b-pause{background:#f57c00;color:#fff}
+.b-mini{padding:4px 8px;font-size:.78rem;background:#1976d2;color:#fff;margin-left:5px}
+.b-rem{padding:3px 7px;font-size:.75rem;background:#d32f2f;color:#fff;margin-left:5px}
 .chips{display:flex;flex-wrap:wrap;gap:6px;margin:-2px 0 12px}
 .chip{background:#eef2f7;border:1px solid #d0d7de;border-radius:14px;padding:4px 9px;font-size:.78rem;cursor:pointer}
 #keyMsg{margin-top:6px;font-size:.82rem;font-weight:600}
 #lessonBox{display:none}
-.txt-box{background:#fdfdfd;border:1px solid #d0d7de;border-left:5px solid #d4213d;padding:14px;border-radius:8px;line-height:1.65;font-size:1.05rem;white-space:pre-wrap}
+.txt-box{background:#fdfdfd;border:1px solid #d0d7de;border-left:5px solid #d4213d;padding:14px;border-radius:8px;line-height:1.8;font-size:1.05rem}
+.sent-span{cursor:pointer;padding:2px 4px;border-radius:4px;transition:background .15s}
+.sent-span:hover{background:#ffeef1}
 .gram-box{background:#fff8e1;border-left:4px solid #fbc02d;padding:12px;border-radius:6px;line-height:1.55;font-size:.95rem}
-.aud-bar{background:#f1f8e9;padding:10px;border-radius:8px;margin-top:10px;display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:.85rem}
-.aud-bar input{width:80px;margin:0}
+.corr-box{background:#e8f5e9;border-left:4px solid #2e7d32;padding:12px;border-radius:6px;line-height:1.55;font-size:.93rem;margin-top:10px;white-space:pre-wrap;display:none}
+.aud-bar{background:#f1f8e9;padding:10px;border-radius:8px;margin-top:10px;display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-size:.84rem}
+.aud-bar input[type=range]{width:70px;margin:0}
+.aud-bar select{width:auto;max-width:180px;margin:0;padding:4px;font-size:.82rem}
 details.box{background:#f8fafc;border:1px solid #d0d7de;border-radius:8px;padding:9px 12px;margin-top:10px}
 details.box summary{cursor:pointer;font-weight:600;color:#1976d2}
 details.box div{margin-top:8px;line-height:1.6}
@@ -37,6 +42,7 @@ li{margin-bottom:6px}
 .cloze-inp{width:130px;display:inline-block;padding:4px 6px;margin:0 4px;font-size:.92rem}
 .ok{border:2px solid #2e7d32!important;background:#e8f5e9}
 .bad{border:2px solid #c62828!important;background:#ffebee}
+.flashcard{background:#f8fafc;border:2px solid #1976d2;border-radius:10px;padding:22px;text-align:center;margin:12px 0;cursor:pointer;min-height:95px;display:flex;flex-direction:column;justify-content:center;align-items:center}
 .err{background:#ffebee;border:1px solid #c62828;color:#b71c1c;padding:10px;border-radius:8px;margin-top:10px;display:none}
 .meta{font-size:.78rem;color:#666;margin-top:12px;border-top:1px solid #eee;padding-top:6px}
 </style>
@@ -62,7 +68,7 @@ li{margin-bottom:6px}
 <div class="grid">
 <div>
 <label for="lang">Sprache:</label>
-<select id="lang" onchange="updateExpBtn()">
+<select id="lang" onchange="onLangChange()">
 <option value="Polnisch|pl-PL">🇵🇱 Polnisch</option>
 <option value="Britisches Englisch|en-GB">🇬🇧 Britisch Englisch</option>
 <option value="US-Englisch|en-US">🇺🇸 US-Englisch</option>
@@ -111,10 +117,12 @@ li{margin-bottom:6px}
 <div id="errBox" class="err"></div>
 </div>
 <div id="lessonBox" class="card">
-<h2 style="margin-top:0">📖 Text / Dialog</h2>
+<h2 style="margin-top:0">📖 Text / Dialog <small style="font-weight:400;color:#666">(Klick auf einen Satz = einzeln anhören)</small></h2>
 <div id="plTxt" class="txt-box"></div>
 <div class="aud-bar">
-<button id="audBtn" class="b-aud" onclick="toggleAud()">🔊 Vorlesen</button>
+<button id="audBtn" class="b-aud" onclick="toggleAud()">🔊 Alles vorlesen</button>
+<button id="pauseBtn" class="b-pause" onclick="pauseAud()" style="display:none">⏸️ Pause</button>
+<select id="voiceSel" title="Stimme wählen"><option value="">Standard-Stimme</option></select>
 <span>Tempo: <input type="range" id="rate" min="0.5" max="1.3" step="0.1" value="0.9" oninput="document.getElementById('rVal').textContent=this.value+'x'"><b id="rVal">0.9x</b></span>
 <span>Höhe: <input type="range" id="pitch" min="0.7" max="1.3" step="0.1" value="1.0" oninput="document.getElementById('pVal').textContent=this.value"><b id="pVal">1.0</b></span>
 </div>
@@ -131,38 +139,76 @@ li{margin-bottom:6px}
 <button class="b-save" style="margin-top:8px" onclick="checkCloze()">Antworten prüfen</button>
 <div id="clozeRes" style="margin-top:6px;font-weight:600;font-size:.9rem"></div>
 
-<h2>❓ Verständnisfragen</h2>
+<h2>❓ Verständnisfragen & Schreibübung</h2>
 <ol id="qList"></ol>
-<details class="box"><summary>✅ Lösungen anzeigen (mit Lautschrift)</summary><div><ol id="aList"></ol></div></details>
+<label for="userAns" style="margin-top:10px">✍️ Deine eigenen Antworten (optional auf der Fremdsprache eintippen):</label>
+<textarea id="userAns" rows="3" placeholder="Schreibe hier deine Antworten zu den Fragen..."></textarea>
+<button id="corrBtn" class="b-save" style="background:#2e7d32" onclick="checkWriting()">✨ Antworten von KI korrigieren lassen</button>
+<div id="corrBox" class="corr-box"></div>
+
+<details class="box"><summary>✅ Musterlösungen anzeigen (mit Lautschrift)</summary><div><ol id="aList"></ol></div></details>
 <div id="meta" class="meta"></div>
 </div>
 
 <div class="card">
 <div class="row" style="justify-content:space-between;flex-wrap:wrap;margin-bottom:8px">
 <h2 style="margin:0;border:none">⭐ Vokabel-Merkliste (<span id="mCount">0</span>)</h2>
-<div class="row">
+<div class="row" style="flex-wrap:wrap">
+<button class="b-mini" style="background:#f57c00" onclick="toggleCards()">🃏 Karteikarten</button>
 <button id="expBtn" class="b-mini" style="background:#2e7d32" onclick="exportMemo()">💾 Polnisch-Export (.csv)</button>
 <button class="b-mini" onclick="document.getElementById('impFile').click()">📂 Importieren</button>
 <input type="file" id="impFile" accept=".csv,.txt" style="display:none" onchange="importMemo(event)">
 </div>
 </div>
-<ul id="memoList"></ul>
+
+<div id="cardMode" style="display:none">
+<div class="flashcard" onclick="flipCard()">
+<div id="fcFront" style="font-size:1.25rem;font-weight:700"></div>
+<div id="fcSub" style="font-size:.95rem;color:#555;margin-top:4px;font-style:italic"></div>
+<div id="fcBack" style="font-size:1.15rem;color:#2e7d32;font-weight:700;margin-top:10px;display:none"></div>
+<small style="color:#888;margin-top:12px">(Karte anklicken zum Umdrehen)</small>
+</div>
+<div class="row" style="justify-content:center">
+<button class="b-del" onclick="navCard(-1)">⬅️ Zurück</button>
+<button class="b-aud" onclick="speakCard()">🔊 Anhören</button>
+<button class="b-save" style="flex:0" onclick="navCard(1)">Weiter ➡️</button>
+</div>
 </div>
 
+<ul id="memoList"></ul>
+</div>
 <script>
 const kIn=document.getElementById('apiKey'),kMsg=document.getElementById('keyMsg'),kPan=document.getElementById('kPanel');
 const errBox=document.getElementById('errBox'),lesBox=document.getElementById('lessonBox'),gBtn=document.getElementById('genBtn');
-let curTxt="",curCode="pl-PL",curLang="Polnisch",clozeAns=[];
+let curTxt="",curCode="pl-PL",curLang="Polnisch",clozeAns=[],allVoices=[],fcIdx=0;
 
 window.addEventListener('DOMContentLoaded',()=>{
 const s=localStorage.getItem('polnisch_app_key');
 if(s){kIn.value=s;msg("✅ Schlüssel aktiv.","#2e7d32");kPan.open=false;}
-updateExpBtn();renderMemo();
+loadVoices();if('speechSynthesis'in window)window.speechSynthesis.onvoiceschanged=loadVoices;
+onLangChange();renderMemo();
 });
 
-function updateExpBtn(){
-const selLang=document.getElementById('lang').value.split("|").at(0);
-document.getElementById('expBtn').textContent="💾 "+selLang+"-Export (.csv)";
+function loadVoices(){
+if(!('speechSynthesis'in window))return;
+allVoices=window.speechSynthesis.getVoices();
+updateVoiceList();
+}
+
+function onLangChange(){
+const p=document.getElementById('lang').value.split("|");
+curLang=p.at(0);curCode=p.at(1);
+document.getElementById('expBtn').textContent="💾 "+curLang+"-Export (.csv)";
+updateVoiceList();
+}
+
+function updateVoiceList(){
+const sel=document.getElementById('voiceSel');sel.innerHTML='<option value="">Standard-Stimme</option>';
+const prefix=curCode.split("-").at(0).toLowerCase();
+allVoices.filter(v=>v.lang.toLowerCase().startsWith(prefix)).forEach((v,i)=>{
+const opt=document.createElement('option');opt.value=v.name;opt.textContent=v.name+" ("+v.lang+")";
+sel.appendChild(opt);
+});
 }
 
 function saveKey(){
@@ -174,25 +220,61 @@ function delKey(){localStorage.removeItem('polnisch_app_key');kIn.value="";msg("
 function msg(t,c){kMsg.style.color=c;kMsg.textContent=t;}
 function setT(t){document.getElementById('topic').value=t;}
 
-function toggleAud(){
+function speakText(text,langCode){
 if(!('speechSynthesis'in window)){alert("Sprachausgabe nicht unterstützt.");return;}
-if(window.speechSynthesis.speaking){window.speechSynthesis.cancel();document.getElementById('audBtn').textContent="🔊 Vorlesen";return;}
-const u=new SpeechSynthesisUtterance(curTxt);
-u.lang=curCode;u.rate=parseFloat(document.getElementById('rate').value);u.pitch=parseFloat(document.getElementById('pitch').value);
-u.onend=()=>{document.getElementById('audBtn').textContent="🔊 Vorlesen";};
-document.getElementById('audBtn').textContent="⏹️ Stopp";window.speechSynthesis.speak(u);
+window.speechSynthesis.cancel();
+const u=new SpeechSynthesisUtterance(text);
+u.lang=langCode||curCode;u.rate=parseFloat(document.getElementById('rate').value);u.pitch=parseFloat(document.getElementById('pitch').value);
+const vName=document.getElementById('voiceSel').value;
+if(vName){const found=allVoices.find(v=>v.name===vName);if(found)u.voice=found;}
+u.onend=()=>{document.getElementById('audBtn').textContent="🔊 Alles vorlesen";document.getElementById('pauseBtn').style.display="none";};
+document.getElementById('audBtn').textContent="⏹️ Stopp";document.getElementById('pauseBtn').style.display="inline-block";
+document.getElementById('pauseBtn').textContent="⏸️ Pause";
+window.speechSynthesis.speak(u);
+}
+
+function toggleAud(){
+if(window.speechSynthesis.speaking){window.speechSynthesis.cancel();document.getElementById('audBtn').textContent="🔊 Alles vorlesen";document.getElementById('pauseBtn').style.display="none";return;}
+speakText(curTxt,curCode);
+}
+
+function pauseAud(){
+if(!window.speechSynthesis.speaking)return;
+if(window.speechSynthesis.paused){window.speechSynthesis.resume();document.getElementById('pauseBtn').textContent="⏸️ Pause";}
+else{window.speechSynthesis.pause();document.getElementById('pauseBtn').textContent="▶️ Weiter";}
+}
+
+async function callGemini(promptText,asJson){
+const key=kIn.value.trim();
+const models=["gemini-3.5-flash-lite","gemini-4-hydrogen","gemini-3.8-flash"];
+const host=["https://","generativelanguage",".","googleapis",".","com"].join("");
+let lastErr="";
+for(const m of models){
+try{
+const bodyObj={contents:[{parts:[{text:promptText}]}]};
+if(asJson)bodyObj.generationConfig={responseMimeType:"application/json"};
+const res=await fetch(host+"/v1beta/models/"+m+":generateContent",{
+method:'POST',headers:{'Content-Type':'application/json','x-goog-api-key':key},body:JSON.stringify(bodyObj)
+});
+const data=await res.json();
+if(!res.ok){lastErr=(data.error&&data.error.message)?data.error.message:("HTTP "+res.status);continue;}
+if(data.candidates&&data.candidates.length>0){
+const f=data.candidates.at(0);
+if(f&&f.content&&f.content.parts&&f.content.parts.length>0)return{text:f.content.parts.at(0).text,model:m};
+}
+}catch(e){lastErr=e.message;}
+}
+throw new Error(lastErr||"Kein Modell erreichbar");
 }
 
 async function genLesson(){
 const key=kIn.value.trim(),top=document.getElementById('topic').value.trim();
 const lvl=document.getElementById('level').value,len=document.getElementById('len').value,mode=document.getElementById('mode').value;
-const langParts=document.getElementById('lang').value.split("|");
-curLang=langParts.at(0);curCode=langParts.at(1);
-
+onLangChange();
 if(!key){kPan.open=true;err("Bitte API-Schlüssel eingeben.");return;}
 if(!top){err("Bitte ein Thema eingeben.");return;}
 window.speechSynthesis.cancel();localStorage.setItem('polnisch_app_key',key);
-gBtn.disabled=true;errBox.style.display="none";lesBox.style.display="none";
+gBtn.disabled=true;gBtn.textContent="Erstelle "+curLang+"-Lektion ("+lvl+")...";errBox.style.display="none";lesBox.style.display="none";
 
 const prompt='Erstelle eine Sprachlektion für '+curLang+' zum Thema "'+top+'" (Niveau GER '+lvl+', Format: '+mode+', Länge: genau '+len+' Sätze). Antworte ausschließlich als JSON-Objekt mit diesen 7 Feldern: '
 +'1. "text": Der '+mode+' auf '+curLang+' ('+len+' Sätze). '
@@ -203,42 +285,36 @@ const prompt='Erstelle eine Sprachlektion für '+curLang+' zum Thema "'+top+'" (
 +'6. "fragen": Array mit 5 Verständnisfragen: "Frage auf '+curLang+'? (Deutsche Übersetzung?)". '
 +'7. "loesungen": Array mit 5 Antworten: "Antwort auf '+curLang+'. (deutsche Lautschrift)".';
 
-const models=["gemini-3.5-flash-lite","gemini-4-hydrogen","gemini-3.8-flash"];
-const host=["https://","generativelanguage",".","googleapis",".","com"].join("");
-let lastErr="";
-
-for(const m of models){
-gBtn.textContent="Erstelle "+curLang+"-Lektion ("+lvl+")...";
 try{
-const res=await fetch(host+"/v1beta/models/"+m+":generateContent",{
-method:'POST',headers:{'Content-Type':'application/json','x-goog-api-key':key},
-body:JSON.stringify({contents:[{parts:[{text:prompt}]}],generationConfig:{responseMimeType:"application/json"}})
-});
-const data=await res.json();
-if(!res.ok){lastErr=(data.error&&data.error.message)?data.error.message:("HTTP "+res.status);continue;}
-let raw="";
-if(data.candidates&&data.candidates.length>0){const f=data.candidates.at(0);if(f&&f.content&&f.content.parts&&f.content.parts.length>0)raw=f.content.parts.at(0).text;}
-if(raw){render(JSON.parse(raw),lvl,m);gBtn.disabled=false;gBtn.textContent="Lektion erstellen";return;}
-}catch(e){lastErr=e.message;}
+const res=await callGemini(prompt,true);
+render(JSON.parse(res.text),lvl,res.model);
+}catch(e){err("Fehler: "+e.message);}
+gBtn.disabled=false;gBtn.textContent="Lektion erstellen";
 }
-err("Fehler: "+lastErr);gBtn.disabled=false;gBtn.textContent="Lektion erstellen";
-}
+
 function render(l,lvl,m){
-curTxt=l.text||"";document.getElementById('plTxt').textContent=curTxt;
-document.getElementById('deTxt').textContent=l.deutsch||"";document.getElementById('audBtn').textContent="🔊 Vorlesen";
+curTxt=l.text||"";
+const box=document.getElementById('plTxt');box.innerHTML="";
+curTxt.split(/(?<=[.!?])\s+|\n+/).forEach(s=>{
+if(!s.trim())return;
+const sp=document.createElement('span');sp.className="sent-span";sp.textContent=s+" ";
+sp.title="Klicken zum Anhören";sp.onclick=()=>speakText(s.trim(),curCode);
+box.appendChild(sp);
+});
+document.getElementById('deTxt').textContent=l.deutsch||"";document.getElementById('audBtn').textContent="🔊 Alles vorlesen";
 document.getElementById('gLvl').textContent=curLang+" "+lvl;document.getElementById('gramTxt').textContent=l.grammatik||"";
+document.getElementById('userAns').value="";document.getElementById('corrBox').style.display="none";
 
 const vl=document.getElementById('vList');vl.innerHTML="";
 (l.vokabeln||[]).forEach(v=>{
 const li=document.createElement('li');
 li.innerHTML="<strong>"+esc(v.w)+"</strong> <em>("+esc(v.laut)+")</em> – "+esc(v.de);
 const b=document.createElement('button');b.className="b-mini";b.textContent="+ Merken";
-b.onclick=()=>addMemo(curLang,v.w,v.laut,v.de);
+b.onclick=()=>addMemo(curLang,curCode,v.w,v.laut,v.de);
 li.appendChild(b);vl.appendChild(li);
 });
 
-const cb=document.getElementById('clozeBox');cb.innerHTML="";clozeAns=[];
-document.getElementById('clozeRes').textContent="";
+const cb=document.getElementById('clozeBox');cb.innerHTML="";clozeAns=[];document.getElementById('clozeRes').textContent="";
 (l.luecken||[]).forEach((c,i)=>{
 clozeAns.push((c.loesung||"").trim());
 const p=document.createElement('div');p.style.marginBottom="8px";
@@ -254,6 +330,20 @@ const al=document.getElementById('aList');al.innerHTML="";
 document.getElementById('meta').textContent="Sprache: "+curLang+" • Niveau: "+lvl+" • Modell: "+m;lesBox.style.display="block";
 }
 
+async function checkWriting(){
+const ans=document.getElementById('userAns').value.trim();
+if(!ans){alert("Bitte schreibe zuerst deine Antworten in das Textfeld.");return;}
+const btn=document.getElementById('corrBtn'),cBox=document.getElementById('corrBox');
+btn.disabled=true;btn.textContent="Prüfe Antworten...";cBox.style.display="none";
+const qText=Array.from(document.getElementById('qList').children).map(li=>li.textContent).join("\n");
+const prompt='Du bist ein freundlicher Sprachlehrer für '+curLang+'. Basierend auf diesem Text:\n"'+curTxt+'"\nUnd diesen Fragen:\n'+qText+'\nHat der Schüler folgende Antworten geschrieben:\n"'+ans+'"\nKorrigiere Rechtschreibung und Grammatik freundlich auf Deutsch, zeige die verbesserte Version auf '+curLang+' und erkläre eventuelle Fehler kurz.';
+try{
+const res=await callGemini(prompt,false);
+cBox.textContent=res.text;cBox.style.display="block";
+}catch(e){alert("Fehler bei der Korrektur: "+e.message);}
+btn.disabled=false;btn.textContent="✨ Antworten von KI korrigieren lassen";
+}
+
 function checkCloze(){
 let ok=0;
 clozeAns.forEach((ans,i)=>{
@@ -262,76 +352,13 @@ inp.classList.remove('ok','bad');
 if(inp.value.trim().toLowerCase()===ans.toLowerCase()){inp.classList.add('ok');ok++;}
 else{inp.classList.add('bad');inp.title="Lösung: "+ans;}
 });
-document.getElementById('clozeRes').textContent="Ergebnis: "+ok+" von "+clozeAns.length+" richtig (Maus/Tipp auf rotes Feld zeigt Lösung).";
+document.getElementById('clozeRes').textContent="Ergebnis: "+ok+" von "+clozeAns.length+" richtig.";
 }
 
 function getMemo(){try{return JSON.parse(localStorage.getItem('lang_memo')||"[]");}catch(e){return[];}}
-function addMemo(lang,w,laut,de){
+function addMemo(lang,code,w,laut,de){
 const list=getMemo();
-if(!list.some(x=>x.w===w&&x.lang===lang)){list.push({lang,w,laut,de});localStorage.setItem('lang_memo',JSON.stringify(list));renderMemo();}
+if(!list.some(x=>x.w===w&&x.lang===lang)){list.push({lang,code,w,laut,de});localStorage.setItem('lang_memo',JSON.stringify(list));renderMemo();}
 }
-function remMemo(idx){const list=getMemo();list.splice(idx,1);localStorage.setItem('lang_memo',JSON.stringify(list));renderMemo();}
+function remMemo(idx){const list=getMemo();list.splice(idx,1);localStorage.setItem('lang_memo',JSON.stringify(list));renderMemo();showCard();}
 function renderMemo(){
-const list=getMemo(),ul=document.getElementById('memoList');
-document.getElementById('mCount').textContent=list.length;ul.innerHTML="";
-if(list.length===0){ul.innerHTML="<li style='color:#666'>Noch keine Vokabeln gemerkt. Klicke oben bei einer Vokabel auf „+ Merken“.</li>";return;}
-list.forEach((v,i)=>{
-const li=document.createElement('li');
-li.innerHTML="["+esc(v.lang)+"] <strong>"+esc(v.w)+"</strong> <em>("+esc(v.laut)+")</em> – "+esc(v.de);
-const b=document.createElement('button');b.className="b-rem";b.textContent="✕";b.onclick=()=>remMemo(i);
-li.appendChild(b);ul.appendChild(li);
-});
-}
-
-function exportMemo(){
-const selLang=document.getElementById('lang').value.split("|").at(0);
-const filtered=getMemo().filter(v=>v.lang===selLang);
-if(filtered.length===0){alert("Keine gespeicherten Vokabeln für "+selLang+" vorhanden.");return;}
-let lines=["#separator:tab","#html:true","#tags column:3"];
-filtered.forEach(v=>{
-const front="<b>"+esc(v.w)+"</b><br><i>("+esc(v.laut)+")</i>";
-const back=esc(v.de);
-const tag=selLang.replace(/\s+/g,"_");
-lines.push(front+"\t"+back+"\t"+tag);
-});
-const slug=selLang.toLowerCase().replace(/[^a-z0-9]+/g,"-");
-const blob=new Blob([lines.join("\n")],{type:"text/tab-separated-values;charset=utf-8"});
-const a=document.createElement('a');a.href=URL.createObjectURL(blob);
-a.download="anki-"+slug+".csv";a.click();
-}
-
-function importMemo(ev){
-const file=ev.target.files.at(0);if(!file)return;
-const reader=new FileReader();
-reader.onload=function(e){
-try{
-const rows=e.target.result.split(/\r?\n/);
-const list=getMemo();let added=0;
-rows.forEach(r=>{
-if(!r.trim()||r.startsWith("#"))return;
-const cols=r.split("\t");
-if(cols.length>=2){
-const tmp=document.createElement('div');tmp.innerHTML=cols.at(0);
-const bTag=tmp.querySelector('b'),iTag=tmp.querySelector('i');
-const w=bTag?bTag.textContent.trim():tmp.textContent.trim();
-const laut=iTag?iTag.textContent.replace(/^\(|\)$/g,"").trim():"";
-const de=cols.at(1).trim();
-const lang=(cols.at(2)||"Import").replace(/_/g," ").trim();
-if(w&&de&&!list.some(x=>x.w===w&&x.lang===lang)){
-list.push({lang,w,laut,de});added++;
-}
-}
-});
-localStorage.setItem('lang_memo',JSON.stringify(list));renderMemo();
-alert(added+" neue Vokabel(n) importiert!");
-}catch(err){alert("Fehler beim Import: "+err.message);}
-ev.target.value="";
-};
-reader.readAsText(file);
-}
-
-function err(m){errBox.textContent=m;errBox.style.display="block";}
-function esc(s){const d=document.createElement('div');d.textContent=s||"";return d.innerHTML;}
-</script>
-</body>
-</html>
