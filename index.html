@@ -138,7 +138,14 @@ li{margin-bottom:6px}
 </div>
 
 <div class="card">
-<h2 style="margin-top:0">⭐ Meine Vokabel-Merkliste (<span id="mCount">0</span>)</h2>
+<div class="row" style="justify-content:space-between;flex-wrap:wrap;margin-bottom:8px">
+<h2 style="margin:0;border:none">⭐ Meine Vokabel-Merkliste (<span id="mCount">0</span>)</h2>
+<div class="row">
+<button class="b-mini" style="background:#2e7d32" onclick="exportMemo()">💾 Exportieren</button>
+<button class="b-mini" onclick="document.getElementById('impFile').click()">📂 Importieren</button>
+<input type="file" id="impFile" accept=".json" style="display:none" onchange="importMemo(event)">
+</div>
+</div>
 <ul id="memoList"></ul>
 </div>
 
@@ -211,7 +218,6 @@ if(raw){render(JSON.parse(raw),lvl,m);gBtn.disabled=false;gBtn.textContent="Lekt
 }
 err("Fehler: "+lastErr);gBtn.disabled=false;gBtn.textContent="Lektion erstellen";
 }
-
 function render(l,lvl,m){
 curTxt=l.text||"";document.getElementById('plTxt').textContent=curTxt;
 document.getElementById('deTxt').textContent=l.deutsch||"";document.getElementById('audBtn').textContent="🔊 Vorlesen";
@@ -270,6 +276,35 @@ li.innerHTML="["+esc(v.lang)+"] <strong>"+esc(v.w)+"</strong> <em>("+esc(v.laut)
 const b=document.createElement('button');b.className="b-rem";b.textContent="✕";b.onclick=()=>remMemo(i);
 li.appendChild(b);ul.appendChild(li);
 });
+}
+
+function exportMemo(){
+const list=getMemo();
+if(list.length===0){alert("Deine Merkliste ist noch leer.");return;}
+const blob=new Blob([JSON.stringify(list,null,2)],{type:"application/json"});
+const a=document.createElement('a');a.href=URL.createObjectURL(blob);
+a.download="vokabel-merkliste.json";a.click();
+}
+
+function importMemo(ev){
+const file=ev.target.files.at(0);if(!file)return;
+const reader=new FileReader();
+reader.onload=function(e){
+try{
+const imp=JSON.parse(e.target.result);
+if(!Array.isArray(imp))throw new Error("Ungültige Datei");
+const list=getMemo();let added=0;
+imp.forEach(item=>{
+if(item.w&&item.de&&!list.some(x=>x.w===item.w&&x.lang===item.lang)){
+list.push({lang:item.lang||"Unbekannt",w:item.w,laut:item.laut||"",de:item.de});added++;
+}
+});
+localStorage.setItem('lang_memo',JSON.stringify(list));renderMemo();
+alert(added+" neue Vokabel(n) importiert!");
+}catch(err){alert("Fehler beim Import: "+err.message);}
+ev.target.value="";
+};
+reader.readAsText(file);
 }
 
 function err(m){errBox.textContent=m;errBox.style.display="block";}
