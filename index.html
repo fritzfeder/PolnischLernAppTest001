@@ -53,10 +53,12 @@ li{margin-bottom:6px}
 <details id="kPanel" open>
 <summary style="cursor:pointer;font-weight:600;color:#555">🔐 API-Schlüssel & KI-Modell Einstellungen</summary>
 <div style="margin-top:10px">
-<label for="apiKey">Google API-Schlüssel (Pflicht für Gemini & optional für Google Cloud TTS):</label>
-<input type="password" id="apiKey" placeholder="AQ.Ab8... oder AIza...">
-<label for="elKey">ElevenLabs API-Schlüssel (Optional – für natürliche HD-Stimmen):</label>
-<input type="password" id="elKey" placeholder="sk_... (leer lassen für kostenlose Browser-Stimmen)">
+<label for="apiKey">1. Google Gemini API-Schlüssel (Pflicht – für Texte & Korrektur):</label>
+<input type="password" id="apiKey" placeholder="AIza... oder AQ.Ab8...">
+<label for="ttsKey">2. Google Cloud Text-to-Speech Schlüssel (Optional – für ☁️ HD-Stimmen):</label>
+<input type="password" id="ttsKey" placeholder="AIza... (leer lassen, falls nicht genutzt)">
+<label for="elKey">3. ElevenLabs API-Schlüssel (Optional – für ✨ HD-Stimmen inkl. Swahili):</label>
+<input type="password" id="elKey" placeholder="sk_... (leer lassen, falls nicht genutzt)">
 <div class="row" style="margin-bottom:8px">
 <label for="modelSel" style="margin:0;flex:1">Bevorzugtes KI-Modell (Text):</label>
 <button type="button" class="b-mini" onclick="fetchAvailableModels(false)">🔄 Modelle aktualisieren</button>
@@ -68,7 +70,7 @@ li{margin-bottom:6px}
 <option value="gemini-4-hydrogen">🧠 gemini-4-hydrogen</option>
 </select>
 <div class="row">
-<button class="b-save" onclick="saveKey()">Speichern</button>
+<button class="b-save" onclick="saveKey()">Alle Einstellungen speichern</button>
 <button class="b-del" onclick="delKey()">Alle Schlüssel löschen</button>
 </div>
 <div id="keyMsg"></div>
@@ -140,7 +142,7 @@ li{margin-bottom:6px}
 <span>Tempo: <input type="range" id="rate" min="0.5" max="1.3" step="0.1" value="0.9" oninput="document.getElementById('rVal').textContent=this.value+'x'"><b id="rVal">0.9x</b></span>
 <span>Höhe: <input type="range" id="pitch" min="0.7" max="1.3" step="0.1" value="1.0" oninput="document.getElementById('pVal').textContent=this.value"><b id="pVal">1.0</b></span>
 </div>
-<div id="ttsHint" style="font-size:.78rem;color:#555;margin-top:4px"></div>
+<div id="ttsHint" style="font-size:.78rem;color:#b71c1c;margin-top:4px;font-weight:600"></div>
 <details class="box"><summary>🇩🇪 Deutsche Übersetzung anzeigen</summary><div id="deTxt"></div></details>
 
 <h2>📐 Grammatik-Fokus (<span id="gLvl"></span>)</h2>
@@ -191,7 +193,8 @@ li{margin-bottom:6px}
 <ul id="memoList"></ul>
 </div>
 <script>
-const kIn=document.getElementById('apiKey'),elIn=document.getElementById('elKey'),kMsg=document.getElementById('keyMsg'),kPan=document.getElementById('kPanel');
+const kIn=document.getElementById('apiKey'),ttsIn=document.getElementById('ttsKey'),elIn=document.getElementById('elKey');
+const kMsg=document.getElementById('keyMsg'),kPan=document.getElementById('kPanel');
 const errBox=document.getElementById('errBox'),lesBox=document.getElementById('lessonBox'),gBtn=document.getElementById('genBtn');
 let curTxt="",curCode="pl-PL",curLang="Polnisch",clozeAns=[],allVoices=[],fcIdx=0,extAudio=null;
 let dynamicModels=["gemini-3.5-flash-lite","gemini-3.8-flash","gemini-4-hydrogen"];
@@ -208,9 +211,15 @@ const cloudVoices={
 
 window.addEventListener('DOMContentLoaded',()=>{
 const s=localStorage.getItem('polnisch_app_key');
+const st=localStorage.getItem('google_tts_key');
 const se=localStorage.getItem('elevenlabs_app_key');
+if(st)ttsIn.value=st;
 if(se)elIn.value=se;
-if(s){kIn.value=s;msg("✅ Schlüssel aktiv"+(se?" (+ ElevenLabs HD).":"."),"#2e7d32");kPan.open=false;fetchAvailableModels(true);}
+if(s){
+kIn.value=s;
+let info="✅ Gemini aktiv";if(st)info+=" + Google TTS";if(se)info+=" + ElevenLabs";
+msg(info+".","#2e7d32");kPan.open=false;fetchAvailableModels(true);
+}
 const sm=localStorage.getItem('polnisch_app_model');
 if(sm)document.getElementById('modelSel').value=sm;
 loadVoices();if('speechSynthesis'in window)window.speechSynthesis.onvoiceschanged=loadVoices;
@@ -246,22 +255,27 @@ const sel=document.getElementById('voiceSel');sel.innerHTML="";
 const defOpt=document.createElement('option');defOpt.value="";defOpt.textContent="Browser-Stimme (Standard • 0 Tokens)";sel.appendChild(defOpt);
 const prefix=curCode.split("-").at(0).toLowerCase();
 allVoices.filter(v=>v.lang.toLowerCase().startsWith(prefix)).forEach(v=>{const o=document.createElement('option');o.value="sys:"+v.name;o.textContent="Browser: "+v.name;sel.appendChild(o);});
+if(ttsIn.value.trim()||kIn.value.trim()){
+(cloudVoices[curCode]||[]).forEach(cv=>{const o=document.createElement('option');o.value="cloud:"+cv.id;o.textContent=cv.label;sel.appendChild(o);});
+}
 if(elIn.value.trim()){
 const o1=document.createElement('option');o1.value="el:EXAVITQu4vr4xnSDxMaL";o1.textContent="✨ ElevenLabs Sarah (Weiblich HD)";sel.appendChild(o1);
 const o2=document.createElement('option');o2.value="el:JBFqnCBsd6RMkjVDRZzb";o2.textContent="✨ ElevenLabs George (Männlich HD)";sel.appendChild(o2);
 }
-(cloudVoices[curCode]||[]).forEach(cv=>{const o=document.createElement('option');o.value="cloud:"+cv.id;o.textContent=cv.label;sel.appendChild(o);});
 sel.value="";
 }
 
 function saveKey(){
-const v=kIn.value.trim(),ev=elIn.value.trim();
-if((!v.startsWith("AQ.")&&!v.startsWith("AIza"))||v.length<25){msg("❌ Ungültiges Google-Key-Format.","#d32f2f");return;}
+const v=kIn.value.trim(),tv=ttsIn.value.trim(),ev=elIn.value.trim();
+if((!v.startsWith("AQ.")&&!v.startsWith("AIza"))||v.length<25){msg("❌ Ungültiges Gemini-Key-Format.","#d32f2f");return;}
 localStorage.setItem('polnisch_app_key',v);
+if(tv)localStorage.setItem('google_tts_key',tv);else localStorage.removeItem('google_tts_key');
 if(ev)localStorage.setItem('elevenlabs_app_key',ev);else localStorage.removeItem('elevenlabs_app_key');
-saveModelPref();updateVoiceList();msg("✅ Lokal gesichert"+(ev?" (+ ElevenLabs HD).":"."),"#2e7d32");fetchAvailableModels(false);
+saveModelPref();updateVoiceList();
+let info="✅ Gespeichert: Gemini";if(tv)info+=" + Google TTS";if(ev)info+=" + ElevenLabs";
+msg(info+".","#2e7d32");fetchAvailableModels(false);
 }
-function delKey(){localStorage.removeItem('polnisch_app_key');localStorage.removeItem('elevenlabs_app_key');kIn.value="";elIn.value="";updateVoiceList();msg("🗑️ Alle Schlüssel gelöscht.","#555");kPan.open=true;}
+function delKey(){localStorage.removeItem('polnisch_app_key');localStorage.removeItem('google_tts_key');localStorage.removeItem('elevenlabs_app_key');kIn.value="";ttsIn.value="";elIn.value="";updateVoiceList();msg("🗑️ Alle Schlüssel gelöscht.","#555");kPan.open=true;}
 function msg(t,c){kMsg.style.color=c;kMsg.textContent=t;}
 function setT(t){document.getElementById('topic').value=t;}
 function stopAllAudio(){
@@ -277,7 +291,8 @@ const vVal=document.getElementById('voiceSel').value;
 const rate=parseFloat(document.getElementById('rate').value);
 const pitch=parseFloat(document.getElementById('pitch').value);
 const hint=document.getElementById('ttsHint');hint.textContent="";
-const elKey=elIn.value.trim(),gKey=kIn.value.trim();
+const elKey=elIn.value.trim();
+const activeTtsKey=ttsIn.value.trim()||kIn.value.trim();
 
 if(vVal.startsWith("el:")&&elKey){
 const voiceId=vVal.replace("el:","");
@@ -305,13 +320,13 @@ hint.textContent="⚠️ ElevenLabs-Fehler ("+e.message+") – nutze Browser-Sti
 }
 }
 
-if(vVal.startsWith("cloud:")&&gKey){
+if(vVal.startsWith("cloud:")&&activeTtsKey){
 const voiceName=vVal.replace("cloud:","");
 document.getElementById('audBtn').textContent="⏳ Lade Google TTS...";
 const ttsHost=["https://","texttospeech",".","googleapis",".","com"].join("");
 try{
 const res=await fetch(ttsHost+"/v1/text:synthesize",{
-method:'POST',headers:{'Content-Type':'application/json','x-goog-api-key':gKey},
+method:'POST',headers:{'Content-Type':'application/json','x-goog-api-key':activeTtsKey},
 body:JSON.stringify({input:{text:text.trim()},voice:{languageCode:langCode||curCode,name:voiceName},audioConfig:{audioEncoding:"MP3",speakingRate:rate,pitch:(pitch-1)*10}})
 });
 const data=await res.json();
@@ -322,7 +337,7 @@ document.getElementById('audBtn').textContent="⏹️ Stopp";
 document.getElementById('pauseBtn').style.display="inline-block";document.getElementById('pauseBtn').textContent="⏸️ Pause";
 extAudio.play();return;
 }catch(e){
-hint.textContent="⚠️ Google Cloud TTS nicht aktiv ("+e.message+") – nutze Browser-Stimme.";
+hint.textContent="⚠️ Google Cloud TTS Fehler ("+e.message+") – nutze Browser-Stimme.";
 }
 }
 
@@ -372,6 +387,7 @@ onLangChange();
 if(!key){kPan.open=true;err("Bitte API-Schlüssel eingeben.");return;}
 if(!top){err("Bitte ein Thema eingeben.");return;}
 stopAllAudio();localStorage.setItem('polnisch_app_key',key);
+if(ttsIn.value.trim())localStorage.setItem('google_tts_key',ttsIn.value.trim());
 if(elIn.value.trim())localStorage.setItem('elevenlabs_app_key',elIn.value.trim());
 gBtn.disabled=true;errBox.style.display="none";lesBox.style.display="none";
 
