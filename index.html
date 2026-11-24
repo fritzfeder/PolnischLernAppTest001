@@ -16,6 +16,7 @@ input,select,textarea{width:100%;padding:8px;margin-bottom:10px;box-sizing:borde
 button{padding:8px 12px;border:none;border-radius:6px;cursor:pointer;font-weight:600;font-size:.88rem}
 button:disabled{background:#999!important;cursor:not-allowed}
 .b-save{background:#1976d2;color:#fff;flex:1}
+.b-test{background:#455a64;color:#fff}
 .b-del{background:#e0e0e0;color:#333}
 .b-gen{width:100%;background:#d4213d;color:#fff;padding:12px;font-size:1rem;margin-top:4px}
 .b-aud{background:#2e7d32;color:#fff}
@@ -25,6 +26,7 @@ button:disabled{background:#999!important;cursor:not-allowed}
 .chips{display:flex;flex-wrap:wrap;gap:6px;margin:-2px 0 12px}
 .chip{background:#eef2f7;border:1px solid #d0d7de;border-radius:14px;padding:4px 9px;font-size:.78rem;cursor:pointer}
 #keyMsg{margin-top:6px;font-size:.82rem;font-weight:600}
+.ampel-box{background:#f8fafc;border:1px solid #d0d7de;border-radius:8px;padding:10px;margin-top:10px;font-size:.84rem;line-height:1.7;display:none}
 #lessonBox{display:none}
 .model-badge{display:inline-block;background:#e8f5e9;border:1px solid #2e7d32;color:#1b5e20;padding:4px 10px;border-radius:15px;font-size:.82rem;font-weight:600;margin-bottom:12px}
 .txt-box{background:#fdfdfd;border:1px solid #d0d7de;border-left:5px solid #d4213d;padding:14px;border-radius:8px;line-height:1.8;font-size:1.05rem}
@@ -34,7 +36,7 @@ button:disabled{background:#999!important;cursor:not-allowed}
 .corr-box{background:#e8f5e9;border-left:4px solid #2e7d32;padding:12px;border-radius:6px;line-height:1.55;font-size:.93rem;margin-top:10px;white-space:pre-wrap;display:none}
 .aud-bar{background:#f1f8e9;padding:10px;border-radius:8px;margin-top:10px;display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-size:.84rem}
 .aud-bar input[type=range]{width:70px;margin:0}
-.aud-bar select{width:auto;max-width:230px;margin:0;padding:4px;font-size:.82rem}
+.aud-bar select{width:auto;max-width:240px;margin:0;padding:4px;font-size:.82rem}
 details.box{background:#f8fafc;border:1px solid #d0d7de;border-radius:8px;padding:9px 12px;margin-top:10px}
 details.box summary{cursor:pointer;font-weight:600;color:#1976d2}
 details.box div{margin-top:8px;line-height:1.6}
@@ -51,7 +53,7 @@ li{margin-bottom:6px}
 <body>
 <div class="card">
 <details id="kPanel" open>
-<summary style="cursor:pointer;font-weight:600;color:#555">🔐 API-Schlüssel & KI-Modell Einstellungen</summary>
+<summary style="cursor:pointer;font-weight:600;color:#555">🔐 API-Schlüssel & Verbindungs-Ampel</summary>
 <div style="margin-top:10px">
 <label for="apiKey">1. Google Gemini API-Schlüssel (Pflicht – für Texte & Korrektur):</label>
 <input type="password" id="apiKey" placeholder="AIza... oder AQ.Ab8...">
@@ -69,11 +71,13 @@ li{margin-bottom:6px}
 <option value="gemini-3.8-flash">🚀 gemini-3.8-flash</option>
 <option value="gemini-4-hydrogen">🧠 gemini-4-hydrogen</option>
 </select>
-<div class="row">
-<button class="b-save" onclick="saveKey()">Alle Einstellungen speichern</button>
-<button class="b-del" onclick="delKey()">Alle Schlüssel löschen</button>
+<div class="row" style="flex-wrap:wrap">
+<button class="b-save" onclick="saveKey()">Speichern</button>
+<button id="testBtn" class="b-test" onclick="testConnections()">🚦 Verbindung & Ampel prüfen</button>
+<button class="b-del" onclick="delKey()">Löschen</button>
 </div>
 <div id="keyMsg"></div>
+<div id="ampelBox" class="ampel-box"></div>
 </div>
 </details>
 </div>
@@ -83,7 +87,7 @@ li{margin-bottom:6px}
 <div class="grid">
 <div>
 <label for="lang">Sprache:</label>
-<select id="lang" onchange="onLangChange()">
+<select id="lang" onchange="onLangChange(true)">
 <option value="Polnisch|pl-PL">🇵🇱 Polnisch</option>
 <option value="Britisches Englisch|en-GB">🇬🇧 Britisch Englisch</option>
 <option value="US-Englisch|en-US">🇺🇸 US-Englisch</option>
@@ -142,7 +146,7 @@ li{margin-bottom:6px}
 <span>Tempo: <input type="range" id="rate" min="0.5" max="1.3" step="0.1" value="0.9" oninput="document.getElementById('rVal').textContent=this.value+'x'"><b id="rVal">0.9x</b></span>
 <span>Höhe: <input type="range" id="pitch" min="0.7" max="1.3" step="0.1" value="1.0" oninput="document.getElementById('pVal').textContent=this.value"><b id="pVal">1.0</b></span>
 </div>
-<div id="ttsHint" style="font-size:.78rem;color:#b71c1c;margin-top:4px;font-weight:600"></div>
+<div id="ttsHint" style="font-size:.82rem;margin-top:6px;font-weight:600"></div>
 <details class="box"><summary>🇩🇪 Deutsche Übersetzung anzeigen</summary><div id="deTxt"></div></details>
 
 <h2>📐 Grammatik-Fokus (<span id="gLvl"></span>)</h2>
@@ -223,8 +227,55 @@ msg(info+".","#2e7d32");kPan.open=false;fetchAvailableModels(true);
 const sm=localStorage.getItem('polnisch_app_model');
 if(sm)document.getElementById('modelSel').value=sm;
 loadVoices();if('speechSynthesis'in window)window.speechSynthesis.onvoiceschanged=loadVoices;
-onLangChange();renderMemo();
+onLangChange(true);renderMemo();
 });
+
+async function testConnections(){
+const btn=document.getElementById('testBtn'),box=document.getElementById('ampelBox');
+btn.disabled=true;btn.textContent="Prüfe...";box.style.display="block";
+const gKey=kIn.value.trim(),tKey=ttsIn.value.trim()||gKey,eKey=elIn.value.trim();
+let lines=[];
+
+// 1. Gemini Check
+if(!gKey){lines.push("🔴 <b>Gemini API:</b> Kein Schlüssel eingetragen");}
+else{
+try{
+const h=["https://","generativelanguage",".","googleapis",".","com"].join("");
+const r=await fetch(h+"/v1beta/models",{headers:{'x-goog-api-key':gKey}});
+if(r.ok)lines.push("🟢 <b>Gemini API:</b> Verbunden & aktiv");
+else{const d=await r.json();lines.push("🔴 <b>Gemini API:</b> "+((d.error&&d.error.message)||("HTTP "+r.status)));}
+}catch(e){lines.push("🔴 <b>Gemini API:</b> "+e.message);}
+}
+
+// 2. Google Cloud TTS Check
+if(!tKey){lines.push("⚪ <b>Google Cloud TTS:</b> Kein Schlüssel eingetragen");}
+else{
+try{
+const th=["https://","texttospeech",".","googleapis",".","com"].join("");
+const r=await fetch(th+"/v1/voices?languageCode=pl-PL",{headers:{'x-goog-api-key':tKey}});
+if(r.ok)lines.push("🟢 <b>Google Cloud TTS:</b> Verbunden & aktiv ("+(ttsIn.value.trim()?"eigener TTS-Key":"Gemini-Key")+")");
+else{const d=await r.json();lines.push("🔴 <b>Google Cloud TTS:</b> "+((d.error&&d.error.message)||("HTTP "+r.status)));}
+}catch(e){lines.push("🔴 <b>Google Cloud TTS:</b> "+e.message);}
+}
+
+// 3. ElevenLabs Check
+if(!eKey){lines.push("⚪ <b>ElevenLabs TTS:</b> Kein Schlüssel eingetragen");}
+else{
+try{
+const eh=["https://","api",".","elevenlabs",".","io"].join("");
+const r=await fetch(eh+"/v1/text-to-speech/EXAVITQu4vr4xnSDxMaL",{
+method:'POST',headers:{'Content-Type':'application/json','xi-api-key':eKey},
+body:JSON.stringify({text:"Hi",model_id:"eleven_multilingual_v2"})
+});
+if(r.ok)lines.push("🟢 <b>ElevenLabs TTS:</b> Verbunden & aktiv");
+else lines.push("🔴 <b>ElevenLabs TTS:</b> HTTP "+r.status);
+}catch(e){lines.push("🔴 <b>ElevenLabs TTS:</b> "+e.message);}
+}
+
+lines.push("🟢 <b>Browser-Stimme (0 Tokens):</b> Bereit");
+box.innerHTML=lines.join("<br>");
+btn.disabled=false;btn.textContent="🚦 Verbindung & Ampel prüfen";
+}
 
 async function fetchAvailableModels(silent){
 const key=kIn.value.trim();if(!key)return;
@@ -247,11 +298,13 @@ if(!silent)msg("✅ "+valid.length+" Modelle geladen!","#2e7d32");
 }
 
 function saveModelPref(){localStorage.setItem('polnisch_app_model',document.getElementById('modelSel').value);}
-function loadVoices(){if(!('speechSynthesis'in window))return;allVoices=window.speechSynthesis.getVoices();updateVoiceList();}
-function onLangChange(){const p=document.getElementById('lang').value.split("|");curLang=p.at(0);curCode=p.at(1);document.getElementById('expBtn').textContent="💾 "+curLang+"-Export (.csv)";updateVoiceList();}
+function loadVoices(){if(!('speechSynthesis'in window))return;allVoices=window.speechSynthesis.getVoices();updateVoiceList(false);}
+function onLangChange(resetVoice){const p=document.getElementById('lang').value.split("|");curLang=p.at(0);curCode=p.at(1);document.getElementById('expBtn').textContent="💾 "+curLang+"-Export (.csv)";updateVoiceList(resetVoice);}
 
-function updateVoiceList(){
-const sel=document.getElementById('voiceSel');sel.innerHTML="";
+function updateVoiceList(resetVoice){
+const sel=document.getElementById('voiceSel');
+const prevVal=sel.value;
+sel.innerHTML="";
 const defOpt=document.createElement('option');defOpt.value="";defOpt.textContent="Browser-Stimme (Standard • 0 Tokens)";sel.appendChild(defOpt);
 const prefix=curCode.split("-").at(0).toLowerCase();
 allVoices.filter(v=>v.lang.toLowerCase().startsWith(prefix)).forEach(v=>{const o=document.createElement('option');o.value="sys:"+v.name;o.textContent="Browser: "+v.name;sel.appendChild(o);});
@@ -262,7 +315,8 @@ if(elIn.value.trim()){
 const o1=document.createElement('option');o1.value="el:EXAVITQu4vr4xnSDxMaL";o1.textContent="✨ ElevenLabs Sarah (Weiblich HD)";sel.appendChild(o1);
 const o2=document.createElement('option');o2.value="el:JBFqnCBsd6RMkjVDRZzb";o2.textContent="✨ ElevenLabs George (Männlich HD)";sel.appendChild(o2);
 }
-sel.value="";
+if(!resetVoice&&Array.from(sel.options).some(o=>o.value===prevVal))sel.value=prevVal;
+else sel.value="";
 }
 
 function saveKey(){
@@ -271,11 +325,11 @@ if((!v.startsWith("AQ.")&&!v.startsWith("AIza"))||v.length<25){msg("❌ Ungülti
 localStorage.setItem('polnisch_app_key',v);
 if(tv)localStorage.setItem('google_tts_key',tv);else localStorage.removeItem('google_tts_key');
 if(ev)localStorage.setItem('elevenlabs_app_key',ev);else localStorage.removeItem('elevenlabs_app_key');
-saveModelPref();updateVoiceList();
+saveModelPref();updateVoiceList(false);
 let info="✅ Gespeichert: Gemini";if(tv)info+=" + Google TTS";if(ev)info+=" + ElevenLabs";
 msg(info+".","#2e7d32");fetchAvailableModels(false);
 }
-function delKey(){localStorage.removeItem('polnisch_app_key');localStorage.removeItem('google_tts_key');localStorage.removeItem('elevenlabs_app_key');kIn.value="";ttsIn.value="";elIn.value="";updateVoiceList();msg("🗑️ Alle Schlüssel gelöscht.","#555");kPan.open=true;}
+function delKey(){localStorage.removeItem('polnisch_app_key');localStorage.removeItem('google_tts_key');localStorage.removeItem('elevenlabs_app_key');kIn.value="";ttsIn.value="";elIn.value="";updateVoiceList(true);msg("🗑️ Alle Schlüssel gelöscht.","#555");kPan.open=true;}
 function msg(t,c){kMsg.style.color=c;kMsg.textContent=t;}
 function setT(t){document.getElementById('topic').value=t;}
 function stopAllAudio(){
@@ -285,12 +339,19 @@ document.getElementById('audBtn').textContent="🔊 Alles vorlesen";
 document.getElementById('pauseBtn').style.display="none";
 }
 
+function setTtsStatus(txt,isErr){
+const hint=document.getElementById('ttsHint');
+hint.style.color=isErr?"#b71c1c":"#1b5e20";
+hint.textContent=txt;
+}
+
 async function speakText(text,langCode){
 stopAllAudio();
-const vVal=document.getElementById('voiceSel').value;
+const sel=document.getElementById('voiceSel');
+const vVal=sel.value;
+const vLabel=sel.options[sel.selectedIndex]?sel.options[sel.selectedIndex].text:"Browser-Stimme";
 const rate=parseFloat(document.getElementById('rate').value);
 const pitch=parseFloat(document.getElementById('pitch').value);
-const hint=document.getElementById('ttsHint');hint.textContent="";
 const elKey=elIn.value.trim();
 const activeTtsKey=ttsIn.value.trim()||kIn.value.trim();
 
@@ -314,9 +375,10 @@ extAudio=new Audio(URL.createObjectURL(blob));
 extAudio.onended=()=>stopAllAudio();
 document.getElementById('audBtn').textContent="⏹️ Stopp";
 document.getElementById('pauseBtn').style.display="inline-block";document.getElementById('pauseBtn').textContent="⏸️ Pause";
+setTtsStatus("🔊 Aktiv: "+vLabel,false);
 extAudio.play();return;
 }catch(e){
-hint.textContent="⚠️ ElevenLabs-Fehler ("+e.message+") – nutze Browser-Stimme.";
+setTtsStatus("⚠️ ElevenLabs-Fehler ("+e.message+") – weiche auf Browser-Stimme aus.",true);
 }
 }
 
@@ -335,9 +397,10 @@ extAudio=new Audio("data:audio/mp3;base64,"+data.audioContent);
 extAudio.onended=()=>stopAllAudio();
 document.getElementById('audBtn').textContent="⏹️ Stopp";
 document.getElementById('pauseBtn').style.display="inline-block";document.getElementById('pauseBtn').textContent="⏸️ Pause";
+setTtsStatus("🔊 Aktiv: "+vLabel,false);
 extAudio.play();return;
 }catch(e){
-hint.textContent="⚠️ Google Cloud TTS Fehler ("+e.message+") – nutze Browser-Stimme.";
+setTtsStatus("⚠️ Google Cloud TTS Fehler ("+e.message+") – weiche auf Browser-Stimme aus.",true);
 }
 }
 
@@ -347,6 +410,7 @@ u.lang=langCode||curCode;u.rate=rate;u.pitch=pitch;
 if(vVal.startsWith("sys:")){const found=allVoices.find(v=>v.name===vVal.replace("sys:",""));if(found)u.voice=found;}
 u.onend=()=>stopAllAudio();
 document.getElementById('audBtn').textContent="⏹️ Stopp";document.getElementById('pauseBtn').style.display="inline-block";document.getElementById('pauseBtn').textContent="⏸️ Pause";
+if(!vVal.startsWith("cloud:")&&!vVal.startsWith("el:"))setTtsStatus("🔊 Aktiv: "+vLabel,false);
 window.speechSynthesis.speak(u);
 }
 
@@ -383,7 +447,7 @@ throw new Error(errors.join(" | ")||"Kein Modell erreichbar");
 async function genLesson(){
 const key=kIn.value.trim(),top=document.getElementById('topic').value.trim();
 const lvl=document.getElementById('level').value,len=document.getElementById('len').value,mode=document.getElementById('mode').value;
-onLangChange();
+onLangChange(false);
 if(!key){kPan.open=true;err("Bitte API-Schlüssel eingeben.");return;}
 if(!top){err("Bitte ein Thema eingeben.");return;}
 stopAllAudio();localStorage.setItem('polnisch_app_key',key);
@@ -420,6 +484,7 @@ box.appendChild(sp);
 document.getElementById('deTxt').textContent=l.deutsch||"";document.getElementById('audBtn').textContent="🔊 Alles vorlesen";
 document.getElementById('gLvl').textContent=curLang+" "+lvl;document.getElementById('gramTxt').textContent=l.grammatik||"";
 document.getElementById('userAns').value="";document.getElementById('corrBox').style.display="none";
+setTtsStatus("",false);
 
 const vl=document.getElementById('vList');vl.innerHTML="";
 (l.vokabeln||[]).forEach(v=>{
