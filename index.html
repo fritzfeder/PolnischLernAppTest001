@@ -43,7 +43,7 @@ li{margin-bottom:6px}
 .ok{border:2px solid #2e7d32!important;background:#e8f5e9}
 .bad{border:2px solid #c62828!important;background:#ffebee}
 .flashcard{background:#f8fafc;border:2px solid #1976d2;border-radius:10px;padding:22px;text-align:center;margin:12px 0;cursor:pointer;min-height:95px;display:flex;flex-direction:column;justify-content:center;align-items:center}
-.err{background:#ffebee;border:1px solid #c62828;color:#b71c1c;padding:10px;border-radius:8px;margin-top:10px;display:none}
+.err{background:#ffebee;border:1px solid #c62828;color:#b71c1c;padding:10px;border-radius:8px;margin-top:10px;display:none;font-size:.9rem}
 .meta{font-size:.78rem;color:#666;margin-top:12px;border-top:1px solid #eee;padding-top:6px}
 </style>
 </head>
@@ -54,12 +54,16 @@ li{margin-bottom:6px}
 <div style="margin-top:10px">
 <label for="apiKey">Google Gemini API-Schlüssel (lokal im Browser):</label>
 <input type="password" id="apiKey" placeholder="AQ.Ab8...">
-<label for="modelSel">Bevorzugtes KI-Modell:</label>
+<div class="row" style="margin-bottom:8px">
+<label for="modelSel" style="margin:0;flex:1">Bevorzugtes KI-Modell:</label>
+<button type="button" class="b-mini" onclick="fetchAvailableModels()" title="Verfügbare Modelle von Google abrufen">🔄 Modelle aktualisieren</button>
+</div>
 <select id="modelSel" onchange="saveModelPref()">
-<option value="auto">🔄 Auto (Alle Modelle + Wiederholung testen)</option>
-<option value="gemini-3.5-flash-lite">⚡ gemini-3.5-flash-lite (Schnell)</option>
-<option value="gemini-3.8-flash">🚀 gemini-3.8-flash (Ausgewogen)</option>
-<option value="gemini-4-hydrogen">🧠 gemini-4-hydrogen (Leistungsstark)</option>
+<option value="auto">🔄 Auto (Alle verfügbaren Modelle + Gemma testen)</option>
+<option value="gemini-3.5-flash-lite">⚡ gemini-3.5-flash-lite</option>
+<option value="gemini-3.8-flash">🚀 gemini-3.8-flash</option>
+<option value="gemini-4-hydrogen">🧠 gemini-4-hydrogen</option>
+<option value="gemma-3-27b-it">💎 gemma-3-27b-it (Oft weniger ausgelastet!)</option>
 </select>
 <div class="row">
 <button class="b-save" onclick="saveKey()">Speichern</button>
@@ -186,44 +190,49 @@ li{margin-bottom:6px}
 const kIn=document.getElementById('apiKey'),kMsg=document.getElementById('keyMsg'),kPan=document.getElementById('kPanel');
 const errBox=document.getElementById('errBox'),lesBox=document.getElementById('lessonBox'),gBtn=document.getElementById('genBtn');
 let curTxt="",curCode="pl-PL",curLang="Polnisch",clozeAns=[],allVoices=[],fcIdx=0;
+let dynamicModels=["gemini-3.5-flash-lite","gemma-3-27b-it","gemini-3.8-flash","gemini-4-hydrogen"];
 
 window.addEventListener('DOMContentLoaded',()=>{
 const s=localStorage.getItem('polnisch_app_key');
-if(s){kIn.value=s;msg("✅ Schlüssel aktiv.","#2e7d32");kPan.open=false;}
+if(s){kIn.value=s;msg("✅ Schlüssel aktiv.","#2e7d32");kPan.open=false;fetchAvailableModels(true);}
 const sm=localStorage.getItem('polnisch_app_model');
 if(sm)document.getElementById('modelSel').value=sm;
 loadVoices();if('speechSynthesis'in window)window.speechSynthesis.onvoiceschanged=loadVoices;
 onLangChange();renderMemo();
 });
 
+async function fetchAvailableModels(silent){
+const key=kIn.value.trim();if(!key)return;
+const host=["https://","generativelanguage",".","googleapis",".","com"].join("");
+try{
+const res=await fetch(host+"/v1beta/models",{headers:{'x-goog-api-key':key}});
+const data=await res.json();
+if(!res.ok||!data.models)return;
+const valid=data.models.filter(m=>m.supportedGenerationMethods&&m.supportedGenerationMethods.includes("generateContent")&&(m.name.includes("gemini")||m.name.includes("gemma"))&&!m.name.includes("image")&&!m.name.includes("tts")).map(m=>m.name.replace("models/",""));
+if(valid.length>0){
+dynamicModels=valid;
+const sel=document.getElementById('modelSel'),prev=sel.value;
+sel.innerHTML='<option value="auto">🔄 Auto ('+valid.length+' Modelle + Gemma testen)</option>';
+valid.forEach(name=>{const o=document.createElement('option');o.value=name;o.textContent=name;sel.appendChild(o);});
+if(valid.includes(prev)||prev==="auto")sel.value=prev;
+if(!silent)msg("✅ "+valid.length+" Modelle vom Server geladen!","#2e7d32");
+}
+}catch(e){if(!silent)msg("⚠️ Modell-Abruf: "+e.message,"#d32f2f");}
+}
+
 function saveModelPref(){localStorage.setItem('polnisch_app_model',document.getElementById('modelSel').value);}
-
-function loadVoices(){
-if(!('speechSynthesis'in window))return;
-allVoices=window.speechSynthesis.getVoices();
-updateVoiceList();
-}
-
-function onLangChange(){
-const p=document.getElementById('lang').value.split("|");
-curLang=p.at(0);curCode=p.at(1);
-document.getElementById('expBtn').textContent="💾 "+curLang+"-Export (.csv)";
-updateVoiceList();
-}
-
+function loadVoices(){if(!('speechSynthesis'in window))return;allVoices=window.speechSynthesis.getVoices();updateVoiceList();}
+function onLangChange(){const p=document.getElementById('lang').value.split("|");curLang=p.at(0);curCode=p.at(1);document.getElementById('expBtn').textContent="💾 "+curLang+"-Export (.csv)";updateVoiceList();}
 function updateVoiceList(){
 const sel=document.getElementById('voiceSel');sel.innerHTML='<option value="">Standard-Stimme</option>';
 const prefix=curCode.split("-").at(0).toLowerCase();
-allVoices.filter(v=>v.lang.toLowerCase().startsWith(prefix)).forEach(v=>{
-const opt=document.createElement('option');opt.value=v.name;opt.textContent=v.name+" ("+v.lang+")";
-sel.appendChild(opt);
-});
+allVoices.filter(v=>v.lang.toLowerCase().startsWith(prefix)).forEach(v=>{const o=document.createElement('option');o.value=v.name;o.textContent=v.name+" ("+v.lang+")";sel.appendChild(o);});
 }
 
 function saveKey(){
 const v=kIn.value.trim();
 if((!v.startsWith("AQ.")&&!v.startsWith("AIza"))||v.length<25){msg("❌ Ungültiges Format.","#d32f2f");return;}
-localStorage.setItem('polnisch_app_key',v);saveModelPref();msg("✅ Lokal gesichert.","#2e7d32");
+localStorage.setItem('polnisch_app_key',v);saveModelPref();msg("✅ Lokal gesichert.","#2e7d32");fetchAvailableModels(false);
 }
 function delKey(){localStorage.removeItem('polnisch_app_key');kIn.value="";msg("🗑️ Gelöscht.","#555");kPan.open=true;}
 function msg(t,c){kMsg.style.color=c;kMsg.textContent=t;}
@@ -237,45 +246,43 @@ u.lang=langCode||curCode;u.rate=parseFloat(document.getElementById('rate').value
 const vName=document.getElementById('voiceSel').value;
 if(vName){const found=allVoices.find(v=>v.name===vName);if(found)u.voice=found;}
 u.onend=()=>{document.getElementById('audBtn').textContent="🔊 Alles vorlesen";document.getElementById('pauseBtn').style.display="none";};
-document.getElementById('audBtn').textContent="⏹️ Stopp";document.getElementById('pauseBtn').style.display="inline-block";
-document.getElementById('pauseBtn').textContent="⏸️ Pause";
+document.getElementById('audBtn').textContent="⏹️ Stopp";document.getElementById('pauseBtn').style.display="inline-block";document.getElementById('pauseBtn').textContent="⏸️ Pause";
 window.speechSynthesis.speak(u);
 }
-
-function toggleAud(){
-if(window.speechSynthesis.speaking){window.speechSynthesis.cancel();document.getElementById('audBtn').textContent="🔊 Alles vorlesen";document.getElementById('pauseBtn').style.display="none";return;}
-speakText(curTxt,curCode);
-}
-
-function pauseAud(){
-if(!window.speechSynthesis.speaking)return;
-if(window.speechSynthesis.paused){window.speechSynthesis.resume();document.getElementById('pauseBtn').textContent="⏸️ Pause";}
-else{window.speechSynthesis.pause();document.getElementById('pauseBtn').textContent="▶️ Weiter";}
-}
+function toggleAud(){if(window.speechSynthesis.speaking){window.speechSynthesis.cancel();document.getElementById('audBtn').textContent="🔊 Alles vorlesen";document.getElementById('pauseBtn').style.display="none";return;}speakText(curTxt,curCode);}
+function pauseAud(){if(!window.speechSynthesis.speaking)return;if(window.speechSynthesis.paused){window.speechSynthesis.resume();document.getElementById('pauseBtn').textContent="⏸️ Pause";}else{window.speechSynthesis.pause();document.getElementById('pauseBtn').textContent="▶️ Weiter";}}
 
 const wait=ms=>new Promise(r=>setTimeout(r,ms));
+function extractJson(raw){
+const cleaned=raw.replace(/```json/gi,"").replace(/```/g,"").trim();
+const s=cleaned.indexOf("{"),e=cleaned.lastIndexOf("}");
+return JSON.parse((s!==-1&&e!==-1)?cleaned.slice(s,e+1):cleaned);
+}
 
 async function callGemini(promptText,asJson,statusBtn){
 const key=kIn.value.trim();
 const chosen=document.getElementById('modelSel').value;
-const allModels=["gemini-3.5-flash-lite","gemini-3.8-flash","gemini-4-hydrogen"];
-const models=(chosen==="auto")?allModels:[chosen];
+const models=(chosen==="auto")?dynamicModels:[chosen];
 const host=["https://","generativelanguage",".","googleapis",".","com"].join("");
 let errors=[];
 
 for(const m of models){
+const isGemma=m.toLowerCase().includes("gemma");
 for(let attempt=1;attempt<=2;attempt++){
-if(statusBtn)statusBtn.textContent="Frage "+m+(attempt>1?" (2. Versuch)...":"...");
+if(statusBtn)statusBtn.textContent="Frage "+m+(attempt>1?" (Wiederholung)...":"...");
 try{
 const bodyObj={contents:[{parts:[{text:promptText}]}]};
-if(asJson)bodyObj.generationConfig={responseMimeType:"application/json"};
+if(!isGemma){
+bodyObj.generationConfig={thinkingConfig:{thinkingBudget:0}};
+if(asJson)bodyObj.generationConfig.responseMimeType="application/json";
+}
 const res=await fetch(host+"/v1beta/models/"+m+":generateContent",{
 method:'POST',headers:{'Content-Type':'application/json','x-goog-api-key':key},body:JSON.stringify(bodyObj)
 });
 const data=await res.json();
 if(!res.ok){
 const mErr=(data.error&&data.error.message)?data.error.message:("HTTP "+res.status);
-if(res.status===503||res.status===429){await wait(2000);if(attempt===2)errors.push(m+": Überlastet (503)");continue;}
+if(res.status===503||res.status===429){await wait(attempt*1500);if(attempt===2)errors.push(m+" (503)");continue;}
 errors.push(m+": "+mErr);break;
 }
 if(data.candidates&&data.candidates.length>0){
@@ -287,7 +294,6 @@ if(f&&f.content&&f.content.parts&&f.content.parts.length>0)return{text:f.content
 }
 throw new Error(errors.join(" | ")||"Kein Modell erreichbar");
 }
-
 async function genLesson(){
 const key=kIn.value.trim(),top=document.getElementById('topic').value.trim();
 const lvl=document.getElementById('level').value,len=document.getElementById('len').value,mode=document.getElementById('mode').value;
@@ -297,7 +303,7 @@ if(!top){err("Bitte ein Thema eingeben.");return;}
 window.speechSynthesis.cancel();localStorage.setItem('polnisch_app_key',key);
 gBtn.disabled=true;errBox.style.display="none";lesBox.style.display="none";
 
-const prompt='Erstelle eine Sprachlektion für '+curLang+' zum Thema "'+top+'" (Niveau GER '+lvl+', Format: '+mode+', Länge: genau '+len+' Sätze). Antworte ausschließlich als JSON-Objekt mit diesen 7 Feldern: '
+const prompt='Erstelle eine Sprachlektion für '+curLang+' zum Thema "'+top+'" (Niveau GER '+lvl+', Format: '+mode+', Länge: genau '+len+' Sätze). Antworte ausschließlich als reines JSON-Objekt ohne Markdown-Codeblock mit diesen 7 Feldern: '
 +'1. "text": Der '+mode+' auf '+curLang+' ('+len+' Sätze). '
 +'2. "deutsch": Vollständige deutsche Übersetzung. '
 +'3. "grammatik": Kurze Grammatik-Regel auf Deutsch passend zu Niveau '+lvl+' mit 1-2 Beispielen aus dem Text. '
@@ -308,10 +314,11 @@ const prompt='Erstelle eine Sprachlektion für '+curLang+' zum Thema "'+top+'" (
 
 try{
 const res=await callGemini(prompt,true,gBtn);
-render(JSON.parse(res.text),lvl,res.model);
+render(extractJson(res.text),lvl,res.model);
 }catch(e){err("Fehler: "+e.message);}
 gBtn.disabled=false;gBtn.textContent="Lektion erstellen";
 }
+
 function render(l,lvl,m){
 curTxt=l.text||"";
 const box=document.getElementById('plTxt');box.innerHTML="";
