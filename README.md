@@ -74,6 +74,28 @@ Die `index.html` ist intern durch klare HTML-Kommentare in **8 eigenständige Mo
 
 ---
 
+## 📝 Changelog (Versionshistorie)
+
+### v2.2 – Polnisch Pro & Modulare Architektur
+* **Neu:** **7-Fälle-Detektiv (Kasus-Trainer)** mit Farbcodes, polnischen Kontrollfragen und interaktivem Kasus-Endungs-Trainer.
+* **Neu:** **Verbaspekt-Vergleich** (*Niedokonany vs. Dokonany*) mit klickbaren Beispielsätzen für beide Aspekte.
+* **Neu:** **Polnische Alltags-Szenarien** (*Bar Mleczny, PKP, Apteka, Basar, Urząd*) inklusive **Zufallsthema-Generator**.
+* **Neu:** Integriertes **SVG-Favicon & Smartphone-Homescreen-Icon** (Weiß-Rot mit `PL`-Badge) sowie Gliederung in **8 wartbare Code-Module**.
+
+### v2.1 – Grammatik-Coach & Audio-Upgrade
+* **Neu:** Einklappbarer **Grammatik-Coach** mit Regel-Tabelle, Stolperfallen-Box, hörbaren Beispielsätzen und Umformungs-Drill.
+* **Neu:** **Verbindungs-Ampel** für Gemini API, Google Cloud TTS und ElevenLabs sowie automatische Fallbacks auf Browser-Stimmen.
+* **Neu:** Token- und geschätzte US-Cent-Kostenanzeige pro Lektion und Schreibkorrektur.
+
+### v2.0 – Multi-Sprachen & Anki-Workflow
+* **Neu:** Unterstützung für 8 Sprachen (Polnisch, UK/US-Englisch, Swahili, Italienisch, Rumänisch, Spanisch, Französisch) auf Niveau A1–B2.
+* **Neu:** KI-Schreibkorrektur für eigene Antworten, Karteikarten-Modus und tab-getrennter `.csv`-Import/Export für Anki.
+
+### v1.0 – Erstveröffentlichung
+* Serverlose Single-File Web-App für Polnisch-Lesetexte, Lückentext-Quiz, Vokabel-Merkliste und Browser-Sprachausgabe.
+
+---
+
 ## 📄 Lizenz
 
 Dieses Projekt steht zur freien persönlichen Nutzung und Weiterentwicklung zur Verfügung.
