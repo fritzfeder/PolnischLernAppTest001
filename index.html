@@ -32,7 +32,15 @@ button:disabled{background:#999!important;cursor:not-allowed}
 .txt-box{background:#fdfdfd;border:1px solid #d0d7de;border-left:5px solid #d4213d;padding:14px;border-radius:8px;line-height:1.8;font-size:1.05rem}
 .sent-span{cursor:pointer;padding:2px 4px;border-radius:4px;transition:background .15s}
 .sent-span:hover{background:#ffeef1}
-.gram-box{background:#fff8e1;border-left:4px solid #fbc02d;padding:12px;border-radius:6px;line-height:1.55;font-size:.95rem}
+details.gram-acc{background:#fffdf5;border:1px solid #fbc02d;border-left:5px solid #fbc02d;border-radius:8px;padding:10px 14px;margin-top:14px}
+details.gram-acc summary{cursor:pointer;font-weight:700;color:#8d6e00;font-size:1rem}
+.gram-sec{margin-top:10px;padding-top:8px;border-top:1px dashed #e0d5a8;font-size:.93rem;line-height:1.55}
+.gram-tbl{width:100%;border-collapse:collapse;margin:8px 0;font-size:.88rem;background:#fff}
+.gram-tbl th,.gram-tbl td{border:1px solid #e0d5a8;padding:6px 8px;text-align:left}
+.gram-tbl th{background:#fff3cd;color:#664d03}
+.trap-box{background:#ffebee;border-left:4px solid #d32f2f;padding:8px 10px;border-radius:4px;margin:8px 0;font-size:.9rem;color:#7f0000}
+.ex-item{background:#fff;border:1px solid #e0e0e0;padding:6px 10px;border-radius:6px;margin-bottom:6px;cursor:pointer}
+.ex-item:hover{background:#f1f8e9}
 .corr-box{background:#e8f5e9;border-left:4px solid #2e7d32;padding:12px;border-radius:6px;line-height:1.55;font-size:.93rem;margin-top:10px;white-space:pre-wrap;display:none}
 .aud-bar{background:#f1f8e9;padding:10px;border-radius:8px;margin-top:10px;display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-size:.84rem}
 .aud-bar input[type=range]{width:70px;margin:0}
@@ -43,11 +51,12 @@ details.box div{margin-top:8px;line-height:1.6}
 ul,ol{padding-left:20px;line-height:1.6;margin:6px 0}
 li{margin-bottom:6px}
 .cloze-inp{width:130px;display:inline-block;padding:4px 6px;margin:0 4px;font-size:.92rem}
+.drill-inp{width:100%;max-width:340px;padding:5px 8px;margin:4px 0;font-size:.92rem}
 .ok{border:2px solid #2e7d32!important;background:#e8f5e9}
 .bad{border:2px solid #c62828!important;background:#ffebee}
 .flashcard{background:#f8fafc;border:2px solid #1976d2;border-radius:10px;padding:22px;text-align:center;margin:12px 0;cursor:pointer;min-height:95px;display:flex;flex-direction:column;justify-content:center;align-items:center}
 .err{background:#ffebee;border:1px solid #c62828;color:#b71c1c;padding:10px;border-radius:8px;margin-top:10px;display:none;font-size:.9rem}
-.meta{font-size:.78rem;color:#666;margin-top:12px;border-top:1px solid #eee;padding-top:6px}
+.meta{font-size:.8rem;color:#444;margin-top:12px;border-top:1px solid #eee;background:#f8fafc;padding:8px 10px;border-radius:6px}
 </style>
 </head>
 <body>
@@ -66,10 +75,9 @@ li{margin-bottom:6px}
 <button type="button" class="b-mini" onclick="fetchAvailableModels(false)">🔄 Modelle aktualisieren</button>
 </div>
 <select id="modelSel" onchange="saveModelPref()">
-<option value="auto">🔄 Auto (Alle verfügbaren Modelle testen)</option>
+<option value="auto">🔄 Auto (Sparsame Modelle testen)</option>
 <option value="gemini-3.5-flash-lite">⚡ gemini-3.5-flash-lite</option>
 <option value="gemini-3.8-flash">🚀 gemini-3.8-flash</option>
-<option value="gemini-4-hydrogen">🧠 gemini-4-hydrogen</option>
 </select>
 <div class="row" style="flex-wrap:wrap">
 <button class="b-save" onclick="saveKey()">Speichern</button>
@@ -149,8 +157,23 @@ li{margin-bottom:6px}
 <div id="ttsHint" style="font-size:.82rem;margin-top:6px;font-weight:600"></div>
 <details class="box"><summary>🇩🇪 Deutsche Übersetzung anzeigen</summary><div id="deTxt"></div></details>
 
-<h2>📐 Grammatik-Fokus (<span id="gLvl"></span>)</h2>
-<div id="gramTxt" class="gram-box"></div>
+<details id="gramAcc" class="gram-acc">
+<summary>📐 Grammatik-Coach (<span id="gLvl"></span>): <span id="gTitle"></span></summary>
+<div class="gram-sec">
+<div id="gramExplain"></div>
+<table class="gram-tbl">
+<thead><tr><th>Form / Struktur</th><th>Beispiel</th><th>Deutsche Bedeutung</th></tr></thead>
+<tbody id="gramTblBody"></tbody>
+</table>
+<div id="gramTrap" class="trap-box"></div>
+<strong>🔊 Weitere hörbare Beispielsätze (Klick zum Anhören):</strong>
+<div id="gramExList" style="margin-top:6px"></div>
+<strong>🎯 Mini-Grammatik-Drill (2 Umformungs-Übungen):</strong>
+<div id="gramDrillBox" style="margin-top:6px"></div>
+<button class="b-save" style="margin-top:6px;background:#8d6e00" onclick="checkDrill()">Grammatik-Drill prüfen</button>
+<div id="drillRes" style="margin-top:5px;font-weight:600;font-size:.88rem"></div>
+</div>
+</details>
 
 <h2>🗣️ Wichtige Redewendungen & Vokabeln</h2>
 <ul id="vList"></ul>
@@ -200,8 +223,8 @@ li{margin-bottom:6px}
 const kIn=document.getElementById('apiKey'),ttsIn=document.getElementById('ttsKey'),elIn=document.getElementById('elKey');
 const kMsg=document.getElementById('keyMsg'),kPan=document.getElementById('kPanel');
 const errBox=document.getElementById('errBox'),lesBox=document.getElementById('lessonBox'),gBtn=document.getElementById('genBtn');
-let curTxt="",curCode="pl-PL",curLang="Polnisch",clozeAns=[],allVoices=[],fcIdx=0,extAudio=null;
-let dynamicModels=["gemini-3.5-flash-lite","gemini-3.8-flash","gemini-4-hydrogen"];
+let curTxt="",curCode="pl-PL",curLang="Polnisch",clozeAns=[],drillAns=[],allVoices=[],fcIdx=0,extAudio=null;
+let dynamicModels=["gemini-3.5-flash-lite","gemini-3.8-flash"];
 
 const cloudVoices={
 "pl-PL":[{id:"pl-PL-Wavenet-A",label:"☁️ Google Cloud Polnisch (Weiblich)"},{id:"pl-PL-Wavenet-B",label:"☁️ Google Cloud Polnisch (Männlich)"}],
@@ -236,7 +259,6 @@ btn.disabled=true;btn.textContent="Prüfe...";box.style.display="block";
 const gKey=kIn.value.trim(),tKey=ttsIn.value.trim()||gKey,eKey=elIn.value.trim();
 let lines=[];
 
-// 1. Gemini Check
 if(!gKey){lines.push("🔴 <b>Gemini API:</b> Kein Schlüssel eingetragen");}
 else{
 try{
@@ -247,7 +269,6 @@ else{const d=await r.json();lines.push("🔴 <b>Gemini API:</b> "+((d.error&&d.e
 }catch(e){lines.push("🔴 <b>Gemini API:</b> "+e.message);}
 }
 
-// 2. Google Cloud TTS Check
 if(!tKey){lines.push("⚪ <b>Google Cloud TTS:</b> Kein Schlüssel eingetragen");}
 else{
 try{
@@ -258,7 +279,6 @@ else{const d=await r.json();lines.push("🔴 <b>Google Cloud TTS:</b> "+((d.erro
 }catch(e){lines.push("🔴 <b>Google Cloud TTS:</b> "+e.message);}
 }
 
-// 3. ElevenLabs Check
 if(!eKey){lines.push("⚪ <b>ElevenLabs TTS:</b> Kein Schlüssel eingetragen");}
 else{
 try{
@@ -287,10 +307,11 @@ if(!res.ok||!data.models)return;
 let valid=data.models.filter(m=>m.supportedGenerationMethods&&m.supportedGenerationMethods.includes("generateContent")&&(m.name.includes("gemini")||m.name.includes("gemma"))&&!m.name.includes("image")&&!m.name.includes("tts")&&!m.name.includes("thinking")).map(m=>m.name.replace("models/",""));
 valid.sort((a,b)=>(b.includes("lite")?1:0)-(a.includes("lite")?1:0));
 if(valid.length>0){
-dynamicModels=valid;
+dynamicModels=valid.filter(n=>!n.toLowerCase().includes("pro"));
+if(dynamicModels.length===0)dynamicModels=valid;
 const sel=document.getElementById('modelSel'),prev=sel.value;
-sel.innerHTML='<option value="auto">🔄 Auto ('+valid.length+' verfügbare Modelle)</option>';
-valid.forEach(name=>{const o=document.createElement('option');o.value=name;o.textContent=name;sel.appendChild(o);});
+sel.innerHTML='<option value="auto">🔄 Auto ('+dynamicModels.length+' sparsame Modelle)</option>';
+valid.forEach(name=>{const o=document.createElement('option');o.value=name;o.textContent=name+(name.toLowerCase().includes("pro")?" (Teuer)":"");sel.appendChild(o);});
 if(valid.includes(prev)||prev==="auto")sel.value=prev;
 if(!silent)msg("✅ "+valid.length+" Modelle geladen!","#2e7d32");
 }
@@ -420,6 +441,18 @@ if(extAudio){if(extAudio.paused){extAudio.play();document.getElementById('pauseB
 if('speechSynthesis'in window&&window.speechSynthesis.speaking){if(window.speechSynthesis.paused){window.speechSynthesis.resume();document.getElementById('pauseBtn').textContent="⏸️ Pause";}else{window.speechSynthesis.pause();document.getElementById('pauseBtn').textContent="▶️ Weiter";}}
 }
 
+function calcCostInfo(usage,model){
+if(!usage)return "";
+const inT=usage.promptTokenCount||0,outT=usage.candidatesTokenCount||0,tot=usage.totalTokenCount||(inT+outT);
+const mLow=(model||"").toLowerCase();
+let inRate=0.000075,outRate=0.00030;
+if(mLow.includes("pro")){inRate=0.00125;outRate=0.010;}
+else if(!mLow.includes("lite")&&!mLow.includes("gemma")){inRate=0.00030;outRate=0.0025;}
+const usd=(inT/1000)*inRate+(outT/1000)*outRate;
+const cents=(usd*100).toFixed(3).replace(".",",");
+return " • 📊 "+tot+" Tokens ("+inT+" In / "+outT+" Out • ca. "+cents+" US-Cent)";
+}
+
 const wait=ms=>new Promise(r=>setTimeout(r,ms));
 function extractJson(raw){const cleaned=raw.replace(/```json/gi,"").replace(/```/g,"").trim();const s=cleaned.indexOf("{"),e=cleaned.lastIndexOf("}");return JSON.parse((s!==-1&&e!==-1)?cleaned.slice(s,e+1):cleaned);}
 
@@ -438,7 +471,7 @@ if(!isGemma){bodyObj.generationConfig={thinkingConfig:{thinkingBudget:0}};if(asJ
 const res=await fetch(host+"/v1beta/models/"+m+":generateContent",{method:'POST',headers:{'Content-Type':'application/json','x-goog-api-key':key},body:JSON.stringify(bodyObj)});
 const data=await res.json();
 if(!res.ok){const mErr=(data.error&&data.error.message)?data.error.message:("HTTP "+res.status);if(res.status===503||res.status===429){await wait(attempt*1500);if(attempt===2)errors.push(m+" (503)");continue;}errors.push(m+": "+mErr);break;}
-if(data.candidates&&data.candidates.length>0){const f=data.candidates.at(0);if(f&&f.content&&f.content.parts&&f.content.parts.length>0)return{text:f.content.parts.at(0).text,model:m};}
+if(data.candidates&&data.candidates.length>0){const f=data.candidates.at(0);if(f&&f.content&&f.content.parts&&f.content.parts.length>0)return{text:f.content.parts.at(0).text,model:m,usage:data.usageMetadata};}
 }catch(e){errors.push(m+": "+e.message);break;}
 }
 }
@@ -458,7 +491,7 @@ gBtn.disabled=true;errBox.style.display="none";lesBox.style.display="none";
 const prompt='Erstelle eine Sprachlektion für '+curLang+' zum Thema "'+top+'" (Niveau GER '+lvl+', Format: '+mode+', Länge: genau '+len+' Sätze). Antworte ausschließlich als reines JSON-Objekt ohne Markdown-Codeblock mit diesen 7 Feldern: '
 +'1. "text": Der '+mode+' auf '+curLang+' ('+len+' Sätze). '
 +'2. "deutsch": Vollständige deutsche Übersetzung. '
-+'3. "grammatik": Kurze Grammatik-Regel auf Deutsch passend zu Niveau '+lvl+' mit 1-2 Beispielen aus dem Text. '
++'3. "grammatik": Objekt mit 6 Feldern passend zu Niveau '+lvl+': {"titel":"Name der Grammatik-Regel","erklaerung":"Verständliche Erklärung auf Deutsch","tabelle":[{"form":"Regel/Endung","bsp":"Beispiel auf '+curLang+'","de":"Deutsche Übersetzung"}],"stolperfalle":"Typischer Fehler von Deutschen im Vergleich zur deutschen Grammatik","beispiele":[{"satz":"Neuer Beispielsatz auf '+curLang+'","de":"Deutsche Übersetzung"}],"uebungen":[{"aufgabe":"Umformungs-Aufgabe auf Deutsch (z.B. Setze in die Vergangenheit: ...)","loesung":"Exakte Lösung auf '+curLang+'"}]} (tabelle: 3 Zeilen, beispiele: 2 Sätze, uebungen: 2 Aufgaben). '
 +'4. "vokabeln": Array mit 5-6 Objekten aus dem Text: {"w":"Fremdsprachiger Ausdruck","laut":"einfache deutsche Lautschrift","de":"Deutsche Bedeutung"}. '
 +'5. "luecken": Array mit 4 Lückentext-Übungen basierend auf dem Text: {"vor":"Satzteil vor der Lücke ","loesung":"gesuchtes Wort","nach":" Satzteil nach der Lücke (deutsche Bedeutung)"}. '
 +'6. "fragen": Array mit 5 Verständnisfragen: "Frage auf '+curLang+'? (Deutsche Übersetzung?)". '
@@ -466,12 +499,12 @@ const prompt='Erstelle eine Sprachlektion für '+curLang+' zum Thema "'+top+'" (
 
 try{
 const res=await callGemini(prompt,true,gBtn);
-render(extractJson(res.text),lvl,res.model);
+render(extractJson(res.text),lvl,res.model,res.usage);
 }catch(e){err("Fehler: "+e.message);}
 gBtn.disabled=false;gBtn.textContent="Lektion erstellen";
 }
 
-function render(l,lvl,m){
+function render(l,lvl,m,usage){
 document.getElementById('modelBadge').textContent="✅ Verbunden • Text erstellt von: "+m;
 curTxt=l.text||"";
 const box=document.getElementById('plTxt');box.innerHTML="";
@@ -482,9 +515,46 @@ sp.title="Klicken zum Anhören";sp.onclick=()=>speakText(s.trim(),curCode);
 box.appendChild(sp);
 });
 document.getElementById('deTxt').textContent=l.deutsch||"";document.getElementById('audBtn').textContent="🔊 Alles vorlesen";
-document.getElementById('gLvl').textContent=curLang+" "+lvl;document.getElementById('gramTxt').textContent=l.grammatik||"";
 document.getElementById('userAns').value="";document.getElementById('corrBox').style.display="none";
 setTtsStatus("",false);
+
+document.getElementById('gramAcc').open=false;
+document.getElementById('gLvl').textContent=curLang+" "+lvl;
+const g=l.grammatik||{};
+if(typeof g==="string"){
+document.getElementById('gTitle').textContent="Regel";
+document.getElementById('gramExplain').textContent=g;
+document.getElementById('gramTblBody').innerHTML="";
+document.getElementById('gramTrap').style.display="none";
+document.getElementById('gramExList').innerHTML="";
+document.getElementById('gramDrillBox').innerHTML="";
+}else{
+document.getElementById('gTitle').textContent=g.titel||"Fokus";
+document.getElementById('gramExplain').textContent=g.erklaerung||"";
+const tb=document.getElementById('gramTblBody');tb.innerHTML="";
+(g.tabelle||[]).forEach(r=>{
+const tr=document.createElement('tr');
+tr.innerHTML="<td><b>"+esc(r.form)+"</b></td><td>"+esc(r.bsp)+"</td><td>"+esc(r.de)+"</td>";
+tb.appendChild(tr);
+});
+const trap=document.getElementById('gramTrap');
+if(g.stolperfalle){trap.style.display="block";trap.innerHTML="⚠️ <b>Typische Stolperfalle:</b> "+esc(g.stolperfalle);}
+else{trap.style.display="none";}
+const exL=document.getElementById('gramExList');exL.innerHTML="";
+(g.beispiele||[]).forEach(ex=>{
+const d=document.createElement('div');d.className="ex-item";
+d.innerHTML="🔊 <strong>"+esc(ex.satz)+"</strong> – <em>"+esc(ex.de)+"</em>";
+d.onclick=()=>speakText(ex.satz,curCode);
+exL.appendChild(d);
+});
+const drB=document.getElementById('gramDrillBox');drB.innerHTML="";drillAns=[];document.getElementById('drillRes').textContent="";
+(g.uebungen||[]).forEach((u,i)=>{
+drillAns.push((u.loesung||"").trim());
+const div=document.createElement('div');div.style.marginBottom="8px";
+div.innerHTML=(i+1)+". "+esc(u.aufgabe)+'<br><input class="drill-inp" id="dr_'+i+'" placeholder="Deine Lösung auf '+curLang+'..."><span id="drSol_'+i+'" style="font-size:.82rem;color:#c62828;margin-left:6px"></span>';
+drB.appendChild(div);
+});
+}
 
 const vl=document.getElementById('vList');vl.innerHTML="";
 (l.vokabeln||[]).forEach(v=>{
@@ -508,7 +578,19 @@ const ql=document.getElementById('qList');ql.innerHTML="";
 const al=document.getElementById('aList');al.innerHTML="";
 (l.loesungen||[]).forEach(a=>{const li=document.createElement('li');li.textContent=a;al.appendChild(li);});
 
-document.getElementById('meta').textContent="Sprache: "+curLang+" • Niveau: "+lvl+" • Modell: "+m;lesBox.style.display="block";
+document.getElementById('meta').textContent="Sprache: "+curLang+" • Niveau: "+lvl+" • Modell: "+m+calcCostInfo(usage,m);
+lesBox.style.display="block";
+}
+function checkDrill(){
+let ok=0;
+const norm=s=>s.trim().toLowerCase().replace(/[.!?]+$/g,"");
+drillAns.forEach((ans,i)=>{
+const inp=document.getElementById('dr_'+i),sol=document.getElementById('drSol_'+i);if(!inp)return;
+inp.classList.remove('ok','bad');sol.textContent="";
+if(norm(inp.value)===norm(ans)){inp.classList.add('ok');ok++;}
+else{inp.classList.add('bad');sol.textContent="Lösung: "+ans;}
+});
+document.getElementById('drillRes').textContent="Drill-Ergebnis: "+ok+" von "+drillAns.length+" richtig.";
 }
 
 async function checkWriting(){
@@ -520,7 +602,7 @@ const qText=Array.from(document.getElementById('qList').children).map(li=>li.tex
 const prompt='Du bist ein freundlicher Sprachlehrer für '+curLang+'. Basierend auf diesem Text:\n"'+curTxt+'"\nUnd diesen Fragen:\n'+qText+'\nHat der Schüler folgende Antworten geschrieben:\n"'+ans+'"\nKorrigiere Rechtschreibung und Grammatik freundlich auf Deutsch, zeige die verbesserte Version auf '+curLang+' und erkläre eventuelle Fehler kurz.';
 try{
 const res=await callGemini(prompt,false,btn);
-cBox.textContent=res.text+" (Korrigiert von: "+res.model+")";cBox.style.display="block";
+cBox.textContent=res.text+"\n\n(Korrigiert von: "+res.model+calcCostInfo(res.usage,res.model)+")";cBox.style.display="block";
 }catch(e){alert("Fehler bei der Korrektur: "+e.message);}
 btn.disabled=false;btn.textContent="✨ Antworten von KI korrigieren lassen";
 }
