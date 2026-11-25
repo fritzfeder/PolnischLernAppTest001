@@ -1,50 +1,79 @@
-# 🌍 Multi-Sprachen Lern-App (Lesetrainer, Dialog- & Schreib-Coach)
+# 🌍 Multi-Sprachen Lern-App (Polnisch Pro Edition)
 
-Eine kostenlose, eigenständige Web-App zum Sprachenlernen (Sprachniveau **A1 bis B2**), die vollständig im Browser läuft – ohne Backend, ohne Serverkosten und ohne fest hinterlegte API-Schlüssel.
+Eine schlanke, serverlose **Single-File Web-App** (`index.html`) zum interaktiven Sprachenlernen mit **Google Gemini** (`gemini-3.8-flash` / `gemini-3.5-flash-lite`) sowie optionalen HD-Stimmen über **Google Cloud Text-to-Speech** und **ElevenLabs**.
 
-## ✨ Funktionen
-
-* **8 Sprachen zur Auswahl:** Polnisch, Britisch Englisch, US-Englisch, Swahili, Italienisch, Rumänisch, Spanisch und Französisch.
-* **Flexible Texte & Dialoge:** Wahl zwischen **Lesetext** (Erzählung) und **Dialog-Trainer** (Gespräch zwischen zwei Personen) in drei Längen (**3–4**, **5–8** oder **10–15 Sätze**) auf den GER-Niveaus `A1` bis `B2`.
-* **Erweiterte Vorlesefunktion (Audio):**
-  * Komplett-Vorlesen mit **Pause-/Fortsetzen-Funktion** sowie **Satz-für-Satz-Vorlesen** per Klick auf jeden einzelnen Satz.
-  * Automatische **Stimmen-Auswahl** für alle auf dem Gerät (PC / iPad) installierten Stimmen der gewählten Sprache.
-  * Stufenlose Regler für **Sprechtempo** (`0.5x`–`1.3x`) und **Tonhöhe**.
-* **Grammatik-Fokus:** Passende Grammatik-Erklärung zum gewählten Sprachniveau inklusive Beispielen aus dem aktuellen Text.
-* **Vokabeln & Lautschrift:** 5–6 zentrale Ausdrücke aus dem Text mit einfacher deutscher Lautschrift und Merk-Button.
-* **Interaktives Lückentext-Quiz:** 4 Übungssätze direkt zum Ausfüllen mit sofortiger Richtig/Falsch-Auswertung.
-* **Verständnisfragen & KI-Schreibkorrektur:** 5 Fragen in der Fremdsprache (mit deutscher Übersetzung), ein eigenes Eingabefeld für freie Antworten mit **KI-Korrektur & Fehlererklärung** sowie aufklappbare Musterlösungen inklusive Lautschrift.
-* **Vokabel-Merkliste mit Karteikarten & Anki-Export:**
-  * Speichert gemerkte Wörter lokal im Browser (`localStorage`).
-  * Integrierter **Karteikarten-Modus** zum direkten Üben in der App (inklusive Sprachausgabe).
-  * Exportiert gezielt die jeweils ausgewählte Sprache als Anki-kompatible Datei (z. B. `anki-polnisch.csv`) und ermöglicht den Rück-Import auf anderen Geräten.
+Die App läuft vollständig lokal im Browser – ohne Backend, ohne Build-Prozess und ohne Abonnement. Sie ist speziell auf **Polnisch** optimiert, unterstützt aber ebenso **Britisches Englisch, US-Englisch, Swahili, Italienisch, Rumänisch, Spanisch und Französisch** auf den GER-Niveaus **A1 bis B2**.
 
 ---
 
-## 🔐 Sicherheit & API-Schlüssel
+## ✨ Hauptfunktionen
 
-Diese App nutzt die **Google Gemini API** (kostenloser Tarif / Free Tier):
-* **Kein Schlüssel im Quellcode:** Der API-Key wird niemals auf GitHub gespeichert.
-* **100 % Client-Side & XSS-geschützt:** Der gesamte Code läuft lokal im Browser ohne externe Skripte. Alle KI- und Import-Texte werden sicher maskiert.
-* **Lokale Speicherung:** Der Schlüssel wird ausschließlich im `localStorage` des eigenen Browsers gesichert (`polnisch_app_key`) und kann jederzeit gelöscht werden.
-* **Unterstützte Schlüssel-Formate:** Kompatibel mit aktuellen `AQ.`-Schlüsseln aus dem [Google AI Studio](https://google.com) sowie `AIza`-Keys.
-* **Auto-Fallback:** Wechselt bei Server-Auslastung automatisch zwischen `gemini-3.5-flash-lite`, `gemini-4-hydrogen` und `gemini-3.8-flash`.
+### 🇵🇱 Polnisch-Spezial (Pro-Features)
+* **7-Fälle-Detektiv (Kasus-Trainer):** Zerlegt Schlüsselsätze aus der aktuellen Lektion, markiert Substantive und Pronomen **farblich nach ihrem Fall** (Nominativ bis Vokativ), nennt das polnische Kontroll-Fragewort (*Kogo? Czego? / Z kim? Z czym?*) und erklärt den grammatikalischen Grund.
+* **Interaktiver Kasus-Endungs-Trainer:** Lückentext-Übungen speziell zum Deklinieren mit direkter Prüfung und Lösungsanzeige.
+* **Verbaspekt-Vergleich (*Niedokonany vs. Dokonany*):** Gegenüberstellung unvollendeter und vollendeter Verben aus der Lektion – inklusive deutscher Bedeutung und klickbaren, hörbaren Beispielsätzen für beide Aspekte.
+* **Polnische Alltags-Szenarien & Zufallsgenerator:** Schnellwahl-Chips für typische Situationen (*🥟 Zapiekanka & Pierogi*, *🚆 PKP-Fahrkarte*, *💊 Apotheke & Arzt*, *🍎 Auf dem Basar*, *🏛️ Amt / Urząd*, *🎲 Zufallsthema*).
+
+### 📖 Lektions- & Grammatik-Engine
+* **Lesetexte & Dialog-Trainer:** Frei wählbare Themen, Textlängen (kurz, mittel, lang) und Sprachniveaus (**A1, A2, B1, B2**).
+* **Interaktiver Grammatik-Coach:** Passende Regel-Erklärung zum Niveau, Übersichtstabelle, **Stolperfallen-Warnung** im Vergleich zur deutschen Grammatik, hörbare Beispielsätze und ein 2-teiliger Umformungs-Drill.
+* **Übungen & KI-Schreibkorrektur:**
+  * Interaktives **Lückentext-Quiz**
+  * **Verständnisfragen** mit eigener Texteingabe und direkter **KI-Korrektur** durch deinen polnischen/fremdsprachigen KI-Tutor
+  * Musterlösungen inklusive **einfacher deutscher Lautschrift**
+* **Transparenz & Kostenkontrolle:** Anzeige des genutzten KI-Modells, des genauen Token-Verbrauchs (Input/Output) und der geschätzten Kosten in US-Cent pro Abruf.
+
+### 🔊 Audio & Vorlesefunktion (3 Stufen)
+* **Satz-für-Satz-Klick:** Jeden Satz im Text oder in den Grammatik-Tabellen einzeln anklicken und anhören.
+* **Stufenloses Tempo & Tonhöhe:** Regler für Sprechgeschwindigkeit (`0.5x` bis `1.3x`) und Stimmlage.
+* **Flexible Audio-Quellen:**
+  1. **Browser-Stimmen** (Standard, komplett kostenlos / 0 Tokens)
+  2. **Google Cloud Text-to-Speech** (`Wavenet` / `Neural2` HD-Stimmen, z. B. `pl-PL-Wavenet-A/B`)
+  3. **ElevenLabs** (`eleven_multilingual_v2` HD-Stimmen, inkl. Unterstützung für Sprachen wie Swahili)
+
+### ⭐ Vokabel-Merkliste, Karteikarten & Anki-Export
+* Vokabeln samt Lautschrift mit einem Klick lokal im Browser (`localStorage`) speichern.
+* Integrierter **Karteikarten-Modus** zum Umdrehen und Vorlesen lassen.
+* **Anki-kompatibler `.csv`-Export & Import** (tab-getrennt, nach Sprache gefiltert).
 
 ---
 
-## 📋 Aktueller Blueprint-Prompt (für spätere KI-Erweiterungen)
+## 🚀 Installation & Nutzung
 
-Falls die App künftig um weitere Funktionen ergänzt werden soll, diesen Prompt als Arbeitsgrundlage verwenden:
+1. Lade die Datei `index.html` aus diesem Repository herunter (oder klone das Repository).
+2. Öffne die `index.html` per Doppelklick in einem modernen Browser (Chrome, Edge, Firefox, Safari) – oder hoste sie kostenlos über **GitHub Pages**.
+3. Öffne oben das Panel **🔐 API-Schlüssel & Verbindungs-Ampel**:
+   * Trage deinen **Google Gemini API-Schlüssel** ein (Pflichtfeld, erhältlich im [Google AI Studio](https://google.com)).
+   * *Optional:* Hinterlege einen **Google Cloud TTS-Key** oder **ElevenLabs API-Key** für noch natürlichere HD-Stimmen.
+   * Klicke auf **Speichern** und prüfe den Status über **🚦 Verbindung & Ampel prüfen**.
+4. Wähle Sprache, Niveau und Thema aus und klicke auf **Lektion erstellen**.
 
-> Du bist ein erfahrener Webentwickler. Wir entwickeln eine reine Client-Side Multi-Sprachen-Lern-App als einzelne `index.html`-Datei für GitHub Pages (ohne Backend, ohne Frameworks, ohne Build-Tools).
->
-> Halte dich strikt an diese bereits erfolgreich getestete Architektur und alle technischen Sicherheitsregeln:
-> 1. **Hosting & Code-Ausgabe:** Gesamter Code (HTML, CSS, Vanilla JS) befindet sich kompakt in einer einzigen `index.html`-Datei. Code-Ausgaben stets in **4 handliche Blöcke** aufteilen, damit beim Kopieren aus dem Chat nichts abgeschnitten wird und Block 4 stets mit `</html>` endet. JavaScript-Arrays ohne eckige Klammern auslesen (z. B. mit `.at(0)`).
-> 2. **API-Key-Sicherheit (`localStorage`):** Der Google Gemini API-Key steht niemals im Quellcode. Eingabe über ein Passwort-Feld in einem einklappbaren `<details>`-Panel, lokale Speicherung unter `localStorage.getItem('polnisch_app_key')` sowie Lösch-Button. Akzeptierte Key-Präfixe: `AQ.` und `AIza`.
-> 3. **API-Anbindung & Auto-Fallback:** Authentifizierung ausschließlich über den HTTP-Header `'x-goog-api-key': apiKey`. Host-URL im JS aus Einzelteilen zusammensetzen: `["https://", "generativelanguage", ".", "googleapis", ".", "com"].join("")`. Automatische Ausweich-Schleife über gültige Modelle: `["gemini-3.5-flash-lite", "gemini-4-hydrogen", "gemini-3.8-flash"]`. Strukturierte Lektions-Antwort via `generationConfig: { responseMimeType: "application/json" }`.
-> 4. **Implementierte Lern-Funktionen:**
->    - Sprachauswahl (`Polnisch`, `Britisches Englisch`, `US-Englisch`, `Swahili`, `Italienisch`, `Rumänisch`, `Spanisch`, `Französisch`) inklusive Sprachcode für TTS.
->    - Auswahl GER-Niveau (`A1`–`B2`), Textlänge (`3–4`, `5–8`, `10–15` Sätze), Textart (`Lesetext` oder `Dialog-Trainer`) und Themen-Eingabe mit Schnellwahl-Chips.
->    - Erweiterte Audio-Steuerung (`window.speechSynthesis`): Komplett-Vorlesen mit Pause/Fortsetzen, Einzelsatz-Klick zum Nachsprechen, Stimmen-Dropdown pro Sprache sowie Regler für Tempo und Tonhöhe.
->    - Aufklappbare deutsche Übersetzung, Grammatik-Fokus-Box, 5–6 Vokabeln mit Lautschrift, interaktives Lückentext-Quiz (4 Lücken mit Auswertung), 5 Verständnisfragen, Freitext-Antwortfeld mit KI-Korrektur und aufklappbare Musterlösungen mit Lautschrift.
->    - Lokale Vokabel-Merkliste (`localStorage` unter `lang_memo`) mit integriertem Karteikarten-Modus, sprachspezifischem Anki-Tab-CSV-Export (`anki-<sprache>.csv` mit `#separator:tab`, `#html:true`, `#tags column:3`) und CSV-Import.
+---
+
+## 🧩 Modulare Code-Struktur (8 Blöcke)
+
+Die `index.html` ist intern durch klare HTML-Kommentare in **8 eigenständige Module** gegliedert, sodass einzelne Funktionen gezielt gewartet oder erweitert werden können:
+
+| Modul | Bereich | Inhalt |
+| :--- | :--- | :--- |
+| **Modul 1** | `HEAD & CSS` | Layout, Responsive Design, Karten-Optik & Kasus-Farbcodes |
+| **Modul 2** | `HTML SETTINGS & SETUP` | API-Schlüssel-Verwaltung, Verbindungs-Ampel & Lektions-Auswahl |
+| **Modul 3** | `HTML LESSON & MEMO` | Text-Box, Audio-Leiste, Grammatik-Coach, Polnisch-Spezial & Merkliste |
+| **Modul 4** | `JS CONFIG & AMPEL` | Initialisierung, dynamische Szenario-Chips & API-Statusprüfung |
+| **Modul 5** | `JS MODELS & AUDIO` | Modell-Abruf, Stimmen-Auswahl, Google Cloud TTS & ElevenLabs Player |
+| **Modul 6** | `JS GEMINI & GENERATOR` | Token-/Kostenrechner, Gemini API-Client & Lektions-Prompt |
+| **Modul 7** | `JS RENDERER` | Darstellung von Text, Grammatik, 7-Fälle-Analyse & Verbaspekten |
+| **Modul 8** | `JS EXERCISES & MEMO` | Übungs-Checks, KI-Korrektur, Karteikarten & CSV-Import/Export |
+
+---
+
+## 🔒 Datenschutz & Sicherheit
+
+* **100 % Client-Side:** Es gibt keinen Zwischenserver. Deine API-Schlüssel und deine Vokabel-Merkliste werden ausschließlich lokal im `localStorage` deines eigenen Browsers gespeichert.
+* Direkte Kommunikation erfolgt nur zwischen deinem Browser und den offiziellen API-Endpunkten von Google (`://googleapis.com`, `://googleapis.com`) bzw. ElevenLabs (`api.elevenlabs.io`).
+
+---
+
+## 📄 Lizenz
+
+Dieses Projekt steht zur freien persönlichen Nutzung und Weiterentwicklung zur Verfügung.
