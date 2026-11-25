@@ -1,11 +1,12 @@
+<!-- === MODUL 1 START: HEAD & CSS === -->
 <!DOCTYPE html>
 <html lang="de">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>🌍 Multi-Sprachen Lern-App</title>
+<title>🌍 Multi-Sprachen Lern-App (Polnisch Pro)</title>
 <style>
-body{font-family:sans-serif;max-width:720px;margin:20px auto;padding:12px;background:#f4f6f9;color:#222}
+body{font-family:sans-serif;max-width:740px;margin:20px auto;padding:12px;background:#f4f6f9;color:#222}
 .card{background:#fff;padding:18px;border-radius:10px;box-shadow:0 3px 10px rgba(0,0,0,.08);margin-bottom:14px}
 h1{margin:0 0 14px;font-size:1.35rem;color:#d4213d}
 h2{font-size:1.05rem;color:#d4213d;margin:18px 0 8px;border-bottom:1px solid #eee;padding-bottom:4px}
@@ -24,7 +25,9 @@ button:disabled{background:#999!important;cursor:not-allowed}
 .b-mini{padding:4px 8px;font-size:.78rem;background:#1976d2;color:#fff;margin-left:5px}
 .b-rem{padding:3px 7px;font-size:.75rem;background:#d32f2f;color:#fff;margin-left:5px}
 .chips{display:flex;flex-wrap:wrap;gap:6px;margin:-2px 0 12px}
-.chip{background:#eef2f7;border:1px solid #d0d7de;border-radius:14px;padding:4px 9px;font-size:.78rem;cursor:pointer}
+.chip{background:#eef2f7;border:1px solid #d0d7de;border-radius:14px;padding:4px 9px;font-size:.78rem;cursor:pointer;transition:background .15s}
+.chip:hover{background:#ffeef1;border-color:#d4213d}
+.chip-rand{background:#fff3e0;border-color:#ffb74d;color:#e65100;font-weight:600}
 #keyMsg{margin-top:6px;font-size:.82rem;font-weight:600}
 .ampel-box{background:#f8fafc;border:1px solid #d0d7de;border-radius:8px;padding:10px;margin-top:10px;font-size:.84rem;line-height:1.7;display:none}
 #lessonBox{display:none}
@@ -32,15 +35,28 @@ button:disabled{background:#999!important;cursor:not-allowed}
 .txt-box{background:#fdfdfd;border:1px solid #d0d7de;border-left:5px solid #d4213d;padding:14px;border-radius:8px;line-height:1.8;font-size:1.05rem}
 .sent-span{cursor:pointer;padding:2px 4px;border-radius:4px;transition:background .15s}
 .sent-span:hover{background:#ffeef1}
-details.gram-acc{background:#fffdf5;border:1px solid #fbc02d;border-left:5px solid #fbc02d;border-radius:8px;padding:10px 14px;margin-top:14px}
+details.gram-acc{background:#fffdf5;border:1px solid #fbc02d;border-left:5px solid #fbc02d;border-radius:8px;padding:10px 14px;margin-top:12px}
 details.gram-acc summary{cursor:pointer;font-weight:700;color:#8d6e00;font-size:1rem}
+details.pl-acc{background:#fff5f7;border:1px solid #f48fb1;border-left:5px solid #d4213d;border-radius:8px;padding:10px 14px;margin-top:12px}
+details.pl-acc summary{cursor:pointer;font-weight:700;color:#ad1457;font-size:1rem}
 .gram-sec{margin-top:10px;padding-top:8px;border-top:1px dashed #e0d5a8;font-size:.93rem;line-height:1.55}
 .gram-tbl{width:100%;border-collapse:collapse;margin:8px 0;font-size:.88rem;background:#fff}
 .gram-tbl th,.gram-tbl td{border:1px solid #e0d5a8;padding:6px 8px;text-align:left}
 .gram-tbl th{background:#fff3cd;color:#664d03}
+.pl-tbl th{background:#fce4ec;color:#880e4f;border-color:#f8bbd0}
+.pl-tbl td{border-color:#f8bbd0}
 .trap-box{background:#ffebee;border-left:4px solid #d32f2f;padding:8px 10px;border-radius:4px;margin:8px 0;font-size:.9rem;color:#7f0000}
 .ex-item{background:#fff;border:1px solid #e0e0e0;padding:6px 10px;border-radius:6px;margin-bottom:6px;cursor:pointer}
 .ex-item:hover{background:#f1f8e9}
+.kasus-card{background:#fff;border:1px solid #f8bbd0;border-radius:8px;padding:10px;margin-bottom:8px}
+.k-badge{display:inline-block;padding:2px 7px;border-radius:5px;font-weight:700;font-size:.82rem;margin:2px 3px 2px 0;border:1px solid rgba(0,0,0,.1)}
+.k-nom{background:#e3f2fd;color:#0d47a1}
+.k-gen{background:#f3e5f5;color:#4a148c}
+.k-dat{background:#fff3e0;color:#e65100}
+.k-akk{background:#e8f5e9;color:#1b5e20}
+.k-ins{background:#ffebee;color:#b71c1c}
+.k-lok{background:#e0f7fa;color:#006064}
+.k-vok{background:#fce4ec;color:#880e4f}
 .corr-box{background:#e8f5e9;border-left:4px solid #2e7d32;padding:12px;border-radius:6px;line-height:1.55;font-size:.93rem;margin-top:10px;white-space:pre-wrap;display:none}
 .aud-bar{background:#f1f8e9;padding:10px;border-radius:8px;margin-top:10px;display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-size:.84rem}
 .aud-bar input[type=range]{width:70px;margin:0}
@@ -59,6 +75,8 @@ li{margin-bottom:6px}
 .meta{font-size:.8rem;color:#444;margin-top:12px;border-top:1px solid #eee;background:#f8fafc;padding:8px 10px;border-radius:6px}
 </style>
 </head>
+<!-- === MODUL 1 ENDE === -->
+<!-- === MODUL 2 START: HTML SETTINGS & SETUP === -->
 <body>
 <div class="card">
 <details id="kPanel" open>
@@ -76,8 +94,8 @@ li{margin-bottom:6px}
 </div>
 <select id="modelSel" onchange="saveModelPref()">
 <option value="auto">🔄 Auto (Sparsame Modelle testen)</option>
-<option value="gemini-3.5-flash-lite">⚡ gemini-3.5-flash-lite</option>
 <option value="gemini-3.8-flash">🚀 gemini-3.8-flash</option>
+<option value="gemini-3.5-flash-lite">⚡ gemini-3.5-flash-lite</option>
 </select>
 <div class="row" style="flex-wrap:wrap">
 <button class="b-save" onclick="saveKey()">Speichern</button>
@@ -132,17 +150,14 @@ li{margin-bottom:6px}
 </div>
 </div>
 
-<label for="topic">Thema eingeben:</label>
+<label for="topic">Thema eingeben oder Alltags-Szenario wählen:</label>
 <input type="text" id="topic" placeholder="Worüber möchtest du lernen?">
-<div class="chips">
-<span class="chip" onclick="setT('Im Café bestellen')">☕ Im Café</span>
-<span class="chip" onclick="setT('Am Bahnhof nach dem Weg fragen')">🚆 Bahnhof</span>
-<span class="chip" onclick="setT('Einkaufen auf dem Markt')">🍎 Markt</span>
-<span class="chip" onclick="setT('Sich kennenlernen und vorstellen')">👋 Kennenlernen</span>
-</div>
+<div id="scenarioChips" class="chips"></div>
 <button id="genBtn" class="b-gen" onclick="genLesson()">Lektion erstellen</button>
 <div id="errBox" class="err"></div>
 </div>
+<!-- === MODUL 2 ENDE === -->
+<!-- === MODUL 3 START: HTML LESSON & MEMO === -->
 <div id="lessonBox" class="card">
 <div id="modelBadge" class="model-badge"></div>
 <h2 style="margin-top:0">📖 Text / Dialog <small style="font-weight:400;color:#666">(Klick auf Satz = einzeln anhören)</small></h2>
@@ -172,6 +187,36 @@ li{margin-bottom:6px}
 <div id="gramDrillBox" style="margin-top:6px"></div>
 <button class="b-save" style="margin-top:6px;background:#8d6e00" onclick="checkDrill()">Grammatik-Drill prüfen</button>
 <div id="drillRes" style="margin-top:5px;font-weight:600;font-size:.88rem"></div>
+</div>
+</details>
+
+<details id="plSpecAcc" class="pl-acc" style="display:none">
+<summary>🇵🇱 Polnisch-Spezial: 7-Fälle-Detektiv (Kasus) & Verbaspekt-Vergleich</summary>
+<div class="gram-sec" style="border-top-color:#f8bbd0">
+<div style="font-size:.8rem;margin-bottom:8px">
+<strong>Farblegende Fälle:</strong>
+<span class="k-badge k-nom">1. Nominativ (Kto? Co?)</span>
+<span class="k-badge k-gen">2. Genitiv (Kogo? Czego?)</span>
+<span class="k-badge k-dat">3. Dativ (Komu? Czemu?)</span>
+<span class="k-badge k-akk">4. Akkusativ (Kogo? Co?)</span>
+<span class="k-badge k-ins">5. Instrumental (Z kim? Z czym?)</span>
+<span class="k-badge k-lok">6. Lokativ (O kim? O czym?)</span>
+<span class="k-badge k-vok">7. Vokativ (O!)</span>
+</div>
+<strong>🔍 Kasus-Analyse aus deinem Text:</strong>
+<div id="kasusList" style="margin-top:6px"></div>
+
+<strong>🎯 Kasus-Endungs-Trainer (Setze die richtige Fall-Endung ein):</strong>
+<div id="kasusDrillBox" style="margin-top:6px"></div>
+<button class="b-save" style="margin-top:4px;margin-bottom:12px;background:#ad1457" onclick="checkKasusDrill()">Kasus-Übung prüfen</button>
+<div id="kasusDrillRes" style="margin-top:-6px;margin-bottom:10px;font-weight:600;font-size:.88rem"></div>
+
+<strong>⚖️ Verbaspekt-Vergleich (Unvollendet / Niedokonany vs. Vollendet / Dokonany):</strong>
+<p style="font-size:.83rem;color:#555;margin:4px 0">Tipp: Klicke auf einen Beispielsatz in der Tabelle, um ihn anzuhören.</p>
+<table class="gram-tbl pl-tbl">
+<thead><tr><th>🔄 Unvollendet (Prozess/Regel)</th><th>✅ Vollendet (Resultat/Einmalig)</th><th>Deutsch & Unterschied</th></tr></thead>
+<tbody id="aspektTblBody"></tbody>
+</table>
 </div>
 </details>
 
@@ -219,12 +264,34 @@ li{margin-bottom:6px}
 </div>
 <ul id="memoList"></ul>
 </div>
+<!-- === MODUL 3 ENDE === -->
+<!-- === MODUL 4 START: JS CONFIG & AMPEL === -->
 <script>
 const kIn=document.getElementById('apiKey'),ttsIn=document.getElementById('ttsKey'),elIn=document.getElementById('elKey');
 const kMsg=document.getElementById('keyMsg'),kPan=document.getElementById('kPanel');
 const errBox=document.getElementById('errBox'),lesBox=document.getElementById('lessonBox'),gBtn=document.getElementById('genBtn');
-let curTxt="",curCode="pl-PL",curLang="Polnisch",clozeAns=[],drillAns=[],allVoices=[],fcIdx=0,extAudio=null;
-let dynamicModels=["gemini-3.5-flash-lite","gemini-3.8-flash"];
+let curTxt="",curCode="pl-PL",curLang="Polnisch",clozeAns=[],drillAns=[],kasusDrillAns=[],allVoices=[],fcIdx=0,extAudio=null;
+let dynamicModels=["gemini-3.8-flash","gemini-3.5-flash-lite"];
+
+const scenariosByLang={
+"Polnisch":[
+{label:"🥟 Zapiekanka & Pierogi",topic:"In einer polnischen Bar Mleczny Pierogi und Zapiekanka bestellen"},
+{label:"🚆 PKP-Fahrkarte",topic:"Am polnischen Bahnhof (PKP) eine Zugfahrkarte nach Krakau kaufen und nach dem Gleis fragen"},
+{label:"💊 Apotheke & Arzt",topic:"In einer polnischen Apotheke (Apteka) ein Mittel gegen Erkältung und Kopfschmerzen kaufen"},
+{label:"🍎 Auf dem Basar",topic:"Auf einem polnischen Wochenmarkt (Targ) frisches Obst, Oscypek-Käse und Gemüse einkaufen"},
+{label:"🏛️ Amt / Urząd",topic:"Auf einem polnischen Amt (Urząd) ein Formular ausfüllen und höflich nach Hilfe fragen"},
+{label:"☕ Kawiarnia",topic:"In einem Café in Warschau Kaffee und polnischen Käsekuchen (Sernik) bestellen"},
+{label:"🏨 Hotel & Check-in",topic:"An der Hotelrezeption in Danzig einchecken und nach WLAN und Frühstück fragen"},
+{label:"👋 Kennenlernen",topic:"Sich auf Polnisch vorstellen, über Hobbys sprechen und sich verabreden"}
+],
+"default":[
+{label:"☕ Im Café",topic:"Im Café Kaffee und Kuchen bestellen und bezahlen"},
+{label:"🚆 Bahnhof",topic:"Am Bahnhof nach dem Weg und den Abfahrtszeiten fragen"},
+{label:"🍎 Markt",topic:"Einkaufen auf dem Wochenmarkt"},
+{label:"👋 Kennenlernen",topic:"Sich kennenlernen und vorstellen"},
+{label:"🏥 Apotheke",topic:"In der Apotheke nach Hilfe bei leichten Beschwerden fragen"}
+]
+};
 
 const cloudVoices={
 "pl-PL":[{id:"pl-PL-Wavenet-A",label:"☁️ Google Cloud Polnisch (Weiblich)"},{id:"pl-PL-Wavenet-B",label:"☁️ Google Cloud Polnisch (Männlich)"}],
@@ -252,6 +319,22 @@ if(sm)document.getElementById('modelSel').value=sm;
 loadVoices();if('speechSynthesis'in window)window.speechSynthesis.onvoiceschanged=loadVoices;
 onLangChange(true);renderMemo();
 });
+
+function renderScenarioChips(){
+const box=document.getElementById('scenarioChips');box.innerHTML="";
+const list=scenariosByLang[curLang]||scenariosByLang["default"];
+list.forEach(item=>{
+const sp=document.createElement('span');sp.className="chip";sp.textContent=item.label;
+sp.title=item.topic;sp.onclick=()=>setT(item.topic);
+box.appendChild(sp);
+});
+const rnd=document.createElement('span');rnd.className="chip chip-rand";rnd.textContent="🎲 Zufallsthema";
+rnd.onclick=()=>{
+const pick=list.at(Math.floor(Math.random()*list.length));
+setT(pick.topic);
+};
+box.appendChild(rnd);
+}
 
 async function testConnections(){
 const btn=document.getElementById('testBtn'),box=document.getElementById('ampelBox');
@@ -296,7 +379,8 @@ lines.push("🟢 <b>Browser-Stimme (0 Tokens):</b> Bereit");
 box.innerHTML=lines.join("<br>");
 btn.disabled=false;btn.textContent="🚦 Verbindung & Ampel prüfen";
 }
-
+<!-- === MODUL 4 ENDE === -->
+<!-- === MODUL 5 START: JS MODELS & AUDIO === -->
 async function fetchAvailableModels(silent){
 const key=kIn.value.trim();if(!key)return;
 const host=["https://","generativelanguage",".","googleapis",".","com"].join("");
@@ -305,9 +389,9 @@ const res=await fetch(host+"/v1beta/models",{headers:{'x-goog-api-key':key}});
 const data=await res.json();
 if(!res.ok||!data.models)return;
 let valid=data.models.filter(m=>m.supportedGenerationMethods&&m.supportedGenerationMethods.includes("generateContent")&&(m.name.includes("gemini")||m.name.includes("gemma"))&&!m.name.includes("image")&&!m.name.includes("tts")&&!m.name.includes("thinking")).map(m=>m.name.replace("models/",""));
-valid.sort((a,b)=>(b.includes("lite")?1:0)-(a.includes("lite")?1:0));
+valid.sort((a,b)=>(b.includes("3.8")?2:(b.includes("lite")?1:0))-(a.includes("3.8")?2:(a.includes("lite")?1:0)));
 if(valid.length>0){
-dynamicModels=valid.filter(n=>!n.toLowerCase().includes("pro"));
+dynamicModels=valid.filter(n=>!n.toLowerCase().includes("pro")&&!n.toLowerCase().includes("hydrogen"));
 if(dynamicModels.length===0)dynamicModels=valid;
 const sel=document.getElementById('modelSel'),prev=sel.value;
 sel.innerHTML='<option value="auto">🔄 Auto ('+dynamicModels.length+' sparsame Modelle)</option>';
@@ -320,12 +404,14 @@ if(!silent)msg("✅ "+valid.length+" Modelle geladen!","#2e7d32");
 
 function saveModelPref(){localStorage.setItem('polnisch_app_model',document.getElementById('modelSel').value);}
 function loadVoices(){if(!('speechSynthesis'in window))return;allVoices=window.speechSynthesis.getVoices();updateVoiceList(false);}
-function onLangChange(resetVoice){const p=document.getElementById('lang').value.split("|");curLang=p.at(0);curCode=p.at(1);document.getElementById('expBtn').textContent="💾 "+curLang+"-Export (.csv)";updateVoiceList(resetVoice);}
+function onLangChange(resetVoice){
+const p=document.getElementById('lang').value.split("|");curLang=p.at(0);curCode=p.at(1);
+document.getElementById('expBtn').textContent="💾 "+curLang+"-Export (.csv)";
+renderScenarioChips();updateVoiceList(resetVoice);
+}
 
 function updateVoiceList(resetVoice){
-const sel=document.getElementById('voiceSel');
-const prevVal=sel.value;
-sel.innerHTML="";
+const sel=document.getElementById('voiceSel'),prevVal=sel.value;sel.innerHTML="";
 const defOpt=document.createElement('option');defOpt.value="";defOpt.textContent="Browser-Stimme (Standard • 0 Tokens)";sel.appendChild(defOpt);
 const prefix=curCode.split("-").at(0).toLowerCase();
 allVoices.filter(v=>v.lang.toLowerCase().startsWith(prefix)).forEach(v=>{const o=document.createElement('option');o.value="sys:"+v.name;o.textContent="Browser: "+v.name;sel.appendChild(o);});
@@ -353,6 +439,7 @@ msg(info+".","#2e7d32");fetchAvailableModels(false);
 function delKey(){localStorage.removeItem('polnisch_app_key');localStorage.removeItem('google_tts_key');localStorage.removeItem('elevenlabs_app_key');kIn.value="";ttsIn.value="";elIn.value="";updateVoiceList(true);msg("🗑️ Alle Schlüssel gelöscht.","#555");kPan.open=true;}
 function msg(t,c){kMsg.style.color=c;kMsg.textContent=t;}
 function setT(t){document.getElementById('topic').value=t;}
+
 function stopAllAudio(){
 if('speechSynthesis'in window)window.speechSynthesis.cancel();
 if(extAudio){extAudio.pause();extAudio=null;}
@@ -362,19 +449,15 @@ document.getElementById('pauseBtn').style.display="none";
 
 function setTtsStatus(txt,isErr){
 const hint=document.getElementById('ttsHint');
-hint.style.color=isErr?"#b71c1c":"#1b5e20";
-hint.textContent=txt;
+hint.style.color=isErr?"#b71c1c":"#1b5e20";hint.textContent=txt;
 }
 
 async function speakText(text,langCode){
 stopAllAudio();
-const sel=document.getElementById('voiceSel');
-const vVal=sel.value;
+const sel=document.getElementById('voiceSel'),vVal=sel.value;
 const vLabel=sel.options[sel.selectedIndex]?sel.options[sel.selectedIndex].text:"Browser-Stimme";
-const rate=parseFloat(document.getElementById('rate').value);
-const pitch=parseFloat(document.getElementById('pitch').value);
-const elKey=elIn.value.trim();
-const activeTtsKey=ttsIn.value.trim()||kIn.value.trim();
+const rate=parseFloat(document.getElementById('rate').value),pitch=parseFloat(document.getElementById('pitch').value);
+const elKey=elIn.value.trim(),activeTtsKey=ttsIn.value.trim()||kIn.value.trim();
 
 if(vVal.startsWith("el:")&&elKey){
 const voiceId=vVal.replace("el:","");
@@ -386,21 +469,11 @@ const res=await fetch(elHost+"/v1/text-to-speech/"+voiceId,{
 method:'POST',headers:{'Content-Type':'application/json','xi-api-key':elKey},
 body:JSON.stringify({text:text.trim(),model_id:"eleven_multilingual_v2",voice_settings:{stability:0.5,similarity_boost:0.75,speed:safeSpeed}})
 });
-if(!res.ok){
-let detail="HTTP "+res.status;
-try{const errData=await res.json();if(errData.detail&&errData.detail.message)detail=errData.detail.message;}catch(e){}
-throw new Error(detail);
-}
-const blob=await res.blob();
-extAudio=new Audio(URL.createObjectURL(blob));
-extAudio.onended=()=>stopAllAudio();
-document.getElementById('audBtn').textContent="⏹️ Stopp";
-document.getElementById('pauseBtn').style.display="inline-block";document.getElementById('pauseBtn').textContent="⏸️ Pause";
-setTtsStatus("🔊 Aktiv: "+vLabel,false);
-extAudio.play();return;
-}catch(e){
-setTtsStatus("⚠️ ElevenLabs-Fehler ("+e.message+") – weiche auf Browser-Stimme aus.",true);
-}
+if(!res.ok){let detail="HTTP "+res.status;try{const errData=await res.json();if(errData.detail&&errData.detail.message)detail=errData.detail.message;}catch(e){}throw new Error(detail);}
+const blob=await res.blob();extAudio=new Audio(URL.createObjectURL(blob));extAudio.onended=()=>stopAllAudio();
+document.getElementById('audBtn').textContent="⏹️ Stopp";document.getElementById('pauseBtn').style.display="inline-block";document.getElementById('pauseBtn').textContent="⏸️ Pause";
+setTtsStatus("🔊 Aktiv: "+vLabel,false);extAudio.play();return;
+}catch(e){setTtsStatus("⚠️ ElevenLabs-Fehler ("+e.message+") – weiche auf Browser-Stimme aus.",true);}
 }
 
 if(vVal.startsWith("cloud:")&&activeTtsKey){
@@ -414,20 +487,14 @@ body:JSON.stringify({input:{text:text.trim()},voice:{languageCode:langCode||curC
 });
 const data=await res.json();
 if(!res.ok)throw new Error((data.error&&data.error.message)||("HTTP "+res.status));
-extAudio=new Audio("data:audio/mp3;base64,"+data.audioContent);
-extAudio.onended=()=>stopAllAudio();
-document.getElementById('audBtn').textContent="⏹️ Stopp";
-document.getElementById('pauseBtn').style.display="inline-block";document.getElementById('pauseBtn').textContent="⏸️ Pause";
-setTtsStatus("🔊 Aktiv: "+vLabel,false);
-extAudio.play();return;
-}catch(e){
-setTtsStatus("⚠️ Google Cloud TTS Fehler ("+e.message+") – weiche auf Browser-Stimme aus.",true);
-}
+extAudio=new Audio("data:audio/mp3;base64,"+data.audioContent);extAudio.onended=()=>stopAllAudio();
+document.getElementById('audBtn').textContent="⏹️ Stopp";document.getElementById('pauseBtn').style.display="inline-block";document.getElementById('pauseBtn').textContent="⏸️ Pause";
+setTtsStatus("🔊 Aktiv: "+vLabel,false);extAudio.play();return;
+}catch(e){setTtsStatus("⚠️ Google Cloud TTS Fehler ("+e.message+") – weiche auf Browser-Stimme aus.",true);}
 }
 
 if(!('speechSynthesis'in window)){alert("Sprachausgabe nicht unterstützt.");return;}
-const u=new SpeechSynthesisUtterance(text);
-u.lang=langCode||curCode;u.rate=rate;u.pitch=pitch;
+const u=new SpeechSynthesisUtterance(text);u.lang=langCode||curCode;u.rate=rate;u.pitch=pitch;
 if(vVal.startsWith("sys:")){const found=allVoices.find(v=>v.name===vVal.replace("sys:",""));if(found)u.voice=found;}
 u.onend=()=>stopAllAudio();
 document.getElementById('audBtn').textContent="⏹️ Stopp";document.getElementById('pauseBtn').style.display="inline-block";document.getElementById('pauseBtn').textContent="⏸️ Pause";
@@ -440,7 +507,8 @@ function pauseAud(){
 if(extAudio){if(extAudio.paused){extAudio.play();document.getElementById('pauseBtn').textContent="⏸️ Pause";}else{extAudio.pause();document.getElementById('pauseBtn').textContent="▶️ Weiter";}return;}
 if('speechSynthesis'in window&&window.speechSynthesis.speaking){if(window.speechSynthesis.paused){window.speechSynthesis.resume();document.getElementById('pauseBtn').textContent="⏸️ Pause";}else{window.speechSynthesis.pause();document.getElementById('pauseBtn').textContent="▶️ Weiter";}}
 }
-
+<!-- === MODUL 5 ENDE === -->
+<!-- === MODUL 6 START: JS GEMINI & GENERATOR === -->
 function calcCostInfo(usage,model){
 if(!usage)return "";
 const inT=usage.promptTokenCount||0,outT=usage.candidatesTokenCount||0,tot=usage.totalTokenCount||(inT+outT);
@@ -477,6 +545,7 @@ if(data.candidates&&data.candidates.length>0){const f=data.candidates.at(0);if(f
 }
 throw new Error(errors.join(" | ")||"Kein Modell erreichbar");
 }
+
 async function genLesson(){
 const key=kIn.value.trim(),top=document.getElementById('topic').value.trim();
 const lvl=document.getElementById('level').value,len=document.getElementById('len').value,mode=document.getElementById('mode').value;
@@ -488,23 +557,42 @@ if(ttsIn.value.trim())localStorage.setItem('google_tts_key',ttsIn.value.trim());
 if(elIn.value.trim())localStorage.setItem('elevenlabs_app_key',elIn.value.trim());
 gBtn.disabled=true;errBox.style.display="none";lesBox.style.display="none";
 
-const prompt='Erstelle eine Sprachlektion für '+curLang+' zum Thema "'+top+'" (Niveau GER '+lvl+', Format: '+mode+', Länge: genau '+len+' Sätze). Antworte ausschließlich als reines JSON-Objekt ohne Markdown-Codeblock mit diesen 7 Feldern: '
+const isPol=(curLang==="Polnisch");
+const plPromptPart=isPol
+?' 8. "polnisch_spezial": Objekt speziell für Polnisch mit 3 Feldern: {"kasus_analyse":[{"satz":"Schlüsselsatz aus dem Text","woerter":[{"wort":"Substantiv/Pronomen aus dem Satz","fall":"Nominativ|Genitiv|Dativ|Akkusativ|Instrumental|Lokativ|Vokativ","frage":"polnisches Fragewort z.B. Kogo? Czego?","grund":"Warum steht dieser Fall hier (z.B. nach Präposition z / Verneinung / Direktes Objekt)"}]}] (genau 2 Sätze aus dem Text analysieren), "kasus_uebungen":[{"vor":"Satzteil vor der Lücke ","loesung":"richtig deklinierte Form","nach":" Satzteil nach der Lücke","hinweis":"Grundform + gesuchter Fall z.B. kawa -> Genitiv"}] (genau 2 Übungen), "verbaspekte":[{"unvollendet":"Infinitiv unvollendet (niedokonany)","vollendet":"Infinitiv vollendet (dokonany)","deutsch":"Deutsche Bedeutung","bsp_unv":"Kurzer Beispielsatz unvollendet auf Polnisch","bsp_vol":"Kurzer Beispielsatz vollendet auf Polnisch"}] (genau 3 wichtige Verben passend zum Text/Thema)}.'
+:'';
+
+const prompt='Erstelle eine Sprachlektion für '+curLang+' zum Thema "'+top+'" (Niveau GER '+lvl+', Format: '+mode+', Länge: genau '+len+' Sätze). Antworte ausschließlich als reines JSON-Objekt ohne Markdown-Codeblock mit diesen '+(isPol?'8':'7')+' Feldern: '
 +'1. "text": Der '+mode+' auf '+curLang+' ('+len+' Sätze). '
 +'2. "deutsch": Vollständige deutsche Übersetzung. '
 +'3. "grammatik": Objekt mit 6 Feldern passend zu Niveau '+lvl+': {"titel":"Name der Grammatik-Regel","erklaerung":"Verständliche Erklärung auf Deutsch","tabelle":[{"form":"Regel/Endung","bsp":"Beispiel auf '+curLang+'","de":"Deutsche Übersetzung"}],"stolperfalle":"Typischer Fehler von Deutschen im Vergleich zur deutschen Grammatik","beispiele":[{"satz":"Neuer Beispielsatz auf '+curLang+'","de":"Deutsche Übersetzung"}],"uebungen":[{"aufgabe":"Umformungs-Aufgabe auf Deutsch (z.B. Setze in die Vergangenheit: ...)","loesung":"Exakte Lösung auf '+curLang+'"}]} (tabelle: 3 Zeilen, beispiele: 2 Sätze, uebungen: 2 Aufgaben). '
 +'4. "vokabeln": Array mit 5-6 Objekten aus dem Text: {"w":"Fremdsprachiger Ausdruck","laut":"einfache deutsche Lautschrift","de":"Deutsche Bedeutung"}. '
 +'5. "luecken": Array mit 4 Lückentext-Übungen basierend auf dem Text: {"vor":"Satzteil vor der Lücke ","loesung":"gesuchtes Wort","nach":" Satzteil nach der Lücke (deutsche Bedeutung)"}. '
 +'6. "fragen": Array mit 5 Verständnisfragen: "Frage auf '+curLang+'? (Deutsche Übersetzung?)". '
-+'7. "loesungen": Array mit 5 Antworten: "Antwort auf '+curLang+'. (deutsche Lautschrift)".';
++'7. "loesungen": Array mit 5 Antworten: "Antwort auf '+curLang+'. (deutsche Lautschrift)".'
++plPromptPart;
 
 try{
 const res=await callGemini(prompt,true,gBtn);
-render(extractJson(res.text),lvl,res.model,res.usage);
+renderLesson(extractJson(res.text),lvl,res.model,res.usage);
 }catch(e){err("Fehler: "+e.message);}
 gBtn.disabled=false;gBtn.textContent="Lektion erstellen";
 }
+<!-- === MODUL 6 ENDE === -->
+<!-- === MODUL 7 START: JS RENDERER === -->
+function getKasusClass(fall){
+const f=(fall||"").toLowerCase();
+if(f.includes("nom"))return "k-nom";
+if(f.includes("gen"))return "k-gen";
+if(f.includes("dat"))return "k-dat";
+if(f.includes("akk")||f.includes("acc"))return "k-akk";
+if(f.includes("ins"))return "k-ins";
+if(f.includes("lok")||f.includes("loc"))return "k-lok";
+if(f.includes("vok")||f.includes("voc"))return "k-vok";
+return "k-nom";
+}
 
-function render(l,lvl,m,usage){
+function renderLesson(l,lvl,m,usage){
 document.getElementById('modelBadge').textContent="✅ Verbunden • Text erstellt von: "+m;
 curTxt=l.text||"";
 const box=document.getElementById('plTxt');box.innerHTML="";
@@ -522,31 +610,17 @@ document.getElementById('gramAcc').open=false;
 document.getElementById('gLvl').textContent=curLang+" "+lvl;
 const g=l.grammatik||{};
 if(typeof g==="string"){
-document.getElementById('gTitle').textContent="Regel";
-document.getElementById('gramExplain').textContent=g;
-document.getElementById('gramTblBody').innerHTML="";
-document.getElementById('gramTrap').style.display="none";
-document.getElementById('gramExList').innerHTML="";
-document.getElementById('gramDrillBox').innerHTML="";
+document.getElementById('gTitle').textContent="Regel";document.getElementById('gramExplain').textContent=g;
+document.getElementById('gramTblBody').innerHTML="";document.getElementById('gramTrap').style.display="none";
+document.getElementById('gramExList').innerHTML="";document.getElementById('gramDrillBox').innerHTML="";
 }else{
-document.getElementById('gTitle').textContent=g.titel||"Fokus";
-document.getElementById('gramExplain').textContent=g.erklaerung||"";
+document.getElementById('gTitle').textContent=g.titel||"Fokus";document.getElementById('gramExplain').textContent=g.erklaerung||"";
 const tb=document.getElementById('gramTblBody');tb.innerHTML="";
-(g.tabelle||[]).forEach(r=>{
-const tr=document.createElement('tr');
-tr.innerHTML="<td><b>"+esc(r.form)+"</b></td><td>"+esc(r.bsp)+"</td><td>"+esc(r.de)+"</td>";
-tb.appendChild(tr);
-});
+(g.tabelle||[]).forEach(r=>{const tr=document.createElement('tr');tr.innerHTML="<td><b>"+esc(r.form)+"</b></td><td>"+esc(r.bsp)+"</td><td>"+esc(r.de)+"</td>";tb.appendChild(tr);});
 const trap=document.getElementById('gramTrap');
-if(g.stolperfalle){trap.style.display="block";trap.innerHTML="⚠️ <b>Typische Stolperfalle:</b> "+esc(g.stolperfalle);}
-else{trap.style.display="none";}
+if(g.stolperfalle){trap.style.display="block";trap.innerHTML="⚠️ <b>Typische Stolperfalle:</b> "+esc(g.stolperfalle);}else{trap.style.display="none";}
 const exL=document.getElementById('gramExList');exL.innerHTML="";
-(g.beispiele||[]).forEach(ex=>{
-const d=document.createElement('div');d.className="ex-item";
-d.innerHTML="🔊 <strong>"+esc(ex.satz)+"</strong> – <em>"+esc(ex.de)+"</em>";
-d.onclick=()=>speakText(ex.satz,curCode);
-exL.appendChild(d);
-});
+(g.beispiele||[]).forEach(ex=>{const d=document.createElement('div');d.className="ex-item";d.innerHTML="🔊 <strong>"+esc(ex.satz)+"</strong> – <em>"+esc(ex.de)+"</em>";d.onclick=()=>speakText(ex.satz,curCode);exL.appendChild(d);});
 const drB=document.getElementById('gramDrillBox');drB.innerHTML="";drillAns=[];document.getElementById('drillRes').textContent="";
 (g.uebungen||[]).forEach((u,i)=>{
 drillAns.push((u.loesung||"").trim());
@@ -556,12 +630,45 @@ drB.appendChild(div);
 });
 }
 
+const plAcc=document.getElementById('plSpecAcc');
+if(curLang==="Polnisch"&&l.polnisch_spezial){
+plAcc.style.display="block";plAcc.open=false;
+const ps=l.polnisch_spezial;
+const kList=document.getElementById('kasusList');kList.innerHTML="";
+(ps.kasus_analyse||[]).forEach(item=>{
+const card=document.createElement('div');card.className="kasus-card";
+const sLine=document.createElement('div');sLine.style.fontWeight="700";sLine.style.marginBottom="6px";sLine.style.cursor="pointer";
+sLine.innerHTML="🔊 "+esc(item.satz);sLine.onclick=()=>speakText(item.satz,"pl-PL");card.appendChild(sLine);
+(item.woerter||[]).forEach(w=>{
+const row=document.createElement('div');row.style.fontSize=".86rem";row.style.marginBottom="4px";
+row.innerHTML='<span class="k-badge '+getKasusClass(w.fall)+'">'+esc(w.wort)+' → '+esc(w.fall)+' ('+esc(w.frage)+')</span> <span>'+esc(w.grund)+'</span>';
+card.appendChild(row);
+});
+kList.appendChild(card);
+});
+
+const kdBox=document.getElementById('kasusDrillBox');kdBox.innerHTML="";kasusDrillAns=[];document.getElementById('kasusDrillRes').textContent="";
+(ps.kasus_uebungen||[]).forEach((ku,i)=>{
+kasusDrillAns.push((ku.loesung||"").trim());
+const div=document.createElement('div');div.style.marginBottom="8px";
+div.innerHTML=(i+1)+". "+esc(ku.vor)+'<input class="cloze-inp" id="kd_'+i+'" placeholder="...">'+esc(ku.nach)+' <small style="color:#880e4f">['+esc(ku.hinweis)+']</small><span id="kdSol_'+i+'" style="font-size:.82rem;color:#c62828;margin-left:6px"></span>';
+kdBox.appendChild(div);
+});
+
+const aBody=document.getElementById('aspektTblBody');aBody.innerHTML="";
+(ps.verbaspekte||[]).forEach(v=>{
+const tr=document.createElement('tr');
+tr.innerHTML='<td><b>'+esc(v.unvollendet)+'</b><br><span style="cursor:pointer;color:#1976d2" onclick="speakText(\''+esc(v.bsp_unv).replace(/'/g,"\\'")+'\',\'pl-PL\')">🔊 '+esc(v.bsp_unv)+'</span></td>'
++'<td><b>'+esc(v.vollendet)+'</b><br><span style="cursor:pointer;color:#2e7d32" onclick="speakText(\''+esc(v.bsp_vol).replace(/'/g,"\\'")+'\',\'pl-PL\')">🔊 '+esc(v.bsp_vol)+'</span></td>'
++'<td>'+esc(v.deutsch)+'</td>';
+aBody.appendChild(tr);
+});
+}else{plAcc.style.display="none";}
+
 const vl=document.getElementById('vList');vl.innerHTML="";
 (l.vokabeln||[]).forEach(v=>{
-const li=document.createElement('li');
-li.innerHTML="<strong>"+esc(v.w)+"</strong> <em>("+esc(v.laut)+")</em> – "+esc(v.de);
-const b=document.createElement('button');b.className="b-mini";b.textContent="+ Merken";
-b.onclick=()=>addMemo(curLang,curCode,v.w,v.laut,v.de);
+const li=document.createElement('li');li.innerHTML="<strong>"+esc(v.w)+"</strong> <em>("+esc(v.laut)+")</em> – "+esc(v.de);
+const b=document.createElement('button');b.className="b-mini";b.textContent="+ Merken";b.onclick=()=>addMemo(curLang,curCode,v.w,v.laut,v.de);
 li.appendChild(b);vl.appendChild(li);
 });
 
@@ -569,21 +676,30 @@ const cb=document.getElementById('clozeBox');cb.innerHTML="";clozeAns=[];documen
 (l.luecken||[]).forEach((c,i)=>{
 clozeAns.push((c.loesung||"").trim());
 const p=document.createElement('div');p.style.marginBottom="8px";
-p.innerHTML=(i+1)+". "+esc(c.vor)+'<input class="cloze-inp" id="cl_'+i+'" placeholder="...">'+esc(c.nach);
-cb.appendChild(p);
+p.innerHTML=(i+1)+". "+esc(c.vor)+'<input class="cloze-inp" id="cl_'+i+'" placeholder="...">'+esc(c.nach);cb.appendChild(p);
 });
 
-const ql=document.getElementById('qList');ql.innerHTML="";
-(l.fragen||[]).forEach(q=>{const li=document.createElement('li');li.textContent=q;ql.appendChild(li);});
-const al=document.getElementById('aList');al.innerHTML="";
-(l.loesungen||[]).forEach(a=>{const li=document.createElement('li');li.textContent=a;al.appendChild(li);});
+const ql=document.getElementById('qList');ql.innerHTML="";(l.fragen||[]).forEach(q=>{const li=document.createElement('li');li.textContent=q;ql.appendChild(li);});
+const al=document.getElementById('aList');al.innerHTML="";(l.loesungen||[]).forEach(a=>{const li=document.createElement('li');li.textContent=a;al.appendChild(li);});
 
 document.getElementById('meta').textContent="Sprache: "+curLang+" • Niveau: "+lvl+" • Modell: "+m+calcCostInfo(usage,m);
 lesBox.style.display="block";
 }
+<!-- === MODUL 7 ENDE === -->
+<!-- === MODUL 8 START: JS EXERCISES & MEMO === -->
+function checkKasusDrill(){
+let ok=0;const norm=s=>s.trim().toLowerCase().replace(/[.!?]+$/g,"");
+kasusDrillAns.forEach((ans,i)=>{
+const inp=document.getElementById('kd_'+i),sol=document.getElementById('kdSol_'+i);if(!inp)return;
+inp.classList.remove('ok','bad');sol.textContent="";
+if(norm(inp.value)===norm(ans)){inp.classList.add('ok');ok++;}
+else{inp.classList.add('bad');sol.textContent="Lösung: "+ans;}
+});
+document.getElementById('kasusDrillRes').textContent="Kasus-Ergebnis: "+ok+" von "+kasusDrillAns.length+" richtig.";
+}
+
 function checkDrill(){
-let ok=0;
-const norm=s=>s.trim().toLowerCase().replace(/[.!?]+$/g,"");
+let ok=0;const norm=s=>s.trim().toLowerCase().replace(/[.!?]+$/g,"");
 drillAns.forEach((ans,i)=>{
 const inp=document.getElementById('dr_'+i),sol=document.getElementById('drSol_'+i);if(!inp)return;
 inp.classList.remove('ok','bad');sol.textContent="";
@@ -693,3 +809,4 @@ function esc(s){const d=document.createElement('div');d.textContent=s||"";return
 </script>
 </body>
 </html>
+<!-- === MODUL 8 ENDE === -->
