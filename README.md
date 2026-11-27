@@ -74,6 +74,23 @@ Die `index.html` ist intern durch klare HTML-Kommentare in **8 eigenständige Mo
 
 ---
 
+### 🔍 Code-Transparenz & Sicherheits-Check (Selbst prüfen)
+
+Da die gesamte App aus einer einzigen, unverschlüsselten HTML-Datei (`index.html`) besteht, lässt sich der Umgang mit den eigenen API-Schlüsseln jederzeit direkt im Quelltext überprüfen:
+
+1. **Lokale Speicherung (`localStorage`):**
+   * Suche im Code nach `localStorage.setItem` und `localStorage.getItem` (in **Modul 4** und **Modul 5**).
+   * Dort wird ersichtlich, dass die Schlüssel (`polnisch_app_key`, `google_tts_key`, `elevenlabs_app_key`) ausschließlich im lokalen Speicher des eigenen Browsers abgelegt und über **Löschen** (`localStorage.removeItem`) wieder restlos entfernt werden.
+2. **Direkte API-Kommunikation (`fetch`):**
+   * Suche im Code nach `fetch(` (in **Modul 4, 5 und 6**).
+   * Sämtliche Netzwerkanfragen gehen direkt vom Browser an die offiziellen Hersteller-Endpunkte:
+     * `https://googleapis.com` (Google Gemini)
+     * `https://googleapis.com` (Google Cloud Text-to-Speech)
+     * `https://elevenlabs.io` (ElevenLabs TTS)
+   * Es existieren keinerlei Drittanbieter-Server, Analytics-Skripte oder externe Bibliotheken.
+
+---
+
 ## 📝 Changelog (Versionshistorie)
 
 ### v2.2 – Polnisch Pro & Modulare Architektur
