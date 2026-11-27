@@ -195,6 +195,22 @@ li{margin-bottom:6px}
 </div>
 </details>
 
+<details id="conjAcc" class="box" style="background:#f3f8ff;border-color:#90caf9;border-left:5px solid #1976d2">
+<summary style="color:#0d47a1;font-weight:700;font-size:1rem">🔄 Verb-Konjugator (Vergangenheit • Gegenwart • Zukunft): <span id="conjVerbTitle"></span></summary>
+<div style="margin-top:10px;font-size:.92rem">
+<div class="row" style="margin-bottom:8px;flex-wrap:wrap">
+<input type="text" id="customVerbInp" placeholder="Eigenes Verb konjugieren (z.B. pisać, iść, machen)..." style="flex:1;min-width:210px;margin:0">
+<button id="conjBtn" class="b-save" style="flex:0;white-space:nowrap" onclick="conjugateCustomVerb()">🔄 Konjugieren</button>
+</div>
+<div id="conjNote" style="font-size:.84rem;color:#444;margin-bottom:6px"></div>
+<table class="gram-tbl" style="border-color:#bbdefb">
+<thead><tr><th style="background:#e3f2fd;color:#0d47a1">Person</th><th style="background:#e3f2fd;color:#0d47a1">⏪ Vergangenheit</th><th style="background:#e3f2fd;color:#0d47a1">⏺️ Gegenwart</th><th style="background:#e3f2fd;color:#0d47a1">⏩ Zukunft</th></tr></thead>
+<tbody id="conjTblBody"></tbody>
+</table>
+<small style="color:#555">💡 Tipp: Klicke auf eine beliebige Verbform in der Tabelle, um sie anzuhören.</small>
+</div>
+</details>
+
 <details id="plSpecAcc" class="pl-acc" style="display:none">
 <summary>🇵🇱 Polnisch-Spezial: 7-Fälle-Detektiv (Kasus) & Verbaspekt-Vergleich</summary>
 <div class="gram-sec" style="border-top-color:#f8bbd0">
@@ -270,6 +286,7 @@ li{margin-bottom:6px}
 <ul id="memoList"></ul>
 </div>
 <!-- === MODUL 3 ENDE === -->
+
 <!-- === MODUL 4 START: JS CONFIG & AMPEL === -->
 <script>
 const kIn=document.getElementById('apiKey'),ttsIn=document.getElementById('ttsKey'),elIn=document.getElementById('elKey');
@@ -563,18 +580,20 @@ if(elIn.value.trim())localStorage.setItem('elevenlabs_app_key',elIn.value.trim()
 gBtn.disabled=true;errBox.style.display="none";lesBox.style.display="none";
 
 const isPol=(curLang==="Polnisch");
+const conjNoteHint=isPol?"Bei Polnisch in der Vergangenheit m./w. Formen angeben (z.B. robiłem / robiłam) und in der Zukunft Aspekt/Zusammensetzung beachten.":"Alle 6 Personen (1./2./3. Sg. & Pl.) sauber konjugieren.";
 const plPromptPart=isPol
-?' 8. "polnisch_spezial": Objekt speziell für Polnisch mit 3 Feldern: {"kasus_analyse":[{"satz":"Schlüsselsatz aus dem Text","woerter":[{"wort":"Substantiv/Pronomen aus dem Satz","fall":"Nominativ|Genitiv|Dativ|Akkusativ|Instrumental|Lokativ|Vokativ","frage":"polnisches Fragewort z.B. Kogo? Czego?","grund":"Warum steht dieser Fall hier (z.B. nach Präposition z / Verneinung / Direktes Objekt)"}]}] (genau 2 Sätze aus dem Text analysieren), "kasus_uebungen":[{"vor":"Satzteil vor der Lücke ","loesung":"richtig deklinierte Form","nach":" Satzteil nach der Lücke","hinweis":"Grundform + gesuchter Fall z.B. kawa -> Genitiv"}] (genau 2 Übungen), "verbaspekte":[{"unvollendet":"Infinitiv unvollendet (niedokonany)","vollendet":"Infinitiv vollendet (dokonany)","deutsch":"Deutsche Bedeutung","bsp_unv":"Kurzer Beispielsatz unvollendet auf Polnisch","bsp_vol":"Kurzer Beispielsatz vollendet auf Polnisch"}] (genau 3 wichtige Verben passend zum Text/Thema)}.'
+?' 9. "polnisch_spezial": Objekt speziell für Polnisch mit 3 Feldern: {"kasus_analyse":[{"satz":"Schlüsselsatz aus dem Text","woerter":[{"wort":"Substantiv/Pronomen aus dem Satz","fall":"Nominativ|Genitiv|Dativ|Akkusativ|Instrumental|Lokativ|Vokativ","frage":"polnisches Fragewort z.B. Kogo? Czego?","grund":"Warum steht dieser Fall hier (z.B. nach Präposition z / Verneinung / Direktes Objekt)"}]}] (genau 2 Sätze aus dem Text analysieren), "kasus_uebungen":[{"vor":"Satzteil vor der Lücke ","loesung":"richtig deklinierte Form","nach":" Satzteil nach der Lücke","hinweis":"Grundform + gesuchter Fall z.B. kawa -> Genitiv"}] (genau 2 Übungen), "verbaspekte":[{"unvollendet":"Infinitiv unvollendet (niedokonany)","vollendet":"Infinitiv vollendet (dokonany)","deutsch":"Deutsche Bedeutung","bsp_unv":"Kurzer Beispielsatz unvollendet auf Polnisch","bsp_vol":"Kurzer Beispielsatz vollendet auf Polnisch"}] (genau 3 wichtige Verben passend zum Text/Thema)}.'
 :'';
 
-const prompt='Erstelle eine Sprachlektion für '+curLang+' zum Thema "'+top+'" (Niveau GER '+lvl+', Format: '+mode+', Länge: genau '+len+' Sätze). Antworte ausschließlich als reines JSON-Objekt ohne Markdown-Codeblock mit diesen '+(isPol?'8':'7')+' Feldern: '
+const prompt='Erstelle eine Sprachlektion für '+curLang+' zum Thema "'+top+'" (Niveau GER '+lvl+', Format: '+mode+', Länge: genau '+len+' Sätze). Antworte ausschließlich als reines JSON-Objekt ohne Markdown-Codeblock mit diesen '+(isPol?'9':'8')+' Feldern: '
 +'1. "text": Der '+mode+' auf '+curLang+' ('+len+' Sätze). '
 +'2. "deutsch": Vollständige deutsche Übersetzung. '
 +'3. "grammatik": Objekt mit 6 Feldern passend zu Niveau '+lvl+': {"titel":"Name der Grammatik-Regel","erklaerung":"Verständliche Erklärung auf Deutsch","tabelle":[{"form":"Regel/Endung","bsp":"Beispiel auf '+curLang+'","de":"Deutsche Übersetzung"}],"stolperfalle":"Typischer Fehler von Deutschen im Vergleich zur deutschen Grammatik","beispiele":[{"satz":"Neuer Beispielsatz auf '+curLang+'","de":"Deutsche Übersetzung"}],"uebungen":[{"aufgabe":"Umformungs-Aufgabe auf Deutsch (z.B. Setze in die Vergangenheit: ...)","loesung":"Exakte Lösung auf '+curLang+'"}]} (tabelle: 3 Zeilen, beispiele: 2 Sätze, uebungen: 2 Aufgaben). '
-+'4. "vokabeln": Array mit 5-6 Objekten aus dem Text: {"w":"Fremdsprachiger Ausdruck","laut":"einfache deutsche Lautschrift","de":"Deutsche Bedeutung"}. '
-+'5. "luecken": Array mit 4 Lückentext-Übungen basierend auf dem Text: {"vor":"Satzteil vor der Lücke ","loesung":"gesuchtes Wort","nach":" Satzteil nach der Lücke (deutsche Bedeutung)"}. '
-+'6. "fragen": Array mit 5 Verständnisfragen: "Frage auf '+curLang+'? (Deutsche Übersetzung?)". '
-+'7. "loesungen": Array mit 5 Antworten: "Antwort auf '+curLang+'. (deutsche Lautschrift)".'
++'4. "konjugation": Objekt für ein wichtiges Hauptverb aus dem Text: {"verb":"Infinitiv (z.B. robić / zrobić)","deutsch":"Deutsche Bedeutung","hinweis":"Kurzer Grammatik-Hinweis zur Beugung ('+conjNoteHint+')","formen":[{"person":"Pronomen (z.B. ja / ich)","verg":"Vergangenheit","geg":"Gegenwart","zuk":"Zukunft"}]} (genau 6 Zeilen für alle 6 Personen). '
++'5. "vokabeln": Array mit 5-6 Objekten aus dem Text: {"w":"Fremdsprachiger Ausdruck","laut":"einfache deutsche Lautschrift","de":"Deutsche Bedeutung"}. '
++'6. "luecken": Array mit 4 Lückentext-Übungen basierend auf dem Text: {"vor":"Satzteil vor der Lücke ","loesung":"gesuchtes Wort","nach":" Satzteil nach der Lücke (deutsche Bedeutung)"}. '
++'7. "fragen": Array mit 5 Verständnisfragen: "Frage auf '+curLang+'? (Deutsche Übersetzung?)". '
++'8. "loesungen": Array mit 5 Antworten: "Antwort auf '+curLang+'. (deutsche Lautschrift)".'
 +plPromptPart;
 
 try{
@@ -582,6 +601,24 @@ const res=await callGemini(prompt,true,gBtn);
 renderLesson(extractJson(res.text),lvl,res.model,res.usage);
 }catch(e){err("Fehler: "+e.message);}
 gBtn.disabled=false;gBtn.textContent="Lektion erstellen";
+}
+
+async function conjugateCustomVerb(){
+const vInp=document.getElementById('customVerbInp').value.trim();
+const key=kIn.value.trim();
+if(!key){kPan.open=true;alert("Bitte zuerst deinen Gemini API-Schlüssel eingeben.");return;}
+if(!vInp){alert("Bitte gib ein Verb ein (z.B. pisać, iść oder gehen).");return;}
+const btn=document.getElementById('conjBtn');
+btn.disabled=true;
+const isPol=(curLang==="Polnisch");
+const conjNoteHint=isPol?"Bei Polnisch in der Vergangenheit m./w. Formen angeben (z.B. pisałem / pisałam) und in der Zukunft Aspekt/Zusammensetzung beachten.":"Alle 6 Personen sauber konjugieren.";
+const prompt='Konjugiere das Verb "'+vInp+'" (falls auf Deutsch eingegeben, zuerst ins '+curLang+' übersetzen) in der Sprache '+curLang+' für Vergangenheit, Gegenwart und Zukunft. Antworte ausschließlich als reines JSON-Objekt mit diesen 4 Feldern: {"verb":"Infinitiv auf '+curLang+'","deutsch":"Deutsche Bedeutung","hinweis":"Kurzer Grammatik-Hinweis ('+conjNoteHint+')","formen":[{"person":"Pronomen (z.B. ja / ich)","verg":"Vergangenheit","geg":"Gegenwart","zuk":"Zukunft"}]} (genau 6 Zeilen für alle 6 Personen).';
+try{
+const res=await callGemini(prompt,true,btn);
+renderConjugation(extractJson(res.text));
+document.getElementById('conjNote').textContent+=" ("+res.model+calcCostInfo(res.usage,res.model)+")";
+}catch(e){alert("Fehler beim Konjugieren: "+e.message);}
+btn.disabled=false;btn.textContent="🔄 Konjugieren";
 }
 <!-- === MODUL 6 ENDE === -->
 <!-- === MODUL 7 START: JS RENDERER === -->
@@ -595,6 +632,32 @@ if(f.includes("ins"))return "k-ins";
 if(f.includes("lok")||f.includes("loc"))return "k-lok";
 if(f.includes("vok")||f.includes("voc"))return "k-vok";
 return "k-nom";
+}
+
+function renderConjugation(c){
+const box=document.getElementById('conjTblBody');box.innerHTML="";
+if(!c||!c.formen){
+document.getElementById('conjVerbTitle').textContent="—";
+document.getElementById('conjNote').textContent="";
+return;
+}
+document.getElementById('conjVerbTitle').textContent=(c.verb||"")+(c.deutsch?" ("+c.deutsch+")":"");
+document.getElementById('conjNote').textContent=c.hinweis||"";
+c.formen.forEach(r=>{
+const tr=document.createElement('tr');
+const mkCell=(val)=>{
+const td=document.createElement('td');
+if(val&&val!=="-"){
+td.style.cursor="pointer";td.title="Klicken zum Anhören";
+td.innerHTML="🔊 "+esc(val);
+td.onclick=()=>speakText(val.replace(/\//g,", "),curCode);
+}else{td.textContent=val||"-";}
+return td;
+};
+const tdP=document.createElement('td');tdP.innerHTML="<b>"+esc(r.person)+"</b>";
+tr.appendChild(tdP);tr.appendChild(mkCell(r.verg));tr.appendChild(mkCell(r.geg));tr.appendChild(mkCell(r.zuk));
+box.appendChild(tr);
+});
 }
 
 function renderLesson(l,lvl,m,usage){
@@ -634,6 +697,10 @@ div.innerHTML=(i+1)+". "+esc(u.aufgabe)+'<br><input class="drill-inp" id="dr_'+i
 drB.appendChild(div);
 });
 }
+
+document.getElementById('conjAcc').open=false;
+document.getElementById('customVerbInp').value="";
+renderConjugation(l.konjugation);
 
 const plAcc=document.getElementById('plSpecAcc');
 if(curLang==="Polnisch"&&l.polnisch_spezial){
@@ -691,6 +758,7 @@ document.getElementById('meta').textContent="Sprache: "+curLang+" • Niveau: "+
 lesBox.style.display="block";
 }
 <!-- === MODUL 7 ENDE === -->
+
 <!-- === MODUL 8 START: JS EXERCISES & MEMO === -->
 function checkKasusDrill(){
 let ok=0;const norm=s=>s.trim().toLowerCase().replace(/[.!?]+$/g,"");
