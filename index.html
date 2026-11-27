@@ -887,13 +887,11 @@ function err(m){errBox.textContent=m;errBox.style.display="block";}
 function esc(s){const d=document.createElement('div');d.textContent=s||"";return d.innerHTML;}
 </script>
 <!-- === MODUL 11 ENDE === -->
-<!-- === MODUL 12 START: ZAHLEN, UHRZEIT & DATUM TRAINER === -->
+<!-- === MODUL 12A START: ZAHLEN, UHRZEIT & DATUM TRAINER === -->
 <div class="card" id="numTrainerCard">
-<div class="row" style="justify-content:space-between;flex-wrap:wrap;margin-bottom:8px">
-<h2 style="margin:0;border:none">🔢 Zahlen-, Uhrzeit- & Datums-Trainer <small style="font-weight:400;color:#666">(0 Tokens • Offline)</small></h2>
-<span id="ntLangBadge" class="k-badge k-nom">Polnisch</span>
-</div>
-
+<details>
+<summary>🔢 Zahlen-, Uhrzeit- & Datums-Trainer <span id="ntLangBadge" class="k-badge k-nom" style="margin-left:8px">Polnisch</span> <small style="font-weight:400;color:#666">(0 Tokens • Offline)</small></summary>
+<div style="margin-top:12px">
 <div class="grid">
 <div>
 <label for="ntCat">Kategorie:</label>
@@ -935,6 +933,8 @@ function esc(s){const d=document.createElement('div');d.textContent=s||"";return
 <div id="ntExtra" style="font-size:.86rem;color:#555;font-style:italic"></div>
 </div>
 </div>
+</div>
+</details>
 </div>
 
 <script>
@@ -1059,6 +1059,8 @@ return p.join(" ");
 }
 return String(n);
 }
+<!-- === MODUL 12A ENDE === -->
+<!-- === MODUL 12B START: ZEIT, DATUM & PREISE === -->
 function ntFormatTime(h,m,lang){
 const pad=x=>String(x).padStart(2,"0");
 const disp=pad(h)+":"+pad(m);
@@ -1205,4 +1207,4 @@ window.addEventListener('DOMContentLoaded',()=>ntSyncLang());
 </script>
 </body>
 </html>
-<!-- === MODUL 12 ENDE === -->
+<!-- === MODUL 12B ENDE === -->
