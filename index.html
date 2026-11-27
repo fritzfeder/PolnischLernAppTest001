@@ -162,7 +162,7 @@ li{margin-bottom:6px}
 <div id="errBox" class="err"></div>
 </div>
 <!-- === MODUL 2 ENDE === -->
-<!-- === MODUL 3 START: HTML LESSON & MEMO === -->
+<!-- === MODUL 3 START: HTML LESSON & TOOLS === -->
 <div id="lessonBox" class="card">
 <div id="modelBadge" class="model-badge"></div>
 <h2 style="margin-top:0">📖 Text / Dialog <small style="font-weight:400;color:#666">(Klick auf Satz = einzeln anhören)</small></h2>
@@ -240,7 +240,8 @@ li{margin-bottom:6px}
 </table>
 </div>
 </details>
-
+<!-- === MODUL 3 ENDE === -->
+<!-- === MODUL 4 START: HTML EXERCISES & MEMO === -->
 <h2>🗣️ Wichtige Redewendungen & Vokabeln</h2>
 <ul id="vList"></ul>
 
@@ -285,9 +286,8 @@ li{margin-bottom:6px}
 </div>
 <ul id="memoList"></ul>
 </div>
-<!-- === MODUL 3 ENDE === -->
-
-<!-- === MODUL 4 START: JS CONFIG & AMPEL === -->
+<!-- === MODUL 4 ENDE === -->
+<!-- === MODUL 5 START: JS CONFIG & AMPEL === -->
 <script>
 const kIn=document.getElementById('apiKey'),ttsIn=document.getElementById('ttsKey'),elIn=document.getElementById('elKey');
 const kMsg=document.getElementById('keyMsg'),kPan=document.getElementById('kPanel');
@@ -364,27 +364,27 @@ btn.disabled=true;btn.textContent="Prüfe...";box.style.display="block";
 const gKey=kIn.value.trim(),tKey=ttsIn.value.trim()||gKey,eKey=elIn.value.trim();
 let lines=[];
 
-if(!gKey){lines.push("🔴 <b>Gemini API:</b> Kein Schlüssel eingetragen");}
+if(!gKey){lines.push("🔴 <strong>Gemini API:</strong> Kein Schlüssel eingetragen");}
 else{
 try{
 const h=["https://","generativelanguage",".","googleapis",".","com"].join("");
 const r=await fetch(h+"/v1beta/models",{headers:{'x-goog-api-key':gKey}});
-if(r.ok)lines.push("🟢 <b>Gemini API:</b> Verbunden & aktiv");
-else{const d=await r.json();lines.push("🔴 <b>Gemini API:</b> "+((d.error&&d.error.message)||("HTTP "+r.status)));}
-}catch(e){lines.push("🔴 <b>Gemini API:</b> "+e.message);}
+if(r.ok)lines.push("🟢 <strong>Gemini API:</strong> Verbunden & aktiv");
+else{const d=await r.json();lines.push("🔴 <strong>Gemini API:</strong> "+((d.error&&d.error.message)||("HTTP "+r.status)));}
+}catch(e){lines.push("🔴 <strong>Gemini API:</strong> "+e.message);}
 }
 
-if(!tKey){lines.push("⚪ <b>Google Cloud TTS:</b> Kein Schlüssel eingetragen");}
+if(!tKey){lines.push("⚪ <strong>Google Cloud TTS:</strong> Kein Schlüssel eingetragen");}
 else{
 try{
 const th=["https://","texttospeech",".","googleapis",".","com"].join("");
 const r=await fetch(th+"/v1/voices?languageCode=pl-PL",{headers:{'x-goog-api-key':tKey}});
-if(r.ok)lines.push("🟢 <b>Google Cloud TTS:</b> Verbunden & aktiv ("+(ttsIn.value.trim()?"eigener TTS-Key":"Gemini-Key")+")");
-else{const d=await r.json();lines.push("🔴 <b>Google Cloud TTS:</b> "+((d.error&&d.error.message)||("HTTP "+r.status)));}
-}catch(e){lines.push("🔴 <b>Google Cloud TTS:</b> "+e.message);}
+if(r.ok)lines.push("🟢 <strong>Google Cloud TTS:</strong> Verbunden & aktiv ("+(ttsIn.value.trim()?"eigener TTS-Key":"Gemini-Key")+")");
+else{const d=await r.json();lines.push("🔴 <strong>Google Cloud TTS:</strong> "+((d.error&&d.error.message)||("HTTP "+r.status)));}
+}catch(e){lines.push("🔴 <strong>Google Cloud TTS:</strong> "+e.message);}
 }
 
-if(!eKey){lines.push("⚪ <b>ElevenLabs TTS:</b> Kein Schlüssel eingetragen");}
+if(!eKey){lines.push("⚪ <strong>ElevenLabs TTS:</strong> Kein Schlüssel eingetragen");}
 else{
 try{
 const eh=["https://","api",".","elevenlabs",".","io"].join("");
@@ -392,17 +392,17 @@ const r=await fetch(eh+"/v1/text-to-speech/EXAVITQu4vr4xnSDxMaL",{
 method:'POST',headers:{'Content-Type':'application/json','xi-api-key':eKey},
 body:JSON.stringify({text:"Hi",model_id:"eleven_multilingual_v2"})
 });
-if(r.ok)lines.push("🟢 <b>ElevenLabs TTS:</b> Verbunden & aktiv");
-else lines.push("🔴 <b>ElevenLabs TTS:</b> HTTP "+r.status);
-}catch(e){lines.push("🔴 <b>ElevenLabs TTS:</b> "+e.message);}
+if(r.ok)lines.push("🟢 <strong>ElevenLabs TTS:</strong> Verbunden & aktiv");
+else lines.push("🔴 <strong>ElevenLabs TTS:</strong> HTTP "+r.status);
+}catch(e){lines.push("🔴 <strong>ElevenLabs TTS:</strong> "+e.message);}
 }
 
-lines.push("🟢 <b>Browser-Stimme (0 Tokens):</b> Bereit");
+lines.push("🟢 <strong>Browser-Stimme (0 Tokens):</strong> Bereit");
 box.innerHTML=lines.join("<br>");
 btn.disabled=false;btn.textContent="🚦 Verbindung & Ampel prüfen";
 }
-<!-- === MODUL 4 ENDE === -->
-<!-- === MODUL 5 START: JS MODELS & AUDIO === -->
+<!-- === MODUL 5 ENDE === -->
+<!-- === MODUL 6 START: JS MODELS & AUDIO === -->
 async function fetchAvailableModels(silent){
 const key=kIn.value.trim();if(!key)return;
 const host=["https://","generativelanguage",".","googleapis",".","com"].join("");
@@ -519,7 +519,7 @@ if(!('speechSynthesis'in window)){alert("Sprachausgabe nicht unterstützt.");ret
 const u=new SpeechSynthesisUtterance(text);u.lang=langCode||curCode;u.rate=rate;u.pitch=pitch;
 if(vVal.startsWith("sys:")){const found=allVoices.find(v=>v.name===vVal.replace("sys:",""));if(found)u.voice=found;}
 u.onend=()=>stopAllAudio();
-document.getElementById('audBtn').textContent="⏹️ Stopp";document.getElementById('pauseBtn').style.display="inline-block";document.getElementById('pauseBtn').textContent="⏸️ Pause";
+document.getElementById('audBtn').textContent="⏹️ Stopp";document.getElementById('pauseBtn').style.display="inline-block";document.getElementById('pauseBtn').textContent="▶️ Pause";
 if(!vVal.startsWith("cloud:")&&!vVal.startsWith("el:"))setTtsStatus("🔊 Aktiv: "+vLabel,false);
 window.speechSynthesis.speak(u);
 }
@@ -529,8 +529,8 @@ function pauseAud(){
 if(extAudio){if(extAudio.paused){extAudio.play();document.getElementById('pauseBtn').textContent="⏸️ Pause";}else{extAudio.pause();document.getElementById('pauseBtn').textContent="▶️ Weiter";}return;}
 if('speechSynthesis'in window&&window.speechSynthesis.speaking){if(window.speechSynthesis.paused){window.speechSynthesis.resume();document.getElementById('pauseBtn').textContent="⏸️ Pause";}else{window.speechSynthesis.pause();document.getElementById('pauseBtn').textContent="▶️ Weiter";}}
 }
-<!-- === MODUL 5 ENDE === -->
-<!-- === MODUL 6 START: JS GEMINI & GENERATOR === -->
+<!-- === MODUL 6 ENDE === -->
+<!-- === MODUL 7 START: JS GEMINI & GENERATOR === -->
 function calcCostInfo(usage,model){
 if(!usage)return "";
 const inT=usage.promptTokenCount||0,outT=usage.candidatesTokenCount||0,tot=usage.totalTokenCount||(inT+outT);
@@ -620,46 +620,8 @@ document.getElementById('conjNote').textContent+=" ("+res.model+calcCostInfo(res
 }catch(e){alert("Fehler beim Konjugieren: "+e.message);}
 btn.disabled=false;btn.textContent="🔄 Konjugieren";
 }
-<!-- === MODUL 6 ENDE === -->
-<!-- === MODUL 7 START: JS RENDERER === -->
-function getKasusClass(fall){
-const f=(fall||"").toLowerCase();
-if(f.includes("nom"))return "k-nom";
-if(f.includes("gen"))return "k-gen";
-if(f.includes("dat"))return "k-dat";
-if(f.includes("akk")||f.includes("acc"))return "k-akk";
-if(f.includes("ins"))return "k-ins";
-if(f.includes("lok")||f.includes("loc"))return "k-lok";
-if(f.includes("vok")||f.includes("voc"))return "k-vok";
-return "k-nom";
-}
-
-function renderConjugation(c){
-const box=document.getElementById('conjTblBody');box.innerHTML="";
-if(!c||!c.formen){
-document.getElementById('conjVerbTitle').textContent="—";
-document.getElementById('conjNote').textContent="";
-return;
-}
-document.getElementById('conjVerbTitle').textContent=(c.verb||"")+(c.deutsch?" ("+c.deutsch+")":"");
-document.getElementById('conjNote').textContent=c.hinweis||"";
-c.formen.forEach(r=>{
-const tr=document.createElement('tr');
-const mkCell=(val)=>{
-const td=document.createElement('td');
-if(val&&val!=="-"){
-td.style.cursor="pointer";td.title="Klicken zum Anhören";
-td.innerHTML="🔊 "+esc(val);
-td.onclick=()=>speakText(val.replace(/\//g,", "),curCode);
-}else{td.textContent=val||"-";}
-return td;
-};
-const tdP=document.createElement('td');tdP.innerHTML="<b>"+esc(r.person)+"</b>";
-tr.appendChild(tdP);tr.appendChild(mkCell(r.verg));tr.appendChild(mkCell(r.geg));tr.appendChild(mkCell(r.zuk));
-box.appendChild(tr);
-});
-}
-
+<!-- === MODUL 7 ENDE === -->
+<!-- === MODUL 8 START: JS RENDER BASE & GRAMMAR === -->
 function renderLesson(l,lvl,m,usage){
 document.getElementById('modelBadge').textContent="✅ Verbunden • Text erstellt von: "+m;
 curTxt=l.text||"";
@@ -684,9 +646,9 @@ document.getElementById('gramExList').innerHTML="";document.getElementById('gram
 }else{
 document.getElementById('gTitle').textContent=g.titel||"Fokus";document.getElementById('gramExplain').textContent=g.erklaerung||"";
 const tb=document.getElementById('gramTblBody');tb.innerHTML="";
-(g.tabelle||[]).forEach(r=>{const tr=document.createElement('tr');tr.innerHTML="<td><b>"+esc(r.form)+"</b></td><td>"+esc(r.bsp)+"</td><td>"+esc(r.de)+"</td>";tb.appendChild(tr);});
+(g.tabelle||[]).forEach(r=>{const tr=document.createElement('tr');tr.innerHTML="<td><strong>"+esc(r.form)+"</strong></td><td>"+esc(r.bsp)+"</td><td>"+esc(r.de)+"</td>";tb.appendChild(tr);});
 const trap=document.getElementById('gramTrap');
-if(g.stolperfalle){trap.style.display="block";trap.innerHTML="⚠️ <b>Typische Stolperfalle:</b> "+esc(g.stolperfalle);}else{trap.style.display="none";}
+if(g.stolperfalle){trap.style.display="block";trap.innerHTML="⚠️ <strong>Typische Stolperfalle:</strong> "+esc(g.stolperfalle);}else{trap.style.display="none";}
 const exL=document.getElementById('gramExList');exL.innerHTML="";
 (g.beispiele||[]).forEach(ex=>{const d=document.createElement('div');d.className="ex-item";d.innerHTML="🔊 <strong>"+esc(ex.satz)+"</strong> – <em>"+esc(ex.de)+"</em>";d.onclick=()=>speakText(ex.satz,curCode);exL.appendChild(d);});
 const drB=document.getElementById('gramDrillBox');drB.innerHTML="";drillAns=[];document.getElementById('drillRes').textContent="";
@@ -701,11 +663,77 @@ drB.appendChild(div);
 document.getElementById('conjAcc').open=false;
 document.getElementById('customVerbInp').value="";
 renderConjugation(l.konjugation);
+renderPolishSpecial(l.polnisch_spezial);
 
+const vl=document.getElementById('vList');vl.innerHTML="";
+(l.vokabeln||[]).forEach(v=>{
+const li=document.createElement('li');li.innerHTML="<strong>"+esc(v.w)+"</strong> <em>("+esc(v.laut)+")</em> – "+esc(v.de);
+const b=document.createElement('button');b.className="b-mini";b.textContent="+ Merken";b.onclick=()=>addMemo(curLang,curCode,v.w,v.laut,v.de);
+li.appendChild(b);vl.appendChild(li);
+});
+
+const cb=document.getElementById('clozeBox');cb.innerHTML="";clozeAns=[];document.getElementById('clozeRes').textContent="";
+(l.luecken||[]).forEach((c,i)=>{
+clozeAns.push((c.loesung||"").trim());
+const p=document.createElement('div');p.style.marginBottom="8px";
+p.innerHTML=(i+1)+". "+esc(c.vor)+'<input class="cloze-inp" id="cl_'+i+'" placeholder="...">'+esc(c.nach);cb.appendChild(p);
+});
+
+const ql=document.getElementById('qList');ql.innerHTML="";(l.fragen||[]).forEach(q=>{const li=document.createElement('li');li.textContent=q;ql.appendChild(li);});
+const al=document.getElementById('aList');al.innerHTML="";(l.loesungen||[]).forEach(a=>{const li=document.createElement('li');li.textContent=a;al.appendChild(li);});
+
+document.getElementById('meta').textContent="Sprache: "+curLang+" • Niveau: "+lvl+" • Modell: "+m+calcCostInfo(usage,m);
+lesBox.style.display="block";
+}
+<!-- === MODUL 8 ENDE === -->
+<!-- === MODUL 9 START: JS RENDER CONJUGATION === -->
+function renderConjugation(c){
+const box=document.getElementById('conjTblBody');box.innerHTML="";
+if(!c||!c.formen){
+document.getElementById('conjVerbTitle').textContent="—";
+document.getElementById('conjNote').textContent="";
+return;
+}
+document.getElementById('conjVerbTitle').textContent=(c.verb||"")+(c.deutsch?" ("+c.deutsch+")":"");
+document.getElementById('conjNote').textContent=c.hinweis||"";
+c.formen.forEach(r=>{
+const tr=document.createElement('tr');
+const mkCell=(val)=>{
+const td=document.createElement('td');
+if(val&&val!=="-"){
+td.style.cursor="pointer";td.title="Klicken zum Anhören";
+td.innerHTML="🔊 "+esc(val);
+td.onclick=()=>speakText(val.replace(/\//g,", "),curCode);
+}else{td.textContent=val||"-";}
+return td;
+};
+const tdP=document.createElement('td');tdP.innerHTML="<strong>"+esc(r.person)+"</strong>";
+tr.appendChild(tdP);
+tr.appendChild(mkCell(r.verg));
+tr.appendChild(mkCell(r.geg));
+tr.appendChild(mkCell(r.zuk));
+box.appendChild(tr);
+});
+}
+<!-- === MODUL 9 ENDE === -->
+<!-- === MODUL 10 START: JS RENDER POLISH SPECIAL === -->
+function getKasusClass(fall){
+const f=(fall||"").toLowerCase();
+if(f.includes("nom"))return "k-nom";
+if(f.includes("gen"))return "k-gen";
+if(f.includes("dat"))return "k-dat";
+if(f.includes("akk")||f.includes("acc"))return "k-akk";
+if(f.includes("ins"))return "k-ins";
+if(f.includes("lok")||f.includes("loc"))return "k-lok";
+if(f.includes("vok")||f.includes("voc"))return "k-vok";
+return "k-nom";
+}
+
+function renderPolishSpecial(ps){
 const plAcc=document.getElementById('plSpecAcc');
-if(curLang==="Polnisch"&&l.polnisch_spezial){
+if(curLang!=="Polnisch"||!ps){plAcc.style.display="none";return;}
 plAcc.style.display="block";plAcc.open=false;
-const ps=l.polnisch_spezial;
+
 const kList=document.getElementById('kasusList');kList.innerHTML="";
 (ps.kasus_analyse||[]).forEach(item=>{
 const card=document.createElement('div');card.className="kasus-card";
@@ -730,36 +758,14 @@ kdBox.appendChild(div);
 const aBody=document.getElementById('aspektTblBody');aBody.innerHTML="";
 (ps.verbaspekte||[]).forEach(v=>{
 const tr=document.createElement('tr');
-tr.innerHTML='<td><b>'+esc(v.unvollendet)+'</b><br><span style="cursor:pointer;color:#1976d2" onclick="speakText(\''+esc(v.bsp_unv).replace(/'/g,"\\'")+'\',\'pl-PL\')">🔊 '+esc(v.bsp_unv)+'</span></td>'
-+'<td><b>'+esc(v.vollendet)+'</b><br><span style="cursor:pointer;color:#2e7d32" onclick="speakText(\''+esc(v.bsp_vol).replace(/'/g,"\\'")+'\',\'pl-PL\')">🔊 '+esc(v.bsp_vol)+'</span></td>'
+tr.innerHTML='<td><strong>'+esc(v.unvollendet)+'</strong><br><span style="cursor:pointer;color:#1976d2" onclick="speakText(\''+esc(v.bsp_unv).replace(/'/g,"\\'")+'\',\'pl-PL\')">🔊 '+esc(v.bsp_unv)+'</span></td>'
++'<td><strong>'+esc(v.vollendet)+'</strong><br><span style="cursor:pointer;color:#2e7d32" onclick="speakText(\''+esc(v.bsp_vol).replace(/'/g,"\\'")+'\',\'pl-PL\')">🔊 '+esc(v.bsp_vol)+'</span></td>'
 +'<td>'+esc(v.deutsch)+'</td>';
 aBody.appendChild(tr);
 });
-}else{plAcc.style.display="none";}
-
-const vl=document.getElementById('vList');vl.innerHTML="";
-(l.vokabeln||[]).forEach(v=>{
-const li=document.createElement('li');li.innerHTML="<strong>"+esc(v.w)+"</strong> <em>("+esc(v.laut)+")</em> – "+esc(v.de);
-const b=document.createElement('button');b.className="b-mini";b.textContent="+ Merken";b.onclick=()=>addMemo(curLang,curCode,v.w,v.laut,v.de);
-li.appendChild(b);vl.appendChild(li);
-});
-
-const cb=document.getElementById('clozeBox');cb.innerHTML="";clozeAns=[];document.getElementById('clozeRes').textContent="";
-(l.luecken||[]).forEach((c,i)=>{
-clozeAns.push((c.loesung||"").trim());
-const p=document.createElement('div');p.style.marginBottom="8px";
-p.innerHTML=(i+1)+". "+esc(c.vor)+'<input class="cloze-inp" id="cl_'+i+'" placeholder="...">'+esc(c.nach);cb.appendChild(p);
-});
-
-const ql=document.getElementById('qList');ql.innerHTML="";(l.fragen||[]).forEach(q=>{const li=document.createElement('li');li.textContent=q;ql.appendChild(li);});
-const al=document.getElementById('aList');al.innerHTML="";(l.loesungen||[]).forEach(a=>{const li=document.createElement('li');li.textContent=a;al.appendChild(li);});
-
-document.getElementById('meta').textContent="Sprache: "+curLang+" • Niveau: "+lvl+" • Modell: "+m+calcCostInfo(usage,m);
-lesBox.style.display="block";
 }
-<!-- === MODUL 7 ENDE === -->
-
-<!-- === MODUL 8 START: JS EXERCISES & MEMO === -->
+<!-- === MODUL 10 ENDE === -->
+<!-- === MODUL 11 START: JS EXERCISES & MEMO === -->
 function checkKasusDrill(){
 let ok=0;const norm=s=>s.trim().toLowerCase().replace(/[.!?]+$/g,"");
 kasusDrillAns.forEach((ans,i)=>{
@@ -847,7 +853,7 @@ function exportMemo(){
 const filtered=getMemo().filter(v=>v.lang===curLang);
 if(filtered.length===0){alert("Keine gespeicherten Vokabeln für "+curLang+" vorhanden.");return;}
 let lines=["#separator:tab","#html:true","#tags column:3"];
-filtered.forEach(v=>{lines.push("<b>"+esc(v.w)+"</b><br><i>("+esc(v.laut)+")</i>\t"+esc(v.de)+"\t"+curLang.replace(/\s+/g,"_"));});
+filtered.forEach(v=>{lines.push("<strong>"+esc(v.w)+"</strong><br><i>("+esc(v.laut)+")</i>\t"+esc(v.de)+"\t"+curLang.replace(/\s+/g,"_"));});
 const blob=new Blob([lines.join("\n")],{type:"text/tab-separated-values;charset=utf-8"});
 const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download="anki-"+curLang.toLowerCase().replace(/[^a-z0-9]+/g,"-")+".csv";a.click();
 }
@@ -863,7 +869,7 @@ if(!r.trim()||r.startsWith("#"))return;
 const cols=r.split("\t");
 if(cols.length>=2){
 const tmp=document.createElement('div');tmp.innerHTML=cols.at(0);
-const b=tmp.querySelector('b'),i=tmp.querySelector('i');
+const b=tmp.querySelector('b,strong'),i=tmp.querySelector('i');
 const w=b?b.textContent.trim():tmp.textContent.trim();
 const laut=i?i.textContent.replace(/^\(|\)$/g,"").trim():"";
 const de=cols.at(1).trim(),lang=(cols.at(2)||curLang).replace(/_/g," ").trim();
@@ -882,4 +888,4 @@ function esc(s){const d=document.createElement('div');d.textContent=s||"";return
 </script>
 </body>
 </html>
-<!-- === MODUL 8 ENDE === -->
+<!-- === MODUL 11 ENDE === -->
