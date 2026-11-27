@@ -81,21 +81,22 @@ Da die gesamte App aus einer einzigen, unverschlüsselten HTML-Datei (`index.htm
 
 ---
 
-## 🧩 Code-Architektur (11-Module-Blueprint)
+## 🧩 Code-Architektur (12-Module-Blueprint)
 
-Der Quelltext der `index.html` ist durch klare Kommentar-Marker in **11 übersichtliche Module** unterteilt, um Wartung und Erweiterungen zu erleichtern:
+Die App ist in **12 klar getrennte HTML/CSS/JS-Module** unterteilt, um Wartung und KI-gestützte Erweiterungen ohne Token-Limits zu ermöglichen:
 
-1. **Modul 1:** HTML-Kopfbereich, SVG-App-Icon & CSS-Design
-2. **Modul 2:** HTML-Oberfläche – API-Einstellungen, Ampel & Lektions-Setup
-3. **Modul 3:** HTML-Oberfläche – Text, Grammatik-Coach, Verb-Konjugator & Polnisch-Spezial
-4. **Modul 4:** HTML-Oberfläche – Vokabeln, Lückentext, Schreibübung & Merkliste
-5. **Modul 5:** JavaScript – Konfiguration, Szenario-Chips & Verbindungs-Ampel
-6. **Modul 6:** JavaScript – KI-Modell-Abruf, Stimmen-Liste & Multi-TTS-Audio-Engine
-7. **Modul 7:** JavaScript – Gemini API-Client, Lektions-Generator & Verb-Konjugator
-8. **Modul 8:** JavaScript – Basis-Lektion & Grammatik-Renderer
-9. **Modul 9:** JavaScript – Verb-Konjugations-Renderer (3 Zeitformen)
-10. **Modul 10:** JavaScript – Polnisch-Spezial-Renderer (7-Fälle-Detektiv & Verbaspekte)
-11. **Modul 11:** JavaScript – Übungs-Checks, KI-Korrektur, Karteikarten & CSV-Import/Export
+1. **Modul 1:** HTML-Grundgerüst & CSS-Design (inkl. Kasus-Farbschema).
+2. **Modul 2:** Einstellungs-UI (API-Key, Modellwahl, Sprache, Stimme, Tempo & Modus).
+3. **Modul 3:** Lese-, Audio-, Vokabel-, KI-Korrektur- & Lückentext-UI.
+4. **Modul 4:** Grammatik-Drill, Karteikarten & CSV-Import/-Export-UI.
+5. **Modul 5:** Polnisch-Kasus-Referenz & Deklinations-Nachschlagewerk (HTML).
+6. **Modul 6:** JavaScript-Basisdaten, Kasus-Tabellen & Sprachumschaltung.
+7. **Modul 7:** JavaScript-Audio-Engine (Web Speech API) & interaktive Wort-Klicks.
+8. **Modul 8:** JavaScript-Deklinations-Suche & Gemini-API-Client mit Kostenrechner.
+9. **Modul 9:** JavaScript-Prompt-Builder (inkl. Kasus-Markierungen) & Text-Renderer.
+10. **Modul 10:** JavaScript-Lückentext-Generator & Satz-Drill-Builder.
+11. **Modul 11:** JavaScript-Übungs-Checks, KI-Korrektur, Karteikarten & CSV-Sync.
+12. **Modul 12 (12A + 12B):** Aufklappbarer Offline-Trainer für Zahlen, Uhrzeiten, Daten & Preise.
 
 ---
 
